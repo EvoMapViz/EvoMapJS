@@ -1,3 +1,9 @@
+---
+layout: default
+title: Deploy online
+nav_order: 3
+---
+
 # Deploy online (Netlify)
 
 ## Existing turnkey deployement synced with Github repository

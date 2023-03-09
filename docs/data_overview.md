@@ -1,3 +1,9 @@
+---
+layout: default
+title: Data requirements - Overview
+nav_order: 2
+---
+
 # Data requirements: Overview
 
 The app requires three `json` files each made of a single array of objects. 

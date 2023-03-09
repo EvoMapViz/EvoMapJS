@@ -1,3 +1,9 @@
+---
+layout: default
+title: Data requirements - Details and effects on visualization
+nav_order: 3
+---
+
 # Data requirements: Details and effects on visualization
 
 (Click on triangles to expand/collapse details about each file.)
