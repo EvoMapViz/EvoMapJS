@@ -19,6 +19,8 @@ circles.json
 </summary> 
 <p>
 
+{::nomarkdown}
+
 An array of objects containing a set of key-value pairs that represent the relevant data about the units that should be displayed in the visualization.
 
 The data is assumed to be in tidy format, i.e., each object in the array must represent a *single* unit in a *single* time period.
@@ -27,6 +29,8 @@ Henceforth:
   - An object in the `circles.json` array will often be referred to as a "row", or an "observation".
   - The term "unit" will be used to denote the group of rows belonging to the same observational agent (e.g., a firm, a political party,...) across time periods.
   - Beyond the required time-stamps, x-y coordinates, and unit identifiers, additional data about observations will be referred to as "features".
+
+{:/nomarkdown}
 
 </p>
 </details>
