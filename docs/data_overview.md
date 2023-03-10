@@ -13,13 +13,8 @@ The three `json` files must be located in the `src/data` folder:
 (Click on triangles to expand/collapse details about each file.)
 
 <!-- https://stackoverflow.com/questions/52214187/how-can-i-fold-content-in-github-markdown -->
-<details closed>
-<summary style = "font-size: 17px; font-weight: bold">  
-circles.json 
-</summary> 
-<p>
 
-{::nomarkdown}
+## `circles.json` 
 
 An array of objects containing a set of key-value pairs that represent the relevant data about the units that should be displayed in the visualization.
 
@@ -30,16 +25,7 @@ Henceforth:
   - The term "unit" will be used to denote the group of rows belonging to the same observational agent (e.g., a firm, a political party,...) across time periods.
   - Beyond the required time-stamps, x-y coordinates, and unit identifiers, additional data about observations will be referred to as "features".
 
-{:/nomarkdown}
-
-</p>
-</details>
-
-<details closed>
-<summary style = "font-size: 17px; font-weight: bold">
- metadata.json 
- </summary>
-<p>
+ ## `metadata.json` 
 
 An array of objects containing a set of key-value pairs that provides additional information about:
 
@@ -47,14 +33,7 @@ An array of objects containing a set of key-value pairs that provides additional
   - How these features should be taken into account in the visualization,
   - How these features should be taken into account in the app's UI.
 
-</p>
-</details>
-
-<details closed>
-<summary style = "font-size: 17px; font-weight: bold"> 
-arrows.json 
-</summary>
-<p>
+## `arrows.json`
 
 An array of objects containing a set of key-value pairs that represent the relevant data about the arrows that should be displayed in the visualization.
 
@@ -62,7 +41,7 @@ The data is assumed to be in tidy format, i.e., each object in the array must re
 
 The file is **required** *even if no arrows should be displayed* in the visualization. To display no arrows, simply provide an empty array, i.e., `[]`.
 
-</p>
-</details>
+
+
 
 
