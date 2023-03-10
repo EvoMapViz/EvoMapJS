@@ -25,7 +25,7 @@ Henceforth:
   - The term "unit" will be used to denote the group of rows belonging to the same observational agent (e.g., a firm, a political party,...) across time periods.
   - Beyond the required time-stamps, x-y coordinates, and unit identifiers, additional data about observations will be referred to as "features".
 
- ## `metadata.json` 
+## `metadata.json` 
 
 An array of objects containing a set of key-value pairs that provides additional information about:
 
