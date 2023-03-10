@@ -1,6 +1,6 @@
 ---
 layout: default
-title: cicrles.json
+title: circles.json
 nav_order: 1
 parent: Data requirements - Details and effects on visualization
 ---
