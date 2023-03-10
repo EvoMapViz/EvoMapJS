@@ -17,9 +17,8 @@ circles.json
 Key-value pairs (each row):
 <br />
 
-<blockquote>
+`name` (required): the name of the unit corresponding to the observation.
 
- `name` (required): the name of the unit corresponding to the observation.
   - *Acceptable*: Any string.
 
 `time` (required): the time period for the observation.
@@ -46,8 +45,6 @@ Key-value pairs (each row):
  
 `discrete_feature_d` (optional): a discrete feature of the unit at `time`.
   - *Acceptable*: Any string or number.
-
-</blockquote>
 
 <br />
 Further requirements and info: 
