@@ -435,26 +435,26 @@ key-value pairs (each row)
 </h4>
 <p><br /></p>
 <blockquote>
-<p><code>name</code> (required): the name of the unit corresponding to
+<p><code>name</code> [required]: the name of the unit corresponding to
 the observation. - <em>Acceptable values</em>: Any string.</p>
-<p><code>time</code> (required): the time period for the observation. -
+<p><code>time</code> [required]: the time period for the observation. -
 <em>Acceptable values</em>: Any integer.</p>
-<p><code>x</code> (required): the x coordinate of the unit at
+<p><code>x</code> [required]: the x coordinate of the unit at
 <code>time</code>. - <em>Acceptable values</em>: Any number.</p>
-<p><code>y</code>(required): the y coordinate of the unit at
+<p><code>y</code>[required]: the y coordinate of the unit at
 <code>time</code>. - <em>Acceptable values</em>: Any number.</p>
-<p><code>continuous_feature_1</code> (optional): a continuous feature of
+<p><code>continuous_feature_1</code> [optional]: a continuous feature of
 the unit at <code>time</code>. - <em>Acceptable values</em>: Any string
 or number.</p>
 <p>⋮</p>
-<p><code>continuous_feature_c</code> (optional): a continuous feature of
+<p><code>continuous_feature_c</code> [optional]: a continuous feature of
 the unit at <code>time</code>. - <em>Acceptable values</em>: Any string
 or number.</p>
-<p><code>discrete_feature_1</code> (optional): a discrete feature of the
+<p><code>discrete_feature_1</code> [optional]: a discrete feature of the
 unit at <code>time</code>. - <em>Acceptable values</em>: Any string or
 number.</p>
 <p>⋮</p>
-<p><code>discrete_feature_d</code> (optional): a discrete feature of the
+<p><code>discrete_feature_d</code> [optional]: a discrete feature of the
 unit at <code>time</code>. - <em>Acceptable values</em>: Any string or
 number.</p>
 </blockquote>
@@ -520,17 +520,17 @@ identify <strong>at least</strong> <em>one</em> of these features as
 <em>“continuous”</em>.</p></li>
 <li><p>For each object in the array, the key-value pairs are:</p>
 <ul>
-<li><code>name</code> (required): The name of the feature.
+<li><code>name</code> [required]: The name of the feature.
 <ul>
 <li><em>Acceptable values</em>: Any string that matches the name of a
 feature in <code>circles.json</code>.</li>
 </ul></li>
-<li><code>label</code> (required): The label of the feature as it should
+<li><code>label</code> [required]: The label of the feature as it should
 be displayed in the app’s UI.
 <ul>
 <li><em>Acceptable values</em>: Any string.</li>
 </ul></li>
-<li><code>type</code> (optional): The type of the feature. Must be
+<li><code>type</code> [optional]: The type of the feature. Must be
 either “continuous” or “discrete”.
 <ul>
 <li><em>Default if not included</em>: <code>&quot;discrete&quot;</code>.</li>
@@ -552,7 +552,7 @@ numerical format in <code>circle.json</code>).</li>
 </ul></li>
 </ul></li>
 </ul></li>
-<li><code>tooltip</code> (optional):
+<li><code>tooltip</code> [optional]:
 <ul>
 <li><em>Acceptable values</em>: <code>&quot;true&quot;</code>,
 <code>&quot;false&quot;</code>, <code>&quot;only&quot;</code>.</li>
@@ -724,23 +724,23 @@ work with <code>src/data/circles_TEMPLATE_DO_NOT_ERASE.json</code>.</li>
 <ul>
 <li><p>For each object in the array, the key-value pairs are:</p>
 <ul>
-<li><code>name</code> (required): The name of the arrow as it will be
+<li><code>name</code> [required]: The name of the arrow as it will be
 displayed in the app (also serves as a technical identifier inside the
 code).
 <ul>
 <li><em>Acceptable values</em>: Any string.</li>
 </ul></li>
-<li><code>x</code> (required): The x-coordinate of the arrow’s head.
+<li><code>x</code> [required]: The x-coordinate of the arrow’s head.
 <ul>
 <li><em>Acceptable values</em>: Any number.</li>
 <li>By default, all arrows tails are placed x = 0.</li>
 </ul></li>
-<li><code>y</code> (required): The y-coordinate of the arrow’s head.
+<li><code>y</code> [required]: The y-coordinate of the arrow’s head.
 <ul>
 <li><em>Acceptable values</em>: Any number.</li>
 <li>By default, all arrows tails are placed at y = 0.</li>
 </ul></li>
-<li><code>time</code> (required): The time at which the arrow’s head is
+<li><code>time</code> [required]: The time at which the arrow’s head is
 located.
 <ul>
 <li><em>Acceptable values</em>: Any number in the range of time periods

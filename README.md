@@ -73,32 +73,32 @@ Key-value pairs (each row):
 
 
 
-  > `name` (required): the name of the unit corresponding to the observation.
+  > `name` [required]: the name of the unit corresponding to the observation.
   >  - *Acceptable*: Any string.
   >
-  >`time` (required): the time period for the observation.
+  >`time` [required]: the time period for the observation.
   >  - *Acceptable*: Any integer.
   >
-  >`x` (required): the x coordinate of the unit at `time`.
+  >`x` [required]: the x coordinate of the unit at `time`.
   >  - *Acceptable*: Any number.
   > 
-  >`y`(required): the y coordinate of the unit at `time`.
+  >`y`[required]: the y coordinate of the unit at `time`.
   >  - *Acceptable*: Any number.
   > 
-  >`continuous_feature_1` (optional): a continuous feature of the unit at `time`.
+  >`continuous_feature_1` [optional]: a continuous feature of the unit at `time`.
   >  - *Acceptable*: Any string or number.
   >
   > ⋮
   >
-  >`continuous_feature_c` (optional): a continuous feature of the unit at `time`.
+  >`continuous_feature_c` [optional]: a continuous feature of the unit at `time`.
   >  - *Acceptable*: Any string or number.
   >
-  >`discrete_feature_1` (optional): a discrete feature of the unit at `time`.
+  >`discrete_feature_1` [optional]: a discrete feature of the unit at `time`.
   >  - *Acceptable*: Any string or number.
   >
   > ⋮
   > 
-  >`discrete_feature_d` (optional): a discrete feature of the unit at `time`.
+  >`discrete_feature_d` [optional]: a discrete feature of the unit at `time`.
   >  - *Acceptable*: Any string or number.
 
 <br />
@@ -149,14 +149,14 @@ The array must contain **at least** *one object corresponding to a feature* from
 
 For each object in the array, the key-value pairs are:
 
-> `name` (required): The name of the feature.
+> `name` [required]: The name of the feature.
 >   - *Acceptable*: Any string that matches the name of a feature in `circles.json`.
 > 
-> `label` (required): The label of the feature as it should be displayed
+> `label` [required]: The label of the feature as it should be displayed
 > in the app's UI.
 >   - *Acceptable*: Any string.
 > 
-> `type` (optional): The type of the feature. Must be either
+> `type` [optional]: The type of the feature. Must be either
 > "continuous" or "discrete".
 >   - *Default*: `"discrete"`.
 >   - *Acceptable*: `"continuous"`, `"discrete"`.
@@ -167,7 +167,7 @@ For each object in the array, the key-value pairs are:
 >      - Feature appears in the "Color" selector menu of the app's UI unless the `tooltip` key is set to `"only"`.
 >      - Feature will be treated as categorical (even if it is supplied in a numerical format in `circle.json`).
 > 
-> `tooltip` (optional): 
+> `tooltip` [optional]: 
 >   - *Acceptable*: `"true"`, `"false"`, `"only"`.
 >   - *Default*: `"false"`.
 >   - `"true"`: 
@@ -188,7 +188,7 @@ For each object in the array, the key-value pairs are:
 > up-to-date. TO DO: Update this documentation to better reflect the
 > current state of the app and unify formatting !!!.
 > 
-> `color_bins` (optional):   
+> `color_bins` [optional]:   
 >   -	*Acceptable*: An array of numbers, e.g., `[1,10,100,300,600]`.
 >   - *Default*: 
 >       - Features marked as "continuous" :The quintiles of the feature's distribution.
@@ -196,7 +196,7 @@ For each object in the array, the key-value pairs are:
 >   -	For features marked as "continuous", determines how circles are binned into discrete categories when the feature is selected in the "Color" selector (e.g., `"color_bins": [1,10,100,300,600]` bins the feature based on whether its value is between its minimum value and 1, between 1 and 10, …, between 300 and 600, and between 600 and the feature's maximum value).
 >   - No effect on features marked as "discrete".
 > 
-> `size_legend_bins` (optional):   
+> `size_legend_bins` [optional]:   
 >   - *Acceptable*: An array of numbers, e.g., `[5, 100,300,600]`.
 >   - *Default*: 
 >       - Features marked as "continuous" :10%, 50%, and 100% quantiles of the feature's distribution.
@@ -204,7 +204,7 @@ For each object in the array, the key-value pairs are:
 >   - Determines the set of values of features marked as "continuous" for which a bubble-size is displayed in the size-legend.
 >   - No effect on features marked as "discrete".
 > 
-> `scale_increasing` (optional): 
+> `scale_increasing` [optional]: 
 >   - *Acceptable*: `“true”`, `“false”`.
 >   - *Default*: `“true”` for features marked as "continous", `undefined` for features marked as "discrete".
 >   - `true`: For features marked as "continuous", when the feature is selected through the "Size" selector, makes 
@@ -216,17 +216,17 @@ proportional (`“true”`) or inversely proportional (“false”) to the corre
 >   - circle sizes inversely proportional to the corresponding continuous feature.
 >  - No effect on features marked as "discrete".
 >
-> `scale_minSize` (optional):
+> `scale_minSize` [optional]:
 >   -	*Acceptable*: a single number.
 >   - *Default*: `1`.
 >   -	Determines the lowest possible circle-size. 
 >
->`scale_maxSize` (optional):   
+>`scale_maxSize` [optional]:   
 >   -	*Acceptable*: a single number.
 >   - *Default*: `50`.
 >   -	Determines the highest possible circle-size. 
 >
->`scale_exponent` (optional):
+>`scale_exponent` [optional]:
 >   -  *Acceptable*: a single number.
 >   - *Default*: `1`.
 >   - Determines the curvature of the matching between the values of a feature identified as “continuous” and the corresponding circle-sizes.
@@ -242,7 +242,7 @@ proportional (`“true”`) or inversely proportional (“false”) to the corre
 >   - Determines whether a unit sign is appended whenever the value of a continuous feature is displayed, whether in legends or in tooltips. 
 >   - No effect on features marked as "discrete".
 >
->`truncate_label` (optional):   
+>`truncate_label` [optional]:   
 >   - *Acceptable*: A single number.
 >   - *Default*: `9`.
 >   - Determines the number of characters after which the feature’s name label is truncated when displayed in the tooltip.  
@@ -290,18 +290,18 @@ For a full example of the data format, see `src/data/metadata_TEMPLATE_DO_NOT_ER
 
 Key-value pairs:
 
-> `name` (required): The name of the arrow as it will be displayed in the app >(also serves as a technical identifier inside the code).
+> `name` [required]: The name of the arrow as it will be displayed in the app >(also serves as a technical identifier inside the code).
 >  - *Acceptable*: Any string.
 >
->`x` (required): The x-coordinate of the arrow's head.
+>`x` [required]: The x-coordinate of the arrow's head.
 >  - *Acceptable*: Any number.
 >  - By default, all arrows tails are placed x = 0.
 >
->`y` (required): The y-coordinate of the arrow's head.
+>`y` [required]: The y-coordinate of the arrow's head.
 >  - *Acceptable*: Any number.
 >  - By default, all arrows tails are placed at y = 0.
 >
->`time` (required): The time at which the arrow's head is located.
+>`time` [required]: The time at which the arrow's head is located.
 >  - *Acceptable*: Any number in the range of time periods included in `circle.json`.
 
 </br>

@@ -11,14 +11,14 @@ parent: Inputs - Details and effects on visualization
 
 ## Key-value pairs (each row)
 
-- `name` (required): The name of the feature.
+- `name` [required]: The name of the feature.
   - *Acceptable*: Any string that matches the name of a feature in `circles.json`.
 
-- `label` (required): The label of the feature as it should be displayed
+- `label` [required]: The label of the feature as it should be displayed
 in the app's UI.
   - *Acceptable*: Any string.
 
-- `type` (optional): The type of the feature. Must be either
+- `type` [optional]: The type of the feature. Must be either
 "continuous" or "discrete".
   - *Default*: `"discrete"`.
   - *Acceptable*: `"continuous"`, `"discrete"`.
@@ -29,7 +29,7 @@ in the app's UI.
      - Feature appears in the "Color" selector menu of the app's UI unless the `tooltip` key is set to `"only"`.
      - Feature will be treated as categorical (even if it is supplied in a numerical format in `circle.json`).
 
-- `tooltip` (optional): 
+- `tooltip` [optional]: 
   - *Acceptable*: `"true"`, `"false"`, `"only"`.
   - *Default*: `"false"`.
   - `"true"`: 
@@ -50,7 +50,7 @@ It is a barely edited copy-paste from old documentation and may not be
 up-to-date. TO DO: Update this documentation to better reflect the
 current state of the app and unify formatting !!!.
 
-- `color_bins` (optional):   
+- `color_bins` [optional]:   
   -	*Acceptable*: An array of numbers, e.g., `[1,10,100,300,600]`.
   - *Default*: 
       - Features marked as "continuous" :The quintiles of the feature's distribution.
@@ -58,7 +58,7 @@ current state of the app and unify formatting !!!.
   -	For features marked as "continuous", determines how circles are binned into discrete categories when the feature is selected in the "Color" selector (e.g., `"color_bins": [1,10,100,300,600]` bins the feature based on whether its value is between its minimum value and 1, between 1 and 10, …, between 300 and 600, and between 600 and the feature's maximum value).
   - No effect on features marked as "discrete".
 
-- `size_legend_bins` (optional):   
+- `size_legend_bins` [optional]:   
   - *Acceptable*: An array of numbers, e.g., `[5, 100,300,600]`.
   - *Default*: 
       - Features marked as "continuous" :10%, 50%, and 100% quantiles of the feature's distribution.
@@ -66,7 +66,7 @@ current state of the app and unify formatting !!!.
   - Determines the set of values of features marked as "continuous" for which a bubble-size is displayed in the size-legend.
   - No effect on features marked as "discrete".
 
-- `scale_increasing` (optional): 
+- `scale_increasing` [optional]: 
   - *Acceptable*: `“true”`, `“false”`.
   - *Default*: `“true”` for features marked as "continous", `undefined` for features marked as "discrete".
   - `true`: For features marked as "continuous", when the feature is selected through the "Size" selector, makes 
@@ -78,17 +78,17 @@ proportional (`“true”`) or inversely proportional (“false”) to the corre
   - circle sizes inversely proportional to the corresponding continuous feature.
  - No effect on features marked as "discrete".
 
-- `scale_minSize` (optional):
+- `scale_minSize` [optional]:
   -	*Acceptable*: a single number.
   - *Default*: `1`.
   -	Determines the lowest possible circle-size. 
 
-- `scale_maxSize` (optional):   
+- `scale_maxSize` [optional]:   
   -	*Acceptable*: a single number.
   - *Default*: `50`.
   -	Determines the highest possible circle-size. 
 
-- `scale_exponent` (optional):
+- `scale_exponent` [optional]:
   -  *Acceptable*: a single number.
   - *Default*: `1`.
   - Determines the curvature of the matching between the values of a feature identified as “continuous” and the corresponding circle-sizes.
@@ -104,7 +104,7 @@ proportional (`“true”`) or inversely proportional (“false”) to the corre
   - Determines whether a unit sign is appended whenever the value of a continuous feature is displayed, whether in legends or in tooltips. 
   - No effect on features marked as "discrete".
 
-- `truncate_label` (optional):   
+- `truncate_label` [optional]:   
   - *Acceptable*: A single number.
   - *Default*: `9`.
   - Determines the number of characters after which the feature’s name label is truncated when displayed in the tooltip.  

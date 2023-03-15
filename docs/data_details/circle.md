@@ -10,32 +10,32 @@ parent: Inputs - Details and effects on visualization
 ## Key-value pairs (each row)
 
 
-- `name` (required): the name of the unit corresponding to the observation.
+- `name` [required]: the name of the unit corresponding to the observation.
   - *Acceptable*: Any string.
 
-- `time` (required): the time period for the observation.
+- `time` [required]: the time period for the observation.
   - *Acceptable*: Any integer.
 
-`x` (required): the x coordinate of the unit at `time`.
+`x` [required]: the x coordinate of the unit at `time`.
   - *Acceptable*: Any number.
  
-`y`(required): the y coordinate of the unit at `time`.
+`y`[required]: the y coordinate of the unit at `time`.
   - *Acceptable*: Any number.
  
-- `continuous_feature_1` (optional): a continuous feature of the unit at `time`.
+- `continuous_feature_1` [optional]: a continuous feature of the unit at `time`.
   - *Acceptable*: Any string or number.
 
  ⋮
 
-- `continuous_feature_c` (optional): a continuous feature of the unit at `time`.
+- `continuous_feature_c` [optional]: a continuous feature of the unit at `time`.
   - *Acceptable*: Any string or number.
 
-- `discrete_feature_1` (optional): a discrete feature of the unit at `time`.
+- `discrete_feature_1` [optional]: a discrete feature of the unit at `time`.
   - *Acceptable*: Any string or number.
 
  ⋮
  
-- `discrete_feature_d` (optional): a discrete feature of the unit at `time`.
+- `discrete_feature_d` [optional]: a discrete feature of the unit at `time`.
   - *Acceptable*: Any string or number.
 
 

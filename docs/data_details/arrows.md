@@ -8,18 +8,18 @@ parent: Inputs - Details and effects on visualization
 
 ## Key-value pairs
 
-- `name` (required): The name of the arrow as it will be displayed in the app >(also serves as a technical identifier inside the code).
- - *Acceptable*: Any string.
+- `name` [required]: The name of the arrow as it will be displayed in the app >(also serves as a technical identifier inside the code).
+  - *Acceptable*: Any string.
 
-- `x` (required): The x-coordinate of the arrow's head.
- - *Acceptable*: Any number.
- - By default, all arrows tails are placed x = 0.
+- `x` [required]: The x-coordinate of the arrow's head.
+  - *Acceptable*: Any number.
+  - By default, all arrows tails are placed x = 0.
 
-- `y` (required): The y-coordinate of the arrow's head.
- - *Acceptable*: Any number.
- - By default, all arrows tails are placed at y = 0.
+- `y` [required]: The y-coordinate of the arrow's head.
+  - *Acceptable*: Any number.
+  - By default, all arrows tails are placed at y = 0.
 
-- `time` (required): The time at which the arrow's head is located.
+- `time` [required]: The time at which the arrow's head is located.
  - *Acceptable*: Any number in the range of time periods included in `circle.json`.
 
 </br>
