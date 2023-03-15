@@ -11,14 +11,18 @@ parent: Inputs - Details and effects on visualization
 
 ## Key-value pairs (each row)
 
-- `name` [required]: The name of the feature.
+#### Required
+
+`name` : The name of the feature.
    - *Acceptable*: Any string that matches the name of a feature in `circles.json`.
 
-- `label` [required]: The label of the feature as it should be displayed
+`label` : The label of the feature as it should be displayed
 in the app's UI.
    - *Acceptable*: Any string.
 
-- `type` [optional]: The type of the feature. Must be either
+#### Optional
+
+`type` : The type of the feature. Must be either
 "continuous" or "discrete".
   - *Default*: `"discrete"`.
   - *Acceptable*: `"continuous"`, `"discrete"`.
@@ -29,7 +33,7 @@ in the app's UI.
      - Feature appears in the "Color" selector menu of the app's UI unless the `tooltip` key is set to `"only"`.
      - Feature will be treated as categorical (even if it is supplied in a numerical format in `circle.json`).
 
-- `tooltip` [optional]: 
+`tooltip` : 
    - *Acceptable*: `"true"`, `"false"`, `"only"`.
    - *Default*: `"false"`.
    - `"true"`: 
@@ -44,7 +48,7 @@ in the app's UI.
 `metadata.json` has `tooltip` set of `"true"` or `"only"`, the
 dimensions of the tooltip will be slightly off.
 
-- `color_bins` [optional]:   
+`color_bins` :   
   -	*Acceptable*: An array of numbers, e.g., `[1,10,100,300,600]`.
   - *Default*: 
       - Features marked as "continuous" :The quintiles of the feature's distribution.
@@ -52,7 +56,7 @@ dimensions of the tooltip will be slightly off.
   -	For features marked as "continuous", determines how circles are binned into discrete categories when the feature is selected in the "Color" selector (e.g., `"color_bins": [1,10,100,300,600]` bins the feature based on whether its value is between its minimum value and 1, between 1 and 10, …, between 300 and 600, and between 600 and the feature's maximum value).
   - No effect on features marked as "discrete".
 
-- `size_legend_bins` [optional]:   
+`size_legend_bins` :   
   - *Acceptable*: An array of numbers, e.g., `[5, 100,300,600]`.
   - *Default*: 
       - Features marked as "continuous" :10%, 50%, and 100% quantiles of the feature's distribution.
@@ -60,7 +64,7 @@ dimensions of the tooltip will be slightly off.
   - Determines the set of values of features marked as "continuous" for which a bubble-size is displayed in the size-legend.
   - No effect on features marked as "discrete".
 
-- `scale_increasing` [optional]: 
+`scale_increasing` : 
   - *Acceptable*: `“true”`, `“false”`.
   - *Default*: `“true”` for features marked as "continous", `undefined` for features marked as "discrete".
   - `true`: For features marked as "continuous", when the feature is selected through the "Size" selector, makes 
@@ -72,17 +76,17 @@ proportional (`“true”`) or inversely proportional (“false”) to the corre
    - circle sizes inversely proportional to the corresponding continuous feature.
  - No effect on features marked as "discrete".
 
-- `scale_minSize` [optional]:
+`scale_minSize` :
    -	*Acceptable*: a single number.
    - *Default*: `1`.
    -	Determines the lowest possible circle-size. 
 
-- `scale_maxSize` [optional]:   
+`scale_maxSize` :   
    -	*Acceptable*: a single number.
    - *Default*: `50`.
    -	Determines the highest possible circle-size. 
 
-- `scale_exponent` [optional]:
+`scale_exponent` :
    -  *Acceptable*: a single number.
    - *Default*: `1`.
    - Determines the curvature of the matching between the values of a feature identified as “continuous” and the corresponding circle-sizes.
@@ -90,25 +94,25 @@ proportional (`“true”`) or inversely proportional (“false”) to the corre
      - A value above 1 corresponds to a concave scale, i.e., starting from `scale_minSize`, sizes will first increase fast with the value of the feature, and then increase slower and slower as they approach
 `scale_maxSize`.
      - A value below 1 corresponds to a convex scale, i.e., starting from `scale_minSize`, sizes will first increase slowly with the value of the feature, and then increase faster and faster as they approach `scale_maxSize`. 
- - No effect on features marked as "discrete".
+   - No effect on features marked as "discrete".
 
-- `unit`:
+`unit`:
    - *Acceptable*: A string (`"B"`, `"USD"`, or `"$"`).
    - *Default*: empty string `""`.
    - Determines whether a unit sign is appended whenever the value of a continuous feature is displayed, whether in legends or in tooltips. 
    - No effect on features marked as "discrete".
 
-- `truncate_label` [optional]:   
+truncate_label` :   
    - *Acceptable*: A single number.
    - *Default*: `9`.
    - Determines the number of characters after which the feature’s name label is truncated when displayed in the tooltip.  
 
-- `truncate_value`:   
+`truncate_value`:   
    - *Acceptable*: A single number.
    - *Default*: `6`.
    - Determines the number of characters after which whether the value of the feature is truncated when displayed in the tooltip.  
 
-- `legend_dline_extral`:  
+`legend_dline_extral`:  
    - *Acceptable*: A single number.
    - *Default*: `10`.
    - For features marked as "continuous", determines the base-length of the dashed line connecting bubble-sizes to their label in the size-legend.
