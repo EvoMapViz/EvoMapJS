@@ -7,7 +7,8 @@ parent: Inputs - Details and effects on visualization
 
 # metadata.json
 
-*Note:* The array must contain **at least** *one object corresponding to a feature* from `circles.json`, and must identify **at least** *one* of these features as *"continuous"*.
+{: .note-title }
+The array must contain **at least** *one object corresponding to a feature* from `circles.json`, and must identify **at least** *one* of these features as *"continuous"*.
 
 ## Key-value pairs (each row)
 
