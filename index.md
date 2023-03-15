@@ -9,9 +9,16 @@ description: "A JS Toolbox for Mapping Evolving Relationship Data."
 
 This tutorial provides a quick overview about the different tools available in EvoMapJS.
 
-In general, input data is expected in the form of either higher-dimensional feature vectors, or in the form of pairwise relationships.
+To install the app *locally*:
 
-Given such data, evomap provides a flexible set of tools to process and manipulate the data, map it to lower-dimensional space, and to evaluate and explore the resultant maps.
+- Clone the github repo.
+- Open the terminal and navigate inside the terminal to its local repository (`cd local_path_of_githb_repo`).
+- Run `npm i` (this will installs `Node.js` module dependencies for `React`).
+- Run `npm start` (the will starts the local server environment for the app).
+- The app should open automatically in your default browser. 
+If it does not, open a browser and navigate to [http://localhost:3000/](http://localhost:3000/). 
+
+See [https://evomapviz.github.io/EvoMapJS/docs/deploy/](https://evomapviz.github.io/EvoMapJS/docs/deploy/) for a guide on how to deploy the app *online*.
 
 # Background
 
@@ -23,7 +30,7 @@ References
 
 [1] Matthe, M., Ringel, D. M., Skiera, B. (2022), "Mapping Market Structure Evolution", Marketing Science, forthcoming.
 
-Read the full paper here (open access): https://doi.org/10.1287/mksc.2022.1385
+Read the full paper here (open access): [https://doi.org/10.1287/mksc.2022.1385](https://doi.org/10.1287/mksc.2022.1385)
 
 Contact: For questions or feedback, please [get in touch].
 

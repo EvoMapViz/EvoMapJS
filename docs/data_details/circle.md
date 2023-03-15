@@ -2,7 +2,7 @@
 layout: default
 title: circles.json
 nav_order: 1
-parent: Inputs - Details and effects on visualization
+parent: Inputs - Details
 ---
 
 # `circles.json`
@@ -10,35 +10,45 @@ parent: Inputs - Details and effects on visualization
 ## Key-value pairs (each row)
 
 #### Required
+{: .mb-lg-3 }
 
-- `name` : the name of the unit corresponding to the observation.
+> <span style="font-size:larger;"><code>name</code></span> : the name of the unit corresponding to the observation.
+
    - *Acceptable*: Any string.
 
-- `time` : the time period for the observation.
+> <span style="font-size:larger;"><code>time</code></span> : the time period for the observation.
+
    - *Acceptable*: Any integer.
 
-- `x` : the x coordinate of the unit at `time`.
+> <span style="font-size:larger;"><code>x</code></span> : the x coordinate of the unit at `time`.
+
    - *Acceptable*: Any number.
  
-- `y`: the y coordinate of the unit at `time`.
+> <span style="font-size:larger;"><code>y</code></span> : the y coordinate of the unit at `time`.
+
    - *Acceptable*: Any number.
  
 #### Optional
+{: .mb-lg-3 }
 
-- `continuous_feature_1` : a continuous feature of the unit at `time`.
+> <span style="font-size:larger;"><code>continuous_feature_1</code></span> : a continuous feature of the unit at `time`.
+
    - *Acceptable*: Any string or number.
 
  ⋮
 
-- `continuous_feature_c` : a continuous feature of the unit at `time`.
+> <span style="font-size:larger;"><code>continuous_feature_c</code></span> : a continuous feature of the unit at `time`.
+
    - *Acceptable*: Any string or number.
 
-- `discrete_feature_1` : a discrete feature of the unit at `time`.
+> <span style="font-size:larger;"><code>discrete_feature_1</code></span> : a discrete feature of the unit at `time`.
+
    - *Acceptable*: Any string or number.
 
  ⋮
  
-- `discrete_feature_d` : a discrete feature of the unit at `time`.
+> <span style="font-size:larger;"><code>discrete_feature_d</code></span> : a discrete feature of the unit at `time`.
+
    - *Acceptable*: Any string or number.
 
 
@@ -70,7 +80,7 @@ parent: Inputs - Details and effects on visualization
 ]
 ```
 
-For a full example of the data format, see `src/data/circles_TEMPLATE_DO_NOT_ERASE.json` in this repository.
+For a full example of the data format, see [https://github.com/EvoMapViz/EvoMapJS/blob/main/src/data/circles_TEMPLATE_DO_NOT_ERASE.json](https://github.com/EvoMapViz/EvoMapJS/blob/main/src/data/circles_TEMPLATE_DO_NOT_ERASE.json) in this repository.
   - This is a reference template that should *not* be erased. 
   You should copy it, rename it to `circles.json`, and experiment with editing the latter with your own data (you can always revert to the template if you break the data format and want a fresh start).
 

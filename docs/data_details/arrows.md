@@ -1,34 +1,37 @@
 ---
 layout: default
 title: arrow.json
-parent: Inputs - Details and effects on visualization
+parent: Inputs - Details
 ---
 
 # `arrows.json`
 
 ## Key-value pairs
 
-#### Requires
+#### Required
+{: .mb-lg-3 }
 
-- `name` : The name of the arrow as it will be displayed in the app >(also serves as a technical identifier inside the code).
+> <span style="font-size:larger;"><code>name</code></span> : The name of the arrow as it will be displayed in the app >(also serves as a technical identifier inside the code).
+
    - *Acceptable*: Any string.
 
-- `x` : The x-coordinate of the arrow's head.
+> <span style="font-size:larger;"><code>x</code></span> : The x-coordinate of the arrow's head.
+
    - *Acceptable*: Any number.
    - By default, all arrows tails are placed x = 0.
 
-- `y` : The y-coordinate of the arrow's head.
+> <span style="font-size:larger;"><code>y</code></span> : The y-coordinate of the arrow's head.
+
    - *Acceptable*: Any number.
    - By default, all arrows tails are placed at y = 0.
 
-- `time` : The time at which the arrow's head is located.
+> <span style="font-size:larger;"><code>time</code></span> : The time at which the arrow's head is located.
+
    - *Acceptable*: Any number in the range of time periods included in `circle.json`.
 
-</br>
-
-{: .note-title }
+{: .note }
 Support for missing time periods has not been tested. 
-For *each* arrow identified in `arrows.json`, It is safest to provide `x` and `y` coordinates for *all* time periods included in `circle.json`. 
+For *each* arrow identified in `arrows.json`, it is safest to provide `x` and `y` coordinates for *all* time periods included in `circle.json`. 
 
 ## Prototype of valid format
 
@@ -56,6 +59,6 @@ For *each* arrow identified in `arrows.json`, It is safest to provide `x` and `y
   ```
 
 
-For a full example of the data format, see `src/data/arrows_TEMPLATE_DO_NOT_ERASE.json` in this repository.
+For a full example of the data format, see [url https://github.com/EvoMapViz/EvoMapJS/blob/main/src/data/arrows_TEMPLATE_DO_NOT_ERASE.json](https://github.com/EvoMapViz/EvoMapJS/blob/main/src/data/arrows_TEMPLATE_DO_NOT_ERASE.json) in this repository.
   - This is reference template that should *not* be erased. 
   You should copy it, rename it to `arrows.json`, and experiment editing the latter with your own data (you can always revert to the template if you break the data format and want a fresh start).
