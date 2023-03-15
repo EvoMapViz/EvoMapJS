@@ -24,7 +24,7 @@ nav_order: 4
 
 ## Local
 
-- After running `npm start` (starts the local server environment for the app), edit `circle.json`, `metadata.json`, or `arrows.json` locally in the `src/data` folder.
+- After running `npm start` (which starts the local server environment for the app), edit `circle.json`, `metadata.json`, or `arrows.json` locally in the `src/data` folder.
 - After you save your updates locally, the local deployment of your app at [http://localhost:3000/](http://localhost:3000/) should automatically update in your browser.
 
 
