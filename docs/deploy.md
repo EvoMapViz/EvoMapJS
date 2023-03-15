@@ -6,14 +6,14 @@ nav_order: 3
 
 # Deploy online (Netlify)
 
-## Existing turnkey deployement synced with Github repository
+### Existing turnkey deployement synced with Github repository
 
   - The app has already been deployed to a Netlify environment that is synced with the
 github repository [https://github.com/EvoMapViz/EvoMapJS](https://github.com/EvoMapViz/EvoMapJS).
   - The deployment settings can be accessed at [https://app.netlify.com/sites/lustrous-pixie-414f67/overview](https://app.netlify.com/sites/lustrous-pixie-414f67/overview) (login through Github with EvoMapViz account).
   - The deployed app can be accessed at [https://lustrous-pixie-414f67.netlify.app/](https://lustrous-pixie-414f67.netlify.app/).
 
-## Redeploying the app from scratch on Netlify from Github repository
+### Redeploying the app from scratch on Netlify from Github repository
 
   - Copy [https://github.com/EvoMapViz/EvoMapJS](https://github.com/EvoMapViz/EvoMapJS) to a separate Github repository of your own.
   - Create a Netlify account and link it to your Github account.

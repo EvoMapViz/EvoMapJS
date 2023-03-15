@@ -6,13 +6,13 @@ nav_order: 2
 
 # Inputs: Overview and terminology
 
-The app requires three `json` input files, each made of a single array of objects. 
+The app requires the three `json` input files listed below.
+Each of these three `json` is made of a single array of objects. 
 The objects themselves can only contain key-value pairs. 
-The three `json` files must be located in the `src/data` folder:
+The three `json` files must be located in the `src/data` folder.
 
-<!-- https://stackoverflow.com/questions/52214187/how-can-i-fold-content-in-github-markdown -->
-
-## `circles.json` 
+### `circles.json` 
+{: .mb-lg-3 }
 
 An array of objects containing a set of key-value pairs that represent the relevant data about the units that should be displayed in the visualization.
 
@@ -23,7 +23,8 @@ Henceforth:
   - The term "unit" will be used to denote the group of rows belonging to the same observational agent (e.g., a firm, a political party,...) across time periods.
   - Beyond the required time-stamps, x-y coordinates, and unit identifiers, additional data about observations will be referred to as "features".
 
-## `metadata.json` 
+### `metadata.json` 
+{: .mb-lg-3 }
 
 An array of objects containing a set of key-value pairs that provides additional information about:
 
@@ -31,7 +32,8 @@ An array of objects containing a set of key-value pairs that provides additional
   - How these features should be taken into account in the visualization,
   - How these features should be taken into account in the app's UI.
 
-## `arrows.json`
+### `arrows.json`
+{: .mb-lg-3 }
 
 An array of objects containing a set of key-value pairs that represent the relevant data about the arrows that should be displayed in the visualization.
 
