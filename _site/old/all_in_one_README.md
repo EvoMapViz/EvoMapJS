@@ -1,4 +1,4 @@
-# EvoMapJS
+# EvoMapJS - A JavaScript Toolbox for Mapping Evolving Relationship Data
 
 ## Inputs: Overview
 
