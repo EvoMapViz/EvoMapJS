@@ -4,7 +4,7 @@ title: arrow.json
 parent: Inputs - Details and effects on visualization
 ---
 
-# arrows.json
+# `arrows.json`
 
 ## Key-value pairs
 
