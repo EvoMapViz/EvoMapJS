@@ -8,24 +8,27 @@ parent: Inputs - Details and effects on visualization
 
 ## Key-value pairs
 
-- `name` [required]: The name of the arrow as it will be displayed in the app >(also serves as a technical identifier inside the code).
+#### Requires
+
+- `name` : The name of the arrow as it will be displayed in the app >(also serves as a technical identifier inside the code).
    - *Acceptable*: Any string.
 
-- `x` [required]: The x-coordinate of the arrow's head.
+- `x` : The x-coordinate of the arrow's head.
    - *Acceptable*: Any number.
    - By default, all arrows tails are placed x = 0.
 
-- `y` [required]: The y-coordinate of the arrow's head.
+- `y` : The y-coordinate of the arrow's head.
    - *Acceptable*: Any number.
    - By default, all arrows tails are placed at y = 0.
 
-- `time` [required]: The time at which the arrow's head is located.
+- `time` : The time at which the arrow's head is located.
    - *Acceptable*: Any number in the range of time periods included in `circle.json`.
 
 </br>
 
+{: .note-title }
 Support for missing time periods has not been tested. 
-  For *each* arrow identified in `arrows.json`, It is safest to provide `x` and `y` coordinates for *all* time periods included in `circle.json`. 
+For *each* arrow identified in `arrows.json`, It is safest to provide `x` and `y` coordinates for *all* time periods included in `circle.json`. 
 
 ## Prototype of valid format
 

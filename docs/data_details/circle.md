@@ -5,37 +5,40 @@ nav_order: 1
 parent: Inputs - Details and effects on visualization
 ---
 
-# circles.json
+# `circles.json`
 
 ## Key-value pairs (each row)
 
+#### Required
 
-- `name` [required]: the name of the unit corresponding to the observation.
+- `name` : the name of the unit corresponding to the observation.
    - *Acceptable*: Any string.
 
-- `time` [required]: the time period for the observation.
+- `time` : the time period for the observation.
    - *Acceptable*: Any integer.
 
-- `x` [required]: the x coordinate of the unit at `time`.
+- `x` : the x coordinate of the unit at `time`.
    - *Acceptable*: Any number.
  
-- `y`[required]: the y coordinate of the unit at `time`.
+- `y`: the y coordinate of the unit at `time`.
    - *Acceptable*: Any number.
  
-- `continuous_feature_1` [optional]: a continuous feature of the unit at `time`.
+#### Optional
+
+- `continuous_feature_1` : a continuous feature of the unit at `time`.
    - *Acceptable*: Any string or number.
 
  ⋮
 
-- `continuous_feature_c` [optional]: a continuous feature of the unit at `time`.
+- `continuous_feature_c` : a continuous feature of the unit at `time`.
    - *Acceptable*: Any string or number.
 
-- `discrete_feature_1` [optional]: a discrete feature of the unit at `time`.
+- `discrete_feature_1` : a discrete feature of the unit at `time`.
    - *Acceptable*: Any string or number.
 
  ⋮
  
-- `discrete_feature_d` [optional]: a discrete feature of the unit at `time`.
+- `discrete_feature_d` : a discrete feature of the unit at `time`.
    - *Acceptable*: Any string or number.
 
 
