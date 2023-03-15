@@ -6,11 +6,9 @@ nav_order: 2
 
 # Data requirements: Overview
 
-The app requires three `json` files each made of a single array of objects. 
+The app requires three `json` input files, each made of a single array of objects. 
 The objects themselves can only contain key-value pairs. 
 The three `json` files must be located in the `src/data` folder:
-
-(Click on triangles to expand/collapse details about each file.)
 
 <!-- https://stackoverflow.com/questions/52214187/how-can-i-fold-content-in-github-markdown -->
 

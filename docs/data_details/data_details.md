@@ -2,6 +2,7 @@
 layout: default
 title: Data requirements - Details and effects on visualization
 nav_order: 3
+has_children: true
 ---
 
 # Data requirements: Details and effects on visualization
