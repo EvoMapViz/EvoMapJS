@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Data requirements - Overview
+title: Inputs - Overview
 nav_order: 2
 ---
 
-# Data requirements: Overview
+# Inputs: Overview
 
 The app requires three `json` input files, each made of a single array of objects. 
 The objects themselves can only contain key-value pairs. 

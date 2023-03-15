@@ -1,6 +1,6 @@
 # EvoMapJS
 
-## Data requirements: Overview
+## Inputs: Overview
 
 The app requires three `json` files each made of a single array of objects. 
 The objects themselves can only contain key-value pairs. 

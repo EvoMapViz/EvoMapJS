@@ -2,7 +2,7 @@
 layout: default
 title: metadata.json
 nav_order: 2
-parent: Data requirements - Details and effects on visualization
+parent: Inputs - Details and effects on visualization
 ---
 
 # metadata.json

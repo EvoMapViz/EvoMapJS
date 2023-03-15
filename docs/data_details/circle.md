@@ -2,19 +2,18 @@
 layout: default
 title: circles.json
 nav_order: 1
-parent: Data requirements - Details and effects on visualization
+parent: Inputs - Details and effects on visualization
 ---
 
 # circles.json
 
-Key-value pairs (each row):
-<br />
+## Key-value pairs (each row)
 
-`name` (required): the name of the unit corresponding to the observation.
 
+- `name` (required): the name of the unit corresponding to the observation.
   - *Acceptable*: Any string.
 
-`time` (required): the time period for the observation.
+- `time` (required): the time period for the observation.
   - *Acceptable*: Any integer.
 
 `x` (required): the x coordinate of the unit at `time`.
@@ -23,24 +22,24 @@ Key-value pairs (each row):
 `y`(required): the y coordinate of the unit at `time`.
   - *Acceptable*: Any number.
  
-`continuous_feature_1` (optional): a continuous feature of the unit at `time`.
+- `continuous_feature_1` (optional): a continuous feature of the unit at `time`.
   - *Acceptable*: Any string or number.
 
  ⋮
 
-`continuous_feature_c` (optional): a continuous feature of the unit at `time`.
+- `continuous_feature_c` (optional): a continuous feature of the unit at `time`.
   - *Acceptable*: Any string or number.
 
-`discrete_feature_1` (optional): a discrete feature of the unit at `time`.
+- `discrete_feature_1` (optional): a discrete feature of the unit at `time`.
   - *Acceptable*: Any string or number.
 
  ⋮
  
-`discrete_feature_d` (optional): a discrete feature of the unit at `time`.
+- `discrete_feature_d` (optional): a discrete feature of the unit at `time`.
   - *Acceptable*: Any string or number.
 
-<br />
-Further requirements and info: 
+
+## Further requirements and info
 
 - Each row *must* contain the full exact same set of keys, including **at least one** continuous feature (on top of the required `name`, `time`, `x`, and `y` keys).
 
@@ -55,10 +54,8 @@ Further requirements and info:
 
 - The order of rows and key-value pairs within rows is irrelevant.
 
-<br />
- Prototype of valid format: 
-<br />
-<br />
+
+## Prototype of valid format
 
 
 ```
