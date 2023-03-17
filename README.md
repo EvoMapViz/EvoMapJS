@@ -17,10 +17,11 @@ See [https://evomapviz.github.io/EvoMapJS/docs/deploy/](https://evomapviz.github
 
 ## Usage
 
-{: .warning}
-  To experiment with new data and metadata setting, please use your own branch with prefix `uexp/` (feel free to create one by cloning the `main` branch).
-  **!! Do NOT use existing `main` or `dev` branches!!**.
-  If you'd like to contribute, please create a new branch with prefix `dev/` and submit a pull request.
+> :warning: *WARNING*:
+>
+> To experiment with new data and metadata setting, please use your own branch with prefix `uexp/` (feel free to create one by cloning the `main` branch).
+> **!! Do NOT use existing `main` or `dev` branches!!**.
+> If you'd like to contribute, please create a new branch with prefix `dev/` and submit a pull request.
 
 See the doc at [https://evomapviz.github.io/EvoMapJS/docs/](https://evomapviz.github.io/EvoMapJS/docs/) for detailed instructions on how to use the app.
 
