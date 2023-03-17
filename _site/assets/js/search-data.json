@@ -85,7 +85,7 @@
   },"12": {
     "doc": "Deploy online",
     "title": "Deploy online (Netlify)",
-    "content": "Existing turnkey deployement synced with Github repository . | The app has already been deployed to a Netlify environment that is synced with the github repository https://github.com/EvoMapViz/EvoMapJS. | The deployment settings can be accessed at https://app.netlify.com/sites/lustrous-pixie-414f67/overview (login through Github with EvoMapViz account). | The deployed app can be accessed at https://lustrous-pixie-414f67.netlify.app/. | . Redeploying the app from scratch on Netlify from Github repository . | Copy https://github.com/EvoMapViz/EvoMapJS to a separate Github repository of your own. | Create a Netlify account and link it to your Github account. | Create a new site on Netlify and link it to your cloned version of https://github.com/EvoMapViz/EvoMapJS. | In your Netlify Sites settings/Build setting, set the build command to Build command CI=false npm run build (and the publish directory to build if that is not already the default). | In your Netlify site’s Sites settings/Environment variables, add a variable with key NPM_FLAGS and value --legacy-peer-deps. | . ",
+    "content": "Existing turnkey deployement synced with Github repository . | The app has already been deployed to Netlify environments that are synced with the three main branches of the github repository. | . To experiment with new data and metadata setting, please use your own branch with prefix uexp/ (feel free to create one by cloning the main branch). !! Do NOT use existing main or dev branches!!. If you’d like to contribute, please create a new branch with prefix dev/ and submit a pull request. | The deployment settings can be accessed at: . | main branch https://app.netlify.com/sites/main-evomapjs/overview. | dev/master branch https://app.netlify.com/sites/dev-evomapjs/overview. | uexp/master branch https://app.netlify.com/sites/uexp-evomapjs/overview. | . | The deployed apps can be accessed at: . | main branch https://main-evomapjs.netlify.app/. | dev/master branch https://dev-evomapjs.netlify.app/. | uexp/master branch https://uexp-evomapjs.netlify.app/. | . | . Redeploying the app from scratch on Netlify from Github repository . | Clone the branch of https://github.com/EvoMapViz/EvoMapJS you’d like to deploy to a separate Github repository of your own. | Create a Netlify account and link it to your Github account. | Create a new site on Netlify and link it to your cloned version of https://github.com/EvoMapViz/EvoMapJS. | In your Netlify Sites settings/Build setting, set the “Build command:” to CI=false npm run build (and the publish directory to build if that is not already the default). | In your Netlify site’s Sites settings/Environment variables, add . | A variable with key NPM_FLAGS and value --legacy-peer-deps. | A variable with key RUBY_VERSION and value 3.1.3 . | This should only required if the branch you are deploying from contains the jerkyll doc of the app (indicated by presence of docs and .github/workflows folder, together with Gemfile, Gemfile.lock, _config_yml, and index.md files at the head level). | . | . | . ",
     "url": "/docs/deploy/#deploy-online-netlify",
     
     "relUrl": "/docs/deploy/#deploy-online-netlify"
@@ -105,54 +105,61 @@
     "relUrl": "/"
   },"15": {
     "doc": "Quickstart",
+    "title": "Branch management and usage",
+    "content": ". | The main branch contains the latest stable version of the app. | Branches with the dev/ prefix contain the development version(s) of the app (potentially unstable). | Branches with the uexp/ prefix contain versions that all users to experiments with new data and metadata. | . To experiment with new data and metadata setting, please use your own branch with prefix uexp/ (feel free to create one by cloning the main branch). !! Do NOT use existing main or dev branches!!. If you’d like to contribute, please create a new branch with prefix dev/ and submit a pull request. ",
+    "url": "/#branch-management-and-usage",
+    
+    "relUrl": "/#branch-management-and-usage"
+  },"16": {
+    "doc": "Quickstart",
     "title": "Background",
     "content": "Last updated: March 2023 . This quickstart guide is based on the following paper. If you use this package or parts of its code, please cite our work. References . [1] Matthe, M., Ringel, D. M., Skiera, B. (2022), “Mapping Market Structure Evolution”, Marketing Science, forthcoming. Read the full paper here (open access): https://doi.org/10.1287/mksc.2022.1385 . Contact: For questions or feedback, please get in touch. ",
     "url": "/#background",
     
     "relUrl": "/#background"
-  },"16": {
+  },"17": {
     "doc": "metadata.json",
     "title": "metadata.json",
     "content": "The array must contain at least one object corresponding to a feature from circles.json, and must identify at least one of these features as “continuous”. ",
     "url": "/docs/data_details/metadata/",
     
     "relUrl": "/docs/data_details/metadata/"
-  },"17": {
+  },"18": {
     "doc": "metadata.json",
     "title": "Key-value pairs (each row)",
     "content": "Required . name : The name of the feature. | Acceptable: Any string that matches the name of a feature in circles.json. | . label : The label of the feature as it should be displayed in the app’s UI. | Acceptable: Any string. | . Optional . type : The type of the feature. | Acceptable: \"continuous\", \"discrete\". | Default: \"discrete\". | Effect: . | \"continuous\": . | Feature appears in the “Size” selector menu of the app’s UI unless the tooltip key is set to \"only\". | Feature must be numerical in circle.json. | . | \"discrete\": . | Feature appears in the “Color” selector menu of the app’s UI unless the tooltip key is set to \"only\". | Feature will be treated as categorical (even if it is supplied in a numerical format in circle.json). | . | . | . tooltip : Whether the featyre should be included in the tooltip that appears when the user hovers over a circle. | Acceptable: \"true\", \"false\", \"only\". | Default: \"false\". | Effect: . | \"true\": . | The feature is included in the tooltip that appears when the user hovers over a circle. | . | false: . | The feature is not included in the tooltip that appears when the user hovers over a circle. | The feature is included in the relevant selector menu of the app’s UI (see type). | . | \"only\": . | The feature is included in the tooltip that appears when the user hovers over a circle. | The feature is not included in the relevant selector menu of the app’s UI (see type). | . | . | Note: The tooltip is calibrated to include at least one feature (on top of each circle’s name). If no features listed in metadata.json has tooltip set of \"true\" or \"only\", the dimensions of the tooltip will be slightly off. | . color_bins : How circles are binned into discrete categories when the feature is selected in the “Color” selector (e.g., \"color_bins\": [1,10,100,300,600] bins the feature based on whether its value is between its minimum value and 1, between 1 and 10, …, between 300 and 600, and between 600 and the feature’s maximum value). Only affects features with type “continuous”. | Acceptable: An array of numbers, e.g., [1,10,100,300,600]. | Default: The quintiles of the feature’s distribution (undefined for features with type “discrete”). | . size_legend_bins : Set of values of features with type “continuous” for which a bubble-size is displayed in the size-legend. | Acceptable: An array of numbers, e.g., [5, 100,300,600]. Only affects features with type “continuous”. | Default: 10%, 50%, and 100% quantiles of the feature’s distribution (undefined for features with type “discrete”). | . scale_increasing : Whether the feature’s values should be mapped to circle sizes in an increasing or decreasing manner. Only affects features with type “continuous”. | Acceptable: “true”, “false”. | Default: “true” for features with type “continous”, undefined for features with type “discrete”. | Effect: . | true: For features with type “continuous”, when the feature is selected through the “Size” selector, makes . | circle sizes proportional to the corresponding continuous feature. | the size Legend display from lower to higher values. proportional (“true”) or inversely proportional (“false”) to the corresponding continuous feature. | . | false: For features with type “continuous”, when the feature is selected through the “Size” selector, makes . | The size Legend is displayed from higher to lower values (“false”). | circle sizes inversely proportional to the corresponding continuous feature. | . | . | . scale_minSize : Lowest possible circle-size. | Acceptable: a single number. | Default: 1. | . scale_maxSize : Highest possible circle-size. | Acceptable: a single number. | Default: 50. | . scale_exponent : Curvature of the matching between the values of a feature identified as “continuous” and the corresponding circle-sizes. Only affects features with type “continuous”. | Acceptable: a single number. | Default: 1. | Effect: . | A value of 1 corresponds to a linear scale, i.e., all values of the feature between its min and max will be linearly recast to sizes between scale_minSize and scale_maxSize. | A value above 1 corresponds to a concave scale, i.e., starting from scale_minSize, sizes will first increase fast with the value of the feature, and then increase slower and slower as they approach scale_maxSize. | A value below 1 corresponds to a convex scale, i.e., starting from scale_minSize, sizes will first increase slowly with the value of the feature, and then increase faster and faster as they approach scale_maxSize. | . | . unit : The unit-sign appended whenever the value of a continuous feature is displayed, whether in legends or in tooltips. Only affects features with type “continuous”. | Acceptable: A string (\"B\", \"USD\", or \"$\"). | Default: empty string \"\" (no unit-sign appended). | . truncate_label : The number of characters after which the feature’s name label is truncated when displayed in the tooltip. | Acceptable: A single number. | Default: 9. | . truncate_value : The number of characters after which whether the value of the feature is truncated when displayed in the tooltip. | Acceptable: A single number. | Default: 6. | . legend_dline_extral : The base-length of the dashed line connecting bubble-sizes to their label in the size-legend. Only affects features with type “continuous”. | Acceptable: A single number. | Default: 10. | . ",
     "url": "/docs/data_details/metadata/#key-value-pairs-each-row",
     
     "relUrl": "/docs/data_details/metadata/#key-value-pairs-each-row"
-  },"18": {
+  },"19": {
     "doc": "metadata.json",
     "title": "Prototype of valid format",
     "content": "[ {\"name\": \"cluster\", \"label\": \"Cluster Number\", \"type\": \"discrete\" }, {\"name\": \"mkvalt\", \"label\": \"Market Value\", \"type\": \"continuous\", \"tooltip\" : \"true\" } ] . For a full example of the data format, see https://github.com/EvoMapViz/EvoMapJS/blob/main/src/data/metadata_TEMPLATE_DO_NOT_ERASE.json in this repository. | This is a reference template that should not be erased. You should copy it, rename it to metadata.json, and experiment editing the latter with your own data (you can always revert to the template if you break the data format and want a fresh start). | src/data/metadata_TEMPLATE_DO_NOT_ERASE.json is made to work with src/data/circles_TEMPLATE_DO_NOT_ERASE.json. | . ",
     "url": "/docs/data_details/metadata/#prototype-of-valid-format",
     
     "relUrl": "/docs/data_details/metadata/#prototype-of-valid-format"
-  },"19": {
+  },"20": {
     "doc": "Update input data",
     "title": "Updating process for circle.json, metadata.json, and arrows.json",
     "content": " ",
     "url": "/docs/update/#updating-process-for-circlejson-metadatajson-and-arrowsjson",
     
     "relUrl": "/docs/update/#updating-process-for-circlejson-metadatajson-and-arrowsjson"
-  },"20": {
+  },"21": {
     "doc": "Update input data",
     "title": "Netlify",
-    "content": "Existing turnkey deployement synced with Github repository. | Clone the https://github.com/EvoMapViz/EvoMapJS. | Edit circle.json, metadata.json, or arrows.json locally in the src/data folder. | Commit your changes using git and push them to the Github repository. | The https://lustrous-pixie-414f67.netlify.app/ app should automatically update on Netlify (pending about a minute for the build process to complete). | . App redeployed from scratch on Netlify from Github repository. | Clone your github copy of the https://github.com/EvoMapViz/EvoMapJS repo. | Edit circle.json, metadata.json, or arrows.json locally in the src/data folder. | Commit your changes using git and push them to the Github repository. | The Netlify app you synced with your personal copy of the repo should automatically update on Netlify (pending about a minute for the build process to complete). | . ",
+    "content": "To experiment with new data and metadata setting, please use your own branch with prefix uexp/ (feel free to create one by cloning the main branch). !! Do NOT use existing main or dev branches!!. If you’d like to contribute, please create a new branch with prefix dev/ and submit a pull request. Existing turnkey deployement synced with Github repository. | Clone the uexp/master branche from https://github.com/EvoMapViz/EvoMapJS. | Edit circle.json, metadata.json, or arrows.json locally in the src/data folder. | Commit your changes using git and push them to the Github repository. | The deployement at https://uexp-evomapjs.netlify.app/) should automatically update (pending about a minute for the build process to complete). | . App redeployed from scratch on Netlify from Github repository. | Clone the relevant branch at https://github.com/EvoMapViz/EvoMapJS repo. | Edit circle.json, metadata.json, or arrows.json locally in the src/data folder. | Commit your changes using git and push them to the Github repository. | The Netlify app you synced with your personal copy of the repo should automatically update on Netlify (pending about a minute for the build process to complete). | . ",
     "url": "/docs/update/#netlify",
     
     "relUrl": "/docs/update/#netlify"
-  },"21": {
+  },"22": {
     "doc": "Update input data",
     "title": "Local",
     "content": ". | After running npm start (which starts the local server environment for the app), edit circle.json, metadata.json, or arrows.json locally in the src/data folder. | After you save your updates locally, the local deployment of your app at http://localhost:3000/ should automatically update in your browser. | . ",
     "url": "/docs/update/#local",
     
     "relUrl": "/docs/update/#local"
-  },"22": {
+  },"23": {
     "doc": "Update input data",
     "title": "Update input data",
     "content": " ",
