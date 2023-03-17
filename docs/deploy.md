@@ -29,8 +29,9 @@ nav_order: 3
   - Clone the branch of [https://github.com/EvoMapViz/EvoMapJS](https://github.com/EvoMapViz/EvoMapJS) you'd like to deploy to a separate Github repository of your own.
   - Create a Netlify account and link it to your Github account.
   - Create a new site on Netlify and link it to your cloned version of [https://github.com/EvoMapViz/EvoMapJS](https://github.com/EvoMapViz/EvoMapJS).
-  - In your Netlify `Sites settings/Build setting`, set the "Build command:" to `CI=false npm run build` (and the publish directory to `build` if that is not already the default).
+  - In your Netlify `Sites settings/Build setting`:
+    - Set the "Base directory:" to `react`.
+    - Set the "Build command:" to `CI=false npm run build`.
+    - Set the publish directory to `react.build` if that is not already the default.
   - In your Netlify site's `Sites settings/Environment variables`, add 
     - A variable with key `NPM_FLAGS` and value `--legacy-peer-deps`.
-    - A variable with key `RUBY_VERSION` and value `3.1.3`
-      - This should only required if the branch you are deploying from contains the `jerkyll` doc of the app (indicated by presence of `docs` and `.github/workflows` folder, together with `Gemfile`, `Gemfile.lock`, `_config_yml`, and `index.md` files at the head level).
