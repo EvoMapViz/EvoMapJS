@@ -20,6 +20,17 @@ If it does not, open a browser and navigate to [http://localhost:3000/](http://l
 
 See [https://evomapviz.github.io/EvoMapJS/docs/deploy/](https://evomapviz.github.io/EvoMapJS/docs/deploy/) for a guide on how to deploy the app *online*.
 
+# Branch management and usage
+
+ - The `main` branch contains the latest stable version of the app.
+ - Branches with the `dev/` prefix contain the development version(s) of the app (potentially unstable).
+ - Branches with the `uexp/` prefix contain versions that all users to experiments with new data and metadata.
+
+{: .warning}
+  To experiment with new data and metadata setting, please use your own branch with prefix `uexp/` (feel free to create one by cloning the `main` branch).
+  **!! Do NOT use existing `main` or `dev` branches!!**.
+  If you'd like to contribute, please create a new branch with prefix `dev/` and submit a pull request.
+
 # Background
 
 Last updated: March 2023
