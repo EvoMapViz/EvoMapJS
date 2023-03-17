@@ -8,16 +8,21 @@ nav_order: 4
 
 ## Netlify
 
+  {: .warning}
+  To experiment with new data and metadata setting, please use your own branch with prefix `uexp/` (feel free to create one by cloning the `main` branch).
+  **!! Do NOT use existing `main` or `dev` branches!!**.
+  If you'd like to contribute, please create a new branch with prefix `dev/` and submit a pull request.
+
 #### Existing turnkey deployement synced with Github repository.
 
-  - Clone the [https://github.com/EvoMapViz/EvoMapJS](https://github.com/EvoMapViz/EvoMapJS).
+  - Clone the `uexp/master` branche from [https://github.com/EvoMapViz/EvoMapJS](https://github.com/EvoMapViz/EvoMapJS).
   - Edit `circle.json`, `metadata.json`, or `arrows.json` locally in the `src/data` folder.
   - Commit your changes using `git` and push them to the Github repository.
-  - The [https://lustrous-pixie-414f67.netlify.app/](https://lustrous-pixie-414f67.netlify.app/) app should automatically update on Netlify (pending about a minute for the build process to complete).
+  - The deployement at [https://uexp-evomapjs.netlify.app/](https://uexp-evomapjs.netlify.app/)) should automatically update (pending about a minute for the build process to complete).
 
 #### App redeployed from scratch on Netlify from Github repository.
 
-  - Clone your github copy of the [https://github.com/EvoMapViz/EvoMapJS](https://github.com/EvoMapViz/EvoMapJS) repo.
+  - Clone the relevant branch at [https://github.com/EvoMapViz/EvoMapJS](https://github.com/EvoMapViz/EvoMapJS) repo.
   - Edit `circle.json`, `metadata.json`, or `arrows.json` locally in the `src/data` folder.
   - Commit your changes using `git` and push them to the Github repository.
   - The Netlify app you synced with your personal copy of the repo should automatically update on Netlify (pending about a minute for the build process to complete).
