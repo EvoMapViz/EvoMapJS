@@ -27,6 +27,14 @@ nav_order: 4
   - Commit your changes using `git` and push them to the Github repository.
   - The Netlify app you synced with your personal copy of the repo should automatically update on Netlify (pending about a minute for the build process to complete).
 
+  {: .note}
+  Netlify does *not* appear to automatically re-deploy a branch when its code is updated *through a *pull/merge request*. 
+  Only a **new commit** to the branch seems to  trigger automatic redeployment.
+  To redeploy manually, go to [https://app.netlify.com](https://app.netlify.com):
+    - navigate to the relevant site.
+    - Click on `Deploys` in the left of the topbar.
+    - Click on `Trigger deploy` in the middle-right.
+
 ## Local
 
 - After running `npm start` (which starts the local server environment for the app), edit `circle.json`, `metadata.json`, or `arrows.json` locally in the `src/data` folder.
