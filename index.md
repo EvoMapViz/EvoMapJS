@@ -12,7 +12,7 @@ This tutorial provides a quick overview about the different tools available in E
 To install the app *locally*:
 
 - Clone the github repo.
-- Open the terminal and navigate inside the terminal to the `react` folder inside the local copy of the repository (`cd "local_path_of_githb_repo"`).
+- Inside a terminal, navigate to the `react` folder inside the local copy of the repository (`cd "local_path_of_githb_repo/react"`).
 - Run `npm i` (this will installs `Node.js` module dependencies for `React`).
 - Run `npm start` (the will starts the local server environment for the app).
 - The app should open automatically in your default browser. 
