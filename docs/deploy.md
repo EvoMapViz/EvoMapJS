@@ -32,6 +32,6 @@ nav_order: 3
   - In your Netlify `Sites settings/Build setting`:
     - Set the "Base directory:" to `react`.
     - Set the "Build command:" to `CI=false npm run build`.
-    - Set the publish directory to `react.build` if that is not already the default.
+    - Set the publish directory to `react/build` if that is not already the default.
   - In your Netlify site's `Sites settings/Environment variables`, add 
     - A variable with key `NPM_FLAGS` and value `--legacy-peer-deps`.
