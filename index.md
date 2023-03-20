@@ -31,6 +31,10 @@ See [https://evomapviz.github.io/EvoMapJS/docs/deploy/](https://evomapviz.github
   **!! Do NOT use existing `main` or `dev` branches!!**.
   If you'd like to contribute, please create a new branch with prefix `dev/` and submit a pull request.
 
+{: .note}
+  The doc is maintained on the `main` branch only, and deployed at [https://evomapviz.github.io/EvoMapJS/](https://evomapviz.github.io/EvoMapJS/). 
+  Please always consult the doc through that link (unless they have been recently synced with the `main` branch, the `dev` and `uexp` branches may not contain up-to-date doc).
+
 # Background
 
 Last updated: March 2023
