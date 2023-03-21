@@ -11,10 +11,10 @@ import {interpolatePlasma} from "d3-scale-chromatic";
 /* State variables for user controls */ // Some other variables are defined through initialization inside the Meta-Data section
 /*  */
 
-const valueSizes = atom('true');
+const adaptDisps = atom('true');
 const allNames = atom('false');
-const showTimes = atom('true');
-const display = atom(['valueSizes', 'showTimes'])
+const timeLabs = atom('true');
+const display = atom(['adaptDisps', 'timeLabs'])
 
 const justClicked = atom('');
 const justSelHigh = atom('');
@@ -241,8 +241,6 @@ newData = newData.map(function(d, index){
     return new_d
   })
 
-console.log('newData', newData)
-
 // Compute ranks for all continuous variables
 
 for (const contVar of sizeOptions.map(d => d.name) ){
@@ -300,7 +298,7 @@ const transD3 = atom({'k':1, 'x':0, 'y':0})
 /* State export */
 /*  */
 
-export {valueSizes, allNames, showTimes, display,
+export {adaptDisps, allNames, timeLabs, display,
         justClicked, justSelHigh,
         colgroup,
         arrowsSel,

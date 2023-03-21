@@ -54,7 +54,7 @@ svg.on("click", function (event) {
     setColgroup("Show All");
     svg
       .selectAll(".color_legend")
-      .attr("opacity", 1)
+      .attr('opacity', 1)
       .attr("data-clicked", false);
   }
 });
@@ -68,15 +68,15 @@ function clickDiscrete(event) {
   if (tthis.attr("data-clicked") === "false") {
     svg
       .selectAll(".color_legend")
-      .attr("opacity", 0.25)
+      .attr('opacity', 0.25)
       .attr("data-clicked", false);
-    tthis.attr("opacity", 1);
+    tthis.attr('opacity', 1);
     setColgroup(event);
     tthis.attr("data-clicked", true);
   } else if (tthis.attr("data-clicked") === "true") {
     svg
       .selectAll(".color_legend")
-      .attr("opacity", 1)
+      .attr('opacity', 1)
       .attr("data-clicked", false);
     setColgroup("Show All");
   }
@@ -92,15 +92,15 @@ function clickContinuous(event) {
   if (tthis.attr("data-clicked") === "false") {
     svg
       .selectAll(".color_legend")
-      .attr("opacity", 0.25)
+      .attr('opacity', 0.25)
       .attr("data-clicked", false);
-    tthis.attr("opacity", 1);
+    tthis.attr('opacity', 1);
     setColgroup(tthis.attr("data-bounds"));
     tthis.attr("data-clicked", true);
   } else if (tthis.attr("data-clicked") === "true") {
     svg
       .selectAll(".color_legend")
-      .attr("opacity", 1)
+      .attr('opacity', 1)
       .attr("data-clicked", false);
     setColgroup("Show All");
   }

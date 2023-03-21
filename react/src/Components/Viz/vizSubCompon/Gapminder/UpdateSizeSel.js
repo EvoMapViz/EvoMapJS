@@ -5,7 +5,7 @@ export default function UpdateSizeSel(XDomain, YDomain, XRange, YRange,
                                       SizeExponent, SizeRange, SizeDomain, SizeIncreasing,
                                       FontRange, FontDomain, FontExponent, 
                                       OpacityRange, OpacityDomain, OpacityExponent,
-                                      valueSizes, sizeSel, 
+                                      adaptDisps, sizeSel, 
                                       trans_d3){
 
 console.log("Sizes selector Update") 
@@ -36,7 +36,7 @@ const opacityScale = d3.scalePow()
 /* Update current sizes */
 /*  */
 
-if(valueSizes === "true"){
+if(adaptDisps === "true"){
   svg
     .selectAll('circle')
     .transition()
@@ -63,12 +63,12 @@ if(valueSizes === "true"){
     })
 
     svg.selectAll('.firmLabel')
-      .attr('fill-opacity', d => opacityScale(d[sizeSel]))
-      .attr('font-size', d => fontScale(d[sizeSel])/trans_d3.k)
-                        
+      // .attr('fill-opacity', d => opacityScale(d[sizeSel]))
+      .attr('opacity', d => opacityScale(d[sizeSel]))
+      .attr('font-size', d => fontScale(d[sizeSel])/trans_d3.k)                
                         }
 
-if(valueSizes === "false"){
+if(adaptDisps === "false"){
   svg
     .selectAll('circle')
     .transition()

@@ -4,7 +4,7 @@ export default function UpdateHighlightsSel(data, justSelHigh,
                                             XDomain, YDomain, XRange, YRange,
                                             SizeExponent, SizeRange, SizeDomain, SizeIncreasing,
                                             OpacityRange, // To set highlight intensity as upper bound of range
-                                            valueSizes, sizeSel, allNames, nFirms, nTimes,
+                                            adaptDisps, sizeSel, allNames, nFirms, nTimes, timeLabs,
                                             trans_d3){
 
 console.log("High Sel Update") 
@@ -40,13 +40,13 @@ d3.selectAll('circle')  // Put non-highlighted circles in opacity background
     return !tthis.classed('trace') && 
            tthis.attr("data-highlighted") === "false"
   })
-  .style('opacity', 0.25)
+  .attr('opacity', OpacityRange[0])
   .style('stroke', 'none')
   .on("mouseout", function(d) { // standard mouseout for non-highlighted
     d3.select('.tooltip')
       .transition()
       .duration(100)
-      .style("opacity", 0);
+      .style('opacity', 0);
     d3.select(this)
       .style("stroke", "none")
   })
@@ -57,7 +57,8 @@ d3.selectAll('.firmLabel')  // Put non-highlighted labels in opacity background
     return !tthis.classed('trace') && 
            tthis.attr("data-highlighted") === "false"
   })
-  .attr('fill-opacity', 0.25)
+    // .attr('fill-opacity', 0.25)
+    .attr('opacity', OpacityRange[0])
 
 /* ----- */  
 /*  */
@@ -73,19 +74,19 @@ var f_circs = zoom_group
 if(justSelHigh[0] === 'high'){                                                      
   f_circs // Highlight main firm circle
     .attr("data-highlighted", 'true')
-    .style('opacity', 1)
+    .attr('opacity', OpacityRange[1])
     .style('stroke', 'black')
     .attr('display', 'inline')
     .on("mouseout", function(d) { //special mouseout to keep clicked stroke
       d3.select('.tooltip')
         .transition()
         .duration(100)
-        .style("opacity", 0);
+        .style('opacity', 0);
   })
 
   d3.selectAll('.firmLabel') //Highlight firm label
     .filter(function(d) {return justSelHigh[1].includes(d.name)})
-    .attr('fill-opacity', OpacityRange[1])
+    // .attr('fill-opacity', OpacityRange[1])
     .attr('opacity', OpacityRange[1])
     .attr('display', 'inline')
     .attr("data-highlighted", 'true')
@@ -114,7 +115,7 @@ if(justSelHigh[0] === 'high'){
     .attr('fill', 'none')
     .attr('stroke-width', 1)
     .attr('stroke', 'black')
-    .attr('opacity', 0.25) 
+    .attr('opacity', OpacityRange[0]) 
     .lower() 
   } else { // Incomplete data series, missing for some times
 
@@ -138,7 +139,7 @@ if(justSelHigh[0] === 'high'){
           .attr('fill', 'none')
           .attr('stroke-width', 1)
           .attr('stroke', 'black')
-          .attr('opacity', 0.25) 
+          .attr('opacity', OpacityRange[0]) 
           .lower()
       }
     }
@@ -158,10 +159,10 @@ if(justSelHigh[0] === 'high'){
     .attr('stroke', 'black')
     .attr('cx', d => x(d.x))
     .attr('cy', d => y(d.y))
-    .attr('opacity', 0.25) 
+    .attr('opacity', OpacityRange[0]) 
     .lower() 
 
-    if(valueSizes === 'true'){
+    if(adaptDisps === 'true'){
       f_trace
       .attr("r", function(d){
         if(SizeIncreasing === "true"){ 
@@ -187,19 +188,29 @@ if(justSelHigh[0] === 'high'){
     .attr('fill', 'grey')
     .attr('stroke', 'black')
     .text(d => d.time)
-    .attr('x', function(d){
-      if(increasing === "true"){ 
-        return x(d.x - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return x(d.x - label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  }
-    }) // adjust for size of circle
+    .attr('x', function(d){ // adjust for size of circle
+      if(adaptDisps === 'true'){
+        if(increasing === "true"){ 
+          return x(d.x - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
+          return x(d.x - label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  
+        }
+      }
+      if(adaptDisps === 'false'){return x(d.x - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) }
+    }) 
     .attr('y', function(d){
-      if(increasing === "true"){ 
-        return y(d.y - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return y(d.y - label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  }
+      if(adaptDisps === 'true'){
+        if(increasing === "true"){ 
+          return y(d.y - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
+          return y(d.y - label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  
+        }
+      }
+      if(adaptDisps === 'false'){return y(d.y - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) }
     })
     .attr('font-size', 12/trans_d3.k)
-    .attr('opacity', 0.25)
+    .attr('opacity', OpacityRange[0])
     .attr("text-anchor", "end") // https://stackoverflow.com/questions/13188125/d3-add-multiple-classes-with-function
+    .attr("visibility", d =>  timeLabs === 'true' ? "visible" : "hidden")
+
 } 
 
 /* ----- */  
@@ -212,13 +223,13 @@ if(justSelHigh[0] === 'dehigh') {
 
   f_circs
     .attr("data-highlighted", 'false')
-    .style('opacity', 0.25)
+    .attr('opacity', OpacityRange[0])
     .style('stroke', 'none')
     .on("mouseout", function(d) {
       d3.select('.tooltip')
         .transition()
         .duration(100)
-        .style("opacity", 0);
+        .style('opacity', 0);
       d3.select(this)
       .style("stroke", "none")
     })
@@ -229,17 +240,19 @@ if(justSelHigh[0] === 'dehigh') {
     .filter(d => d.length > 1 ?  justSelHigh[1].includes(d[0].name) : justSelHigh[1].includes(d.name)) // d[0] is first element of path if element is path element
     .remove()
 
-  let to_be_dehigh = d3.selectAll('.firmLabel') //De-highlight firm label
+  const to_be_dehigh = d3.selectAll('.firmLabel') //De-highlight firm label
                       .filter(d => justSelHigh[1].includes(d.name))
                       .attr("data-highlighted", 'false')
 
   if(allNames === 'true'){
   to_be_dehigh
-  .attr('fill-opacity', 0.25)
+    // .attr('fill-opacity', 0.25)
+    .attr('opacity', OpacityRange[0])
   } else { 
   to_be_dehigh
-  .attr('fill-opacity', 0.25)
-  .attr('display', 'none')
+    // .attr('fill-opacity', 0.25)
+    .attr('opacity', OpacityRange[0])
+  . attr('display', 'none')
   }
 
 }

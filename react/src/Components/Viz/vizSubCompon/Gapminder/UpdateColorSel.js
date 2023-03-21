@@ -6,7 +6,7 @@ export default function UpdateColorSel(data, meta,
                                       Colortype, Colorrange, Colordomain, Colorincreasing,
                                       SizeIncreasing,
                                       setJustClicked, allNames,
-                                      sizeSel, time, OpacityRange, OpacityDomain, OpacityExponent){
+                                      sizeSel, time, OpacityRange, OpacityDomain, OpacityExponent, AdaptDisp){
 
 console.log("Color selector Update");
 

@@ -7,7 +7,7 @@ export default function UpdateTime(
   XRange,
   YRange,
   time,
-  valueSizes,
+  adaptDisps,
   sizeSel,
   colorSel,
   SizeExponent,
@@ -93,7 +93,7 @@ export default function UpdateTime(
     .attr("cx", (d) => x(d.x))
     .attr("cy", (d) => y(d.y))
     .attr("r", function (d) {
-      if (valueSizes === "true") {
+      if (adaptDisps === "true") {
         if (SizeIncreasing === "true") {
           return size(d[sizeSel]) / trans_d3.k;
         } else {
@@ -117,7 +117,7 @@ export default function UpdateTime(
     .attr("cx", (d) => x(d.x))
     .attr("cy", (d) => y(d.y))
     .attr("r", function (d) {
-      if (valueSizes === "true") {
+      if (adaptDisps === "true") {
         if (SizeIncreasing === "true") {
           return size(d[sizeSel]) / trans_d3.k;
         } else {
@@ -165,7 +165,7 @@ export default function UpdateTime(
     .duration(200)
     .ease(d3.easeLinear)
     .attr("x", function (d) {
-      if (valueSizes === "true") {
+      if (adaptDisps === "true") {
         if (SizeIncreasing === "true") {
           return x(
             d.x + label_mult_nudge * (Math.sqrt(size(d[sizeSel])) / trans_d3.k)
@@ -182,7 +182,7 @@ export default function UpdateTime(
       }
     }) // adjust for size of circle
     .attr("y", function (d) {
-      if (valueSizes === "true") {
+      if (adaptDisps === "true") {
         if (SizeIncreasing === "true") {
           return y(
             d.y + label_mult_nudge * (Math.sqrt(size(d[sizeSel])) / trans_d3.k)
@@ -199,7 +199,7 @@ export default function UpdateTime(
       }
     })
     .attr("font-size", function (d) {
-      if (valueSizes === "true") {
+      if (adaptDisps === "true") {
         if (SizeIncreasing === "true") {
           return fontScale(d[sizeSel]) / trans_d3.k;
         } else {
@@ -209,15 +209,15 @@ export default function UpdateTime(
         return 12 / trans_d3.k;
       }
     })
-    .attr("opacity", function (d) {
-      if (valueSizes === "true") {
+    .attr('opacity', function (d) {
+      if (adaptDisps === "true") {
         if (SizeIncreasing === "true") {
           return opacityScale(d[sizeSel]);
         } else {
           return opacityScale(SizeDomain[1] - d[sizeSel]);
         }
       } else {
-        return 0.7;
+        return OpacityRange[1];
       }
     })
     .transition()

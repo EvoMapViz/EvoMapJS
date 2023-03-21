@@ -20,11 +20,11 @@ const f_circ_Nshow = f_circ
                         if(Sizeincreasing === 'true'){ return d[selRank] <= nFirms}
                         if(Sizeincreasing === 'false'){return d[selRank] >= (maxNfirms - nFirms)}  
                       })
-const f_trace_Nshow = f_trace
-                      .filter(function(d){
-                        if(Sizeincreasing === 'true'){ return d[selRank] <= nFirms}
-                        if(Sizeincreasing === 'false'){return d[selRank] >= (maxNfirms - nFirms)}  
-                      })
+// const f_trace_Nshow = f_trace
+//                       .filter(function(d){
+//                         if(Sizeincreasing === 'true'){ return d[selRank] <= nFirms}
+//                         if(Sizeincreasing === 'false'){return d[selRank] >= (maxNfirms - nFirms)}  
+//                       })
 const f_lab_Nshow = f_lab
                       .filter(function(d){
                         if(Sizeincreasing === 'true'){ return d[selRank] <= nFirms}
@@ -38,7 +38,7 @@ const f_lab_Nshow = f_lab
 if(colGroup === "Show All"){
   f_circ_Nshow
      .attr('display', 'inline')
-  f_trace_Nshow
+  f_trace
     .filter(function(d){ return d3.select(this).attr('data-highlighted') === 'true'})
      .attr('display', 'inline')
   f_lab
@@ -61,7 +61,7 @@ if(colGroup === "Show All"){
     .filter(d => d[colorSel] !== colGroup)
     .attr('display', 'none')
   f_trace
-    .filter(d => d[colorSel] !== colGroup)
+    .filter(d => d.length > 1 ? d[0][colorSel] !== colGroup : d[colorSel] !== colGroup)
     .attr('display', 'none')
   f_lab
     .filter(d => d[colorSel] !== colGroup)
@@ -71,7 +71,7 @@ if(colGroup === "Show All"){
   f_circ_Nshow
     .filter(d => d[colorSel] === colGroup)
     .attr('display', 'inline')
-  f_trace_Nshow
+  f_trace
     .filter(function(d){return d[colorSel] === colGroup && d3.select(this).attr('data-highlighted') === 'true'}) 
     .attr('display', 'inline')
   f_lab
