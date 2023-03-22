@@ -7,7 +7,7 @@ export default function UpdateTime(
   XRange,
   YRange,
   time,
-  valueSizes,
+  adaptDisps,
   sizeSel,
   colorSel,
   SizeExponent,
@@ -26,7 +26,7 @@ export default function UpdateTime(
   Colordomain,
   trans_d3
 ) {
-  console.log("Update Main Circles");
+  console.log("Update Time");
 
   const zoom_group = d3.select(".zoom_group_g");
   const svg = d3.select(".svg-content-responsive");
@@ -93,7 +93,7 @@ export default function UpdateTime(
     .attr("cx", (d) => x(d.x))
     .attr("cy", (d) => y(d.y))
     .attr("r", function (d) {
-      if (valueSizes === "true") {
+      if (adaptDisps === "true") {
         if (SizeIncreasing === "true") {
           return size(d[sizeSel]) / trans_d3.k;
         } else {
@@ -117,7 +117,7 @@ export default function UpdateTime(
     .attr("cx", (d) => x(d.x))
     .attr("cy", (d) => y(d.y))
     .attr("r", function (d) {
-      if (valueSizes === "true") {
+      if (adaptDisps === "true") {
         if (SizeIncreasing === "true") {
           return size(d[sizeSel]) / trans_d3.k;
         } else {
@@ -165,7 +165,7 @@ export default function UpdateTime(
     .duration(200)
     .ease(d3.easeLinear)
     .attr("x", function (d) {
-      if (valueSizes === "true") {
+      if (adaptDisps === "true") {
         if (SizeIncreasing === "true") {
           return x(
             d.x + label_mult_nudge * (Math.sqrt(size(d[sizeSel])) / trans_d3.k)
@@ -182,7 +182,7 @@ export default function UpdateTime(
       }
     }) // adjust for size of circle
     .attr("y", function (d) {
-      if (valueSizes === "true") {
+      if (adaptDisps === "true") {
         if (SizeIncreasing === "true") {
           return y(
             d.y + label_mult_nudge * (Math.sqrt(size(d[sizeSel])) / trans_d3.k)
@@ -199,7 +199,7 @@ export default function UpdateTime(
       }
     })
     .attr("font-size", function (d) {
-      if (valueSizes === "true") {
+      if (adaptDisps === "true") {
         if (SizeIncreasing === "true") {
           return fontScale(d[sizeSel]) / trans_d3.k;
         } else {
@@ -208,22 +208,29 @@ export default function UpdateTime(
       } else {
         return 12 / trans_d3.k;
       }
-    })
-    .attr("opacity", function (d) {
-      if (valueSizes === "true") {
+    }) 
+    .transition()
+    .duration(1) // adding an extra transition guarantees the labels are only visible after they have moved.
+                // Using on.('end') method instead (https://stackoverflow.com/a/10692220/14095529) creates severe lags in the time animation 
+    .attr('visibility', 'visible')
+
+  if(zoom_group.attr('data-high-count') === 0){
+    labels
+    .transition()
+    .duration(200)
+    .ease(d3.easeLinear)
+    .attr('opacity', function (d) {
+      if (adaptDisps === "true") {
         if (SizeIncreasing === "true") {
           return opacityScale(d[sizeSel]);
         } else {
           return opacityScale(SizeDomain[1] - d[sizeSel]);
         }
       } else {
-        return 0.7;
+        return OpacityRange[1];
       }
     })
-    .transition()
-    .duration(1) // adding an extra transition guarantees the labels are only visible after they have moved.
-                 // Using on.('end') method instead (https://stackoverflow.com/a/10692220/14095529) creates severe lags in the time animation 
-    .attr('visibility', 'visible')
+  }  
                                                               
 /* Hide labels with missing data */
 

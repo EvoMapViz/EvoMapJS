@@ -15,7 +15,7 @@ import {Columns} from 'react-bulma-components';
 import './Navbar.css';
 
 import {useAtom} from 'jotai';
-import {data, arrows, valueSizes, allNames, showTimes,
+import {data, arrows, adaptDisps, allNames, timeLabs,
         nFirms, maxNfirms, Time, minTime, maxTime, metaData, sizeSel, colorSel, sizeSelLabel, colorSelLabel, colgroup,
         colorType, colorDomain, colorRange, colorBins, colorIncreasing, colorExtremes,
         sizeIncreasing, sizeExponent, sizeDomain, sizeRange, arrowsSel} 
@@ -99,7 +99,6 @@ const handleColorChange = (event) => {
     // Needs to be manually synchronized with similar code in jotaiStore.js -> "Color Scales"
 
     const colorSel = event.value
-    console.log('New ColorSel: ' + colorSel)
 
     locSetColorSel(colorSel) // Communicate the change to relevant jotai state
     locSetColorSelLabel(event.label)
@@ -180,9 +179,9 @@ const cust_style = {
   // Display options
 
     const displayOptions = [
-        { value: "valueSizes", label: "Adaptive display" },
+        { value: "adaptDisps", label: "Adaptive display" },
         { value: "allNames", label: "Show all names" },
-        { value: "showTimes", label: "Time labels" }
+        { value: "timeLabs", label: "Time labels" }
     ];
 
     const displayDefault = [displayOptions[0], displayOptions[2]]
@@ -212,7 +211,8 @@ const cust_style = {
                             name= "display"
                             options = {displayOptions}
                             defaultValue = {displayDefault}
-                            atoms = {{'valueSizes' : valueSizes, 'allNames' : allNames, 'showTimes': showTimes}}
+                            isClearable = {false}
+                            atoms = {{'adaptDisps' : adaptDisps, 'allNames' : allNames, 'timeLabs': timeLabs}}
                         />
                         </Grid>
                     </Grid>
