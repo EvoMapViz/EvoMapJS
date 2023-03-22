@@ -62,7 +62,7 @@ parent: Inputs - Details
     - Inconsistent types for "discrete" features has not been tested. 
     It's safest to have a single discrete feature be either all strings or all numericals across all rows. 
 
-- For any unit, missing time periods are allowed and are signaled by the *complete* absence of the row corresponding to that time period.
+- Missing time periods for a unit is allowed. To indicate that a time period is missing, **completely** *omit* the row corresponding to that time period.
   - As indicated above, each *included* row *must* however contain the exact same set of keys. 
     In particular, the app does not allow for "partially missing" time periods whereby a row features missing keys or keys otherwise marked as `NA`, `NaN`, `null`,....
 
