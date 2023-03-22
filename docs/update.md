@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Update input data
-nav_order: 4
+nav_order: 5
 ---
 
 # Updating process for `circle.json`, `metadata.json`, and `arrows.json`
@@ -20,7 +20,7 @@ nav_order: 4
   - Commit your changes using `git` and push them to the Github repository.
   - The deployement at [https://uexp-evomapjs.netlify.app/](https://uexp-evomapjs.netlify.app/)) should automatically update (pending about a minute for the build process to complete).
 
-#### App redeployed from scratch on Netlify from Github repository.
+#### App Redeployed from scratch on Netlify.
 
   - Clone the relevant branch at [https://github.com/EvoMapViz/EvoMapJS](https://github.com/EvoMapViz/EvoMapJS) repo.
   - Edit `circle.json`, `metadata.json`, or `arrows.json` locally in the `src/data` folder.
