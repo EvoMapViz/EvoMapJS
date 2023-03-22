@@ -5,8 +5,9 @@ import UpdateTime from "./UpdateTime.js";
 import UpdateCircleClick from "./UpdateCircleClick.js";
 import UpdateHighlightSel from "./UpdateHighlightSel.js";
 import UpdateAllnames from "./UpdateAllnames.js";
+import UpdateTimeLabs from "./UpdateTimeLabs.js";
 import UpdateN from "./UpdateN.js";
-import UpdateAdaptiveSizes from "./UpdateAdaptiveSizes.js";
+import UpdateAdaptiveDisplay from "./UpdateAdaptiveDisplay.js";
 import UpdateSizeSel from "./UpdateSizeSel.js";
 import UpdateColorSel from "./UpdateColorSel.js";
 import UpdateArrows from "./UpdateArrows.js";
@@ -20,8 +21,8 @@ import "./Gapminder.css"
 import { data, metaData,
          Width, Height, Margin,
          xDomain, yDomain, xRange, yRange,
-         allFirms, allNames, maxNfirms, minTime, nTimes,
-         valueSizes, Time, nFirms, sizeSel, colorSel, colgroup, arrowsSel,
+         allFirms, allNames, maxNfirms, minTime, nTimes, timeLabs,
+         adaptDisps, Time, nFirms, sizeSel, colorSel, colgroup, arrowsSel,
          transD3, 
          justClicked, justSelHigh, 
          colorType, colorDomain, colorRange, colorBins, colorIncreasing, colorBounds, 
@@ -80,9 +81,10 @@ export default function Gapminder() {
   const [locOpacityDomain, ] = useAtom(opacityDomain)
   const [locOpacityRange, ] = useAtom(opacityRange)
 
-  const [locValueSizes,] = useAtom(valueSizes)
+  const [locAdaptDisp,] = useAtom(adaptDisps)
   const [locAllNames,] = useAtom(allNames)
   const [locAllFirms,] = useAtom(allFirms)
+  const [locTimeLabs,] = useAtom(timeLabs)
   const [locMaxnfirms,] = useAtom(maxNfirms)
   const [locMintime,] = useAtom(minTime)
   const [locNTimes,] = useAtom(nTimes)
@@ -109,7 +111,7 @@ useEffect(() => {
         locSizeUnit, locSizeExponent, locSizeDomain, locSizeRange, locSizeIncreasing,
         locFontExponent, locFontDomain, locFontRange,
         locOpacityExponent, locOpacityDomain, locOpacityRange,
-        locValueSizes, locTime, locNfirms,
+        locAdaptDisp, locTime, locNfirms,
         locSizeSel, locColorSel, 
         locSetTransD3, locSetJustClicked, locSetData,
         ref.current)
@@ -129,10 +131,10 @@ useEffect(() => {
                       locSizeExponent, locSizeRange, locSizeDomain, locSizeIncreasing,
                       locFontRange, locFontDomain, locFontExponent, 
                       locOpacityRange, locOpacityDomain, locOpacityExponent,
-                      locValueSizes, locSizeSel,
+                      locAdaptDisp, locSizeSel,
                       locTransD3, locSetTransD3,
                       locIsArrows)}  
-}, [locValueSizes, locSizeSel, locTime])
+}, [locAdaptDisp, locSizeSel, locTime])
 
 /* Main circle/label animation */
 
@@ -140,7 +142,7 @@ useEffect(() => {
   if (didMountRef.current){ // Prevents run on initial render 
     return UpdateTime(locData, locArrows, locIsArrows,
                              locXDomain, locYDomain, locXRange, locYRange,
-                             locTime, locValueSizes, locSizeSel, locColorSel,
+                             locTime, locAdaptDisp, locSizeSel, locColorSel,
                              locSizeExponent, locSizeRange, locSizeDomain, locSizeIncreasing,
                              locFontRange, locFontDomain, locFontExponent, 
                              locOpacityRange, locOpacityDomain, locOpacityExponent,
@@ -156,7 +158,7 @@ useEffect(() => {
                          locSizeExponent, locSizeRange, locSizeDomain, locSizeIncreasing,
                          locFontRange, locFontDomain, locFontExponent, 
                          locOpacityRange, locOpacityDomain, locOpacityExponent,
-                         locValueSizes, locSizeSel,
+                         locAdaptDisp, locSizeSel,
                          locTransD3)} 
 }, [locSizeSel])
 
@@ -169,7 +171,7 @@ useEffect(() => {
                           locColortype,locColorrange, locColordomain, locColorincreasing, 
                           locSizeIncreasing,
                           locSetJustClicked, locAllNames,
-                          locSizeSel, locTime, opacityRange, opacityDomain, opacityExponent // For use in clearSVG
+                          locSizeSel, locTime, opacityRange, opacityDomain, opacityExponent, locAdaptDisp, locAdaptDisp // For use in clearSVG
                           )} 
 }, [locColorSel])
 
@@ -182,6 +184,13 @@ useEffect(() => {
                           )} 
 }, [locAllNames, locSizeSel])
 
+/* Show/Hide time labels upon highlight */
+
+useEffect(() => {
+  if (didMountRef.current){  // Prevents run on initial render 
+    return UpdateTimeLabs(locTimeLabs)} 
+}, [locTimeLabs])
+
 /* Max. number of firms N */
 
 useEffect(() => {
@@ -190,7 +199,7 @@ useEffect(() => {
                    locSizeIncreasing, locNfirms, locColgroup, locSetJustClicked,
                    locData, locSizeSel, locColorSel, locTime,
                    locColortype, locColorbounds,
-                   opacityRange, opacityDomain, opacityExponent // For use in clearSVG
+                   opacityRange, opacityDomain, opacityExponent, locAdaptDisp // For use in clearSVG
                    )} 
 }, [locNfirms, locSizeSel])
 
@@ -198,13 +207,13 @@ useEffect(() => {
 
 useEffect(() => {
   if (didMountRef.current){ // Prevents run on initial render
-    return UpdateAdaptiveSizes(locXDomain, locYDomain, locXRange, locYRange,
+    return UpdateAdaptiveDisplay(locXDomain, locYDomain, locXRange, locYRange,
                               locSizeExponent, locSizeRange, locSizeDomain, locSizeIncreasing,
                               locFontRange, locFontDomain, locFontExponent, 
                               locOpacityRange, locOpacityDomain, locOpacityExponent,
-                              locValueSizes, locSizeSel,
+                              locAdaptDisp, locSizeSel,
                               locTransD3)}  
-}, [locValueSizes])
+}, [locAdaptDisp])
 
 /* Colgroup */
 
@@ -230,8 +239,8 @@ useEffect(() => {
       return UpdateCircleClick(locData, locTime, locJustClicked,
                               locXDomain, locYDomain, locXRange, locYRange,
                               locSizeExponent, locSizeRange, locSizeDomain, locSizeIncreasing,
-                              locOpacityRange, locOpacityDomain, locOpacityExponent, 
-                              locValueSizes, locSizeSel, locAllNames, locNfirms, locNTimes,
+                              locOpacityRange, locOpacityDomain, locOpacityExponent, locAdaptDisp,
+                              locAdaptDisp, locSizeSel, locAllNames, locNfirms, locNTimes, locTimeLabs,
                               locTransD3)
                             // } 
     }
@@ -247,12 +256,12 @@ useEffect(() => {
                                 locXDomain, locYDomain, locXRange, locYRange,
                                 locSizeExponent, locSizeRange, locSizeDomain, locSizeIncreasing,
                                 locOpacityRange, // To set highlight intensity as upper bound of range
-                                locValueSizes, locSizeSel,locAllNames, locNfirms, locNTimes,
+                                locAdaptDisp, locSizeSel,locAllNames, locNfirms, locNTimes, locTimeLabs,
                                 locTransD3)} 
     if (zoom_group.attr('data-high-count') === '0'){
-      clearSVG(zoom_group, allNames,
+      clearSVG(zoom_group, locAllNames,
                locData, locSizeSel, locTime,
-               opacityRange, opacityDomain, opacityExponent)
+               locOpacityRange, locOpacityDomain, locOpacityExponent, locAdaptDisp)
     }
   
   }

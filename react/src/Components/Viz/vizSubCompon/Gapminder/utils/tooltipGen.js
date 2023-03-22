@@ -18,8 +18,6 @@ varList.map(function(d){
         let truncate_label = 9
         if(typeof d.truncate_label !== 'undefined'){truncate_label = d.truncate_label}
 
-        console.log(truncate(d.label, truncate_label))
-
         string = string + '<div class="grid-item">' + 
         truncate(d.label, truncate_label) +
         // abbreviate(d.label, {length: truncate_label, keepSeparators: true}) + 

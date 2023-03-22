@@ -56,6 +56,7 @@ svg.on('click', function(event){
     }
   });
 
+// Discrete
 function clickDiscrete(event){
     let tthis = svg
                 .selectAll('.color_legend')
@@ -77,6 +78,7 @@ function clickDiscrete(event){
     }
 }
 
+// Continuous
 function clickContinuous(event){
 
     let tthis = svg

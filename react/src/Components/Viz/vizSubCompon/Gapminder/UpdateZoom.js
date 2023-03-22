@@ -7,7 +7,7 @@ export default function UpdateZoom( data,
                                     XDomain, YDomain, XRange, YRange,
                                     SizeExponent, SizeRange, SizeDomain, SizeIncreasing,
                                     FontRange, FontDomain, FontExponent, OpacityRange, OpacityDomain, OpacityExponent,
-                                    valueSizes, sizeSel,
+                                    adaptDisps, sizeSel,
                                     trans_d3, setTrans_d3,
                                     isArrows){
 
@@ -56,7 +56,6 @@ var zoom = d3.zoom()
   .on("zoom", zoomed);
 
 var zoom_group = d3.select(".zoom_group_g")
-
 var xAxis = svg.select("axis--x")
 var yAxis = svg.select("axis--y")
         
@@ -77,7 +76,11 @@ function zoomed({transform}) {
 
   // Update firms circles and labels
   /*  */
-  if(valueSizes === 'true'){
+
+  // ADAPTIVE display
+  if(adaptDisps === 'true'){
+    
+    // Circles
     zoom_group //Apply zoom to groups rather than individual elements for better performance: https://stackoverflow.com/questions/51562401/d3-slow-zoomable-heatmap
     .attr("transform", trans_d3)
     .selectAll('circle')
@@ -87,6 +90,7 @@ function zoomed({transform}) {
         return   size(SizeDomain[1]-d[sizeSel]) / trans_d3.k  }
       })
 
+    // Firm labels
     zoom_group
       .selectAll('.firmLabel')
       .attr('x', function(d){
@@ -105,43 +109,56 @@ function zoomed({transform}) {
           return fontScale(SizeDomain[1] - d[sizeSel])/trans_d3.k
         }
       })
-      .attr('opacity', function(d){
-        if(SizeIncreasing === "true"){ 
-          return opacityScale(d[sizeSel]) } else {
-          return opacityScale(SizeDomain[1] - d[sizeSel])
-        }
+
+    // Trace time labels
+    zoom_group
+      .selectAll('.time-label-trace-firm')
+      .attr('x', function(d){
+        if(increasing === "true"){ 
+          return x(d.x - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
+          return x(d.x - label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  }
+      }) // Update for size of circle
+      .attr('y', function(d){
+        if(increasing === "true"){ 
+          return y(d.y - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
+          return y(d.y - label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  }
       })
-  } else {
+      .attr('font-size', 12/trans_d3.k)
+  } 
+  
+  if(adaptDisps === 'false'){
+
+    //Circles
     zoom_group //Apply zoom to groups rather than individual elements for better performance: https://stackoverflow.com/questions/51562401/d3-slow-zoomable-heatmap
     .attr("transform", trans_d3)
     .selectAll('circle')
     .attr("r", 4/trans_d3.k) // Still need to make sure circles don't grow in size upon zoom.
 
+    // Firm labels
     zoom_group
       .selectAll('.firmLabel')
       .attr('x', function(d){ return x(d.x + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) }) 
       .attr('y', function(d){return y(d.y + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  })
       .attr('font-size', 12/ trans_d3.k)
-      .attr('opacity', 0.7)
-  }
 
-  // Update trace time labels
-  /*  */
-  zoom_group
-    .selectAll('.time-label-trace-firm')
-    .attr('x', function(d){
-      if(increasing === "true"){ 
-        return x(d.x + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return x(d.x + label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  }
-    }) // Update for size of circle
-    .attr('y', function(d){
-      if(increasing === "true"){ 
-        return y(d.y - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return y(d.y - label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  }
-    })
-    .attr('font-size', 12/trans_d3.k)
+    // Trace time labels
+    zoom_group
+      .selectAll('.time-label-trace-firm')
+      .attr('x', function(d){
+        if(increasing === "true"){ 
+          return x(d.x - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) } else {
+          return x(d.x - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  }
+      }) // Update for size of circle
+      .attr('y', function(d){
+        if(increasing === "true"){ 
+          return y(d.y - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) } else {
+          return y(d.y - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  }
+      })
+      .attr('font-size', 12/trans_d3.k)
+  }
+    
   
-  // Update explainer elements
+  // Explainer arrows
   /*  */
 
   if(isArrows){

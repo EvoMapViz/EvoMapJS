@@ -47,9 +47,9 @@ export const MultiSelectAbrev = props => {
 
     let acronym = ''
 
-    if(data.value === 'valueSizes') acronym = 'Adapt'
+    if(data.value === 'adaptDisps') acronym = 'Adapt'
     if(data.value === 'allNames') acronym = 'Names'
-    if(data.value === 'showTimes') acronym = 'Yr labs'
+    if(data.value === 'timeLabs') acronym = 'Time labs'
     
     return (
       <div {...innerProps}>
@@ -63,8 +63,8 @@ export const MultiSelectAbrev = props => {
   // 
 
   const [, locSetAllNames] = useAtom(props.atoms['allNames'])
-  const [, locSetShowTimes] = useAtom(props.atoms['showTimes'])
-  const [, locSetValueSizes] = useAtom(props.atoms['valueSizes'])
+  const [, locSettimeLabs] = useAtom(props.atoms['timeLabs'])
+  const [, locSetadaptDisps] = useAtom(props.atoms['adaptDisps'])
   const [locDisplay, locSetDisplay] = useAtom(display)
 
   // 
@@ -79,18 +79,18 @@ export const MultiSelectAbrev = props => {
 
       const new_item = newDisp.filter(item => !locDisplay.includes(item))
 
-      if(new_item[0] === 'valueSizes') locSetValueSizes('true')
+      if(new_item[0] === 'adaptDisps') locSetadaptDisps('true')
       if(new_item[0] === 'allNames') locSetAllNames('true')
-      if(new_item[0] === 'showTimes') locSetShowTimes('true')
+      if(new_item[0] === 'timeLabs') locSettimeLabs('true')
     }
 
     if(newDisp.length < locDisplay.length){ // Option(s) removed
 
       const removed_item = locDisplay.filter(item => !newDisp.includes(item))
 
-      if(removed_item[0] === 'valueSizes') locSetValueSizes('false')
+      if(removed_item[0] === 'adaptDisps') locSetadaptDisps('false')
       if(removed_item[0] === 'allNames') locSetAllNames('false')
-      if(removed_item[0] === 'showTimes') locSetShowTimes('false')
+      if(removed_item[0] === 'timeLabs') locSettimeLabs('false')
     }
 
     locSetDisplay(newDisp)
@@ -112,6 +112,7 @@ export const MultiSelectAbrev = props => {
       components = {{MultiValueLabel,    //https://stackoverflow.com/questions/68678071/react-select-abreviate-dropdown-names-on-multi-select
                     DropdownIndicator:() => null, //https://stackoverflow.com/questions/54961077/react-select-is-there-a-way-to-remove-the-button-on-the-right-that-expand-the-l
                     IndicatorSeparator:() => null }} 
+      isClearable={props.isClearable}
     />
   );
 };

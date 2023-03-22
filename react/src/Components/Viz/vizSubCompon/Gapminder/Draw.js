@@ -9,10 +9,10 @@ export default function Draw(data, meta, arrows, isArrows,
                               XDomain, YDomain, XRange, YRange,
                               allFirms, allNames, maxNfirms, minTime,
                               Colortype, Colorrange, Colorbins, Colordomain, Colorincreasing,
-                              SizeUnit, SizeExponent, SizeDomain, SizeRange, Sizeincreasing,
+                              SizeUnit, SizeExponent, SizeDomain, SizeRange, SizeIncreasing,
                               FontExponent, FontDomain, FontRange,
                               OpacityExponent, OpacityDomain, OpacityRange,
-                              valueSizes, time, nFirms,
+                              adaptDisps, time, nFirms,
                               sizeSel, colorSel,
                               setTrans_d3, setJustClicked, locSetData,
                               refcur){
@@ -53,7 +53,7 @@ const tooldiv = d3.select(refcur)
               .append("div")
               .attr("class", "tooltip")
               .style('position', 'fixed')
-              .style("opacity", 0);
+              .style('opacity', 0);
 
 const toolVarList = meta
                       .filter(d => d.tooltip === 'true' | d.tooltip === 'only')
@@ -207,71 +207,92 @@ function zoomed({transform}) {
   xAxis.call(d3.axisBottom(newX))
   yAxis.call(d3.axisLeft(newY))
 
-  // Adjust firms circles and labels
-  if(valueSizes === 'true'){
+  // Update firms circles and labels
+  /*  */
+
+  // ADAPTIVE display
+  if(adaptDisps === 'true'){
+    
+    // Circles
     zoom_group //Apply zoom to groups rather than individual elements for better performance: https://stackoverflow.com/questions/51562401/d3-slow-zoomable-heatmap
     .attr("transform", trans_d3)
     .selectAll('circle')
     .attr("r", function(d){
-      if(increasing === "true"){ 
+      if(SizeIncreasing === "true"){ 
         return   size(d[sizeSel]) / trans_d3.k } else {
-        return   size(dom[1]-d[sizeSel]) / trans_d3.k  }
+        return   size(SizeDomain[1]-d[sizeSel]) / trans_d3.k  }
       })
 
+    // Firm labels
     zoom_group
       .selectAll('.firmLabel')
       .attr('x', function(d){
-        if(increasing === "true"){ 
+        if(SizeIncreasing === "true"){ 
           return x(d.x + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-          return x(d.x + label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  }
-      }) // adjust for size of circle
+          return x(d.x + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
+      }) // Update for size of circle
       .attr('y', function(d){
-        if(increasing === "true"){ 
+        if(SizeIncreasing === "true"){ 
           return y(d.y + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-          return y(d.y + label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  }
+          return y(d.y + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
       })
       .attr('font-size', function(d){
-        if(increasing === "true"){ 
+        if(SizeIncreasing === "true"){ 
           return fontScale(d[sizeSel])/trans_d3.k } else {
-          return fontScale(dom[1] - d[sizeSel])/trans_d3.k
+          return fontScale(SizeDomain[1] - d[sizeSel])/trans_d3.k
         }
       })
-      .attr('opacity', function(d){
+
+    // Trace time labels
+    zoom_group
+      .selectAll('.time-label-trace-firm')
+      .attr('x', function(d){
         if(increasing === "true"){ 
-          return opacityScale(d[sizeSel]) } else {
-          return opacityScale(dom[1] - d[sizeSel])
-        }
+          return x(d.x - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
+          return x(d.x - label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  }
+      }) // Update for size of circle
+      .attr('y', function(d){
+        if(increasing === "true"){ 
+          return y(d.y - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
+          return y(d.y - label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  }
       })
-  } else {
+      .attr('font-size', 12/trans_d3.k)
+  } 
+  
+  if(adaptDisps === 'false'){
+
+    //Circles
     zoom_group //Apply zoom to groups rather than individual elements for better performance: https://stackoverflow.com/questions/51562401/d3-slow-zoomable-heatmap
     .attr("transform", trans_d3)
     .selectAll('circle')
     .attr("r", 4/trans_d3.k) // Still need to make sure circles don't grow in size upon zoom.
 
+    // Firm labels
     zoom_group
       .selectAll('.firmLabel')
       .attr('x', function(d){ return x(d.x + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) }) 
       .attr('y', function(d){return y(d.y + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  })
       .attr('font-size', 12/ trans_d3.k)
-      .attr('opacity', 0.7)
+
+    // Trace time labels
+    zoom_group
+      .selectAll('.time-label-trace-firm')
+      .attr('x', function(d){
+        if(increasing === "true"){ 
+          return x(d.x - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) } else {
+          return x(d.x - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  }
+      }) // Update for size of circle
+      .attr('y', function(d){
+        if(increasing === "true"){ 
+          return y(d.y - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) } else {
+          return y(d.y - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  }
+      })
+      .attr('font-size', 12/trans_d3.k)
   }
 
-  // Adjust trace time labels
-  zoom_group
-    .selectAll('.time-label-trace-firm')
-    .attr('x', function(d){
-      if(increasing === "true"){ 
-        return x(d.x - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return x(d.x - label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  }
-    }) // adjust for size of circle
-    .attr('y', function(d){
-      if(increasing === "true"){ 
-        return y(d.y - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return y(d.y - label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  }
-    })
-    .attr('font-size', 12/trans_d3.k)
+  // Explainer arrows
+  /*  */
 
-  // Adjust explainer arrows
   zoom_group
     .selectAll('.explainer-arrow')
     .attr("stroke-width", 2/trans_d3.k)
@@ -578,7 +599,7 @@ if(isArrows){
       )
     })
     .attr('font-size', 12/trans_d3.k)
-    .attr('opacity', 0.25)
+    .attr('opacity', OpacityRange[0])
     .classed('arrow-text', true)
     .style("text-anchor", "middle") // https://stackoverflow.com/questions/13188125/d3-add-multiple-classes-with-function
 }
@@ -653,7 +674,7 @@ zoom_group
       return size(dom[1] - d[sizeSel]) / trans_d3.k;
     }
   })
-  .attr("opacity", 0.65)
+  .attr('opacity', OpacityRange[1])
   .attr("display", function (d) {
     if (Colorincreasing === "true") {
       return d[selRank] <= nFirms ? "inline" : "none";
@@ -684,7 +705,7 @@ zoom_group
   })
   /* Show tooltip on hover */
   .on("mouseover", function (event, d) {
-    tooldiv.transition().duration(100).style("opacity", 0.9);
+    tooldiv.transition().duration(100).style('opacity', 0.9);
     tooldiv
       .html(
         tooltipGen(
@@ -703,7 +724,7 @@ zoom_group
     d3.select(this).style("stroke", "black");
   })
   .on("mouseout", function (d) {
-    tooldiv.transition().duration(100).style("opacity", 0);
+    tooldiv.transition().duration(100).style('opacity', 0);
     d3.select(this).style("stroke", "none");
   })
   .filter((d) => d.time !== minTime) // Hide circles whose time is not minTime
@@ -731,7 +752,7 @@ zoom_group.selectAll('label-firms')
   .text(d => d.label)
   .attr('data-highlighted', false)
   .attr('x', function(d){
-    if(valueSizes === 'true'){
+    if(adaptDisps === 'true'){
       if(increasing === "true"){ 
         return x(d.x + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
         return x(d.x + label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  }
@@ -740,7 +761,7 @@ zoom_group.selectAll('label-firms')
     }
   }) // adjust for size of circle
   .attr('y', function(d){
-    if(valueSizes === 'true'){
+    if(adaptDisps === 'true'){
       if(increasing === "true"){ 
         return y(d.y + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
         return y(d.y + label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  }
@@ -749,7 +770,7 @@ zoom_group.selectAll('label-firms')
     }
   })
   .attr('font-size', function(d){
-    if(valueSizes === 'true'){
+    if(adaptDisps === 'true'){
       if(increasing === "true"){ 
         return fontScale(d[sizeSel])/trans_d3.k } else {
         return fontScale(dom[1] - d[sizeSel])/trans_d3.k}
@@ -758,12 +779,12 @@ zoom_group.selectAll('label-firms')
     }
   })
   .attr('opacity', function(d){
-    if(valueSizes === 'true'){
+    if(adaptDisps === 'true'){
       if(increasing === "true"){ 
         return opacityScale(d[sizeSel]) } else {
         return opacityScale(dom[1] - d[sizeSel])}
     } else {
-        return 0.7
+        return OpacityRange[1]
     }
   })
   .attr('display', 'none')
