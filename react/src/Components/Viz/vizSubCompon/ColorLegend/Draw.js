@@ -60,7 +60,6 @@ svg.on("click", function (event) {
 });
 
 // Discrete
-
 function clickDiscrete(event) {
   let tthis = svg.selectAll(".color_legend").filter(function (e) {
     return d3.select(this).attr("data-name") === event;
@@ -83,7 +82,6 @@ function clickDiscrete(event) {
 }
 
 // Continuous
-
 function clickContinuous(event) {
   let tthis = svg.selectAll(".color_legend").filter(function (e) {
     return d3.select(this).attr("data-name") === event.toString();

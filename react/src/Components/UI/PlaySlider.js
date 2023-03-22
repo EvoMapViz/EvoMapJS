@@ -16,8 +16,6 @@ export default function AtomSlider(props) { //https://stackoverflow.com/question
   const smax = props.max 
 
   console.log('Building play slider')
-  console.log('smin: ', smin)
-  console.log('smax: ', smax)
 
   const [value, setValue] = useAtom(props.atom);
   const [isRunning, setIsRunning] = useState(false);

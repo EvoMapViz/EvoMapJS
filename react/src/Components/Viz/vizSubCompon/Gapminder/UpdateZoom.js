@@ -56,7 +56,6 @@ var zoom = d3.zoom()
   .on("zoom", zoomed);
 
 var zoom_group = d3.select(".zoom_group_g")
-
 var xAxis = svg.select("axis--x")
 var yAxis = svg.select("axis--y")
         

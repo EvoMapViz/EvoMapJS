@@ -99,7 +99,6 @@ const handleColorChange = (event) => {
     // Needs to be manually synchronized with similar code in jotaiStore.js -> "Color Scales"
 
     const colorSel = event.value
-    console.log('New ColorSel: ' + colorSel)
 
     locSetColorSel(colorSel) // Communicate the change to relevant jotai state
     locSetColorSelLabel(event.label)
@@ -212,6 +211,7 @@ const cust_style = {
                             name= "display"
                             options = {displayOptions}
                             defaultValue = {displayDefault}
+                            isClearable = {false}
                             atoms = {{'adaptDisps' : adaptDisps, 'allNames' : allNames, 'timeLabs': timeLabs}}
                         />
                         </Grid>

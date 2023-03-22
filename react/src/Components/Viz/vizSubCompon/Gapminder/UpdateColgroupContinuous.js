@@ -64,42 +64,44 @@ if(colGroup === "Show All"){
 // Click is on a colGroup in the legend, show only those circles 
 //
 
-  // Elements to hide
-  f_circ
-    .filter(d => d[colorSel] < bounds[0] | d[colorSel] >= bounds[1])
-    .attr('display', 'none')
-  f_trace
-    .filter(d => (
-      d.length > 1 ?
-      d[0][colorSel] < bounds[0] | d[0][colorSel] >= bounds[1] :
-      d[colorSel] < bounds[0] | d[colorSel] >= bounds[1]
-      )
-    )
-    .attr('display', 'none')
-  f_lab
-    .filter(d => d[colorSel] < bounds[0] | d[colorSel] >= bounds[1])
-    .attr('display', 'none')
+// Find names within bounds
 
-  // Elements to show
-  f_circ_Nshow
-    .filter(d => d[colorSel] >= bounds[0] && d[colorSel] < bounds[1])
-     .attr('display', 'inline')
-  f_trace
-    .filter(function(d){return d[colorSel] >= bounds[0] && d[colorSel] < bounds[1] &&
-                               d3.select(this).attr('data-highlighted') === 'true'})
-     .attr('display', 'inline')
-  f_lab
-    .filter(function(d){return d[colorSel] >= bounds[0] && d[colorSel] < bounds[1] &&
+const names_in_bounds = f_circ
+                          .filter(d => d[colorSel] >= bounds[0] && d[colorSel] < bounds[1])
+                          .nodes()
+                          .map(d => d.__data__.name)
+
+// Elements to hide
+f_circ
+  .filter(d => !names_in_bounds.includes(d.name))
+  .attr('display', 'none')
+f_trace
+  .filter(d => !names_in_bounds.includes(d.length > 1 ? d[0].name : d.name))
+  .attr('display', 'none')
+f_lab
+  .filter(d => !names_in_bounds.includes(d.name))
+  .attr('display', 'none')
+
+// Elements to show
+f_circ_Nshow
+  .filter(d => names_in_bounds.includes(d.name))
+  .attr('display', 'inline')
+f_trace
+  .filter(function(d){return names_in_bounds.includes(d.length > 1 ? d[0].name : d.name) &&
+                              d3.select(this).attr('data-highlighted') === 'true'})
+    .attr('display', 'inline')
+f_lab
+  .filter(function(d){return names_in_bounds.includes(d.name) &&
+                              d3.select(this).attr('data-highlighted') === 'true'})
+    .attr('display', 'inline') 
+
+// All names case
+if(allNames === 'true'){
+  f_lab_Nshow
+    .filter(function(d){return names_in_bounds.includes(d.name) &&
                                 d3.select(this).attr('data-highlighted') === 'true'})
-     .attr('display', 'inline') 
-
-  // All names case
-  if(allNames === 'true'){
-    f_lab_Nshow
-      .filter(function(d){return d[colorSel] >= bounds[0] && d[colorSel] < bounds[1] &&
-                                  d3.select(this).attr('data-highlighted') === 'true'})
-      .attr('display', 'inline') 
-  }
+    .attr('display', 'inline') 
+}
 
 }
 

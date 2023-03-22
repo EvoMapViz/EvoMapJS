@@ -6,7 +6,6 @@ export default function clearSVG(svg, allNames,
                                  adaptDisp = 'true'){
 
     console.log('Clearing up! (clearSVG)')
-    console.log('allNames: ' + allNames)
 
     const opacityScale = d3.scalePow()
                             .exponent(OpacityExponent)

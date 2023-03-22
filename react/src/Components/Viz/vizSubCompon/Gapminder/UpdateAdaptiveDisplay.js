@@ -8,7 +8,6 @@ export default function UpdateAdaptiveDisplay(XDomain, YDomain, XRange, YRange,
                                             trans_d3){
 
 console.log("Adaptive Size Update")
-console.log('adaptDisps: ' + adaptDisps)
 
 const svg = d3.select(".svg-content-responsive")
 const label_mult_nudge = 0.12; // label nudge away from circles
@@ -128,6 +127,7 @@ if(adaptDisps === "false"){
 
   // Firm labels
   if(zoom_group.attr('data-high-count') === "0"){  
+    console.log("ZERO high COUNT")
     svg
       .selectAll('.firmLabel')
       .transition()
@@ -135,11 +135,11 @@ if(adaptDisps === "false"){
       .attr('x', function(d){ return x(d.x + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  }) // adjust for size of circle
       .attr('y', function(d){ return y(d.y + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) })
       .attr('font-size', 12/trans_d3.k)
-      .filter(function(){return d3.select(this).attr("data-highlighted") === "false"})
       .attr('opacity', OpacityRange[1])
   }
 
   if(zoom_group.attr('data-high-count') !== "0"){  
+    console.log("NON zero high COUNT")
     svg
       .selectAll('.firmLabel')
       .transition()
@@ -147,7 +147,9 @@ if(adaptDisps === "false"){
       .attr('x', function(d){ return x(d.x + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  }) // adjust for size of circle
       .attr('y', function(d){ return y(d.y + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) })
       .attr('font-size', 12/trans_d3.k)
-      .filter(function(){return d3.select(this).attr("data-highlighted") === "false"})
+      .attr('opacity', function(d){
+        return d3.select(this).attr("data-highlighted") === "false" ? OpacityRange[0] : OpacityRange[1]
+      })
   }
 
   // Time labels

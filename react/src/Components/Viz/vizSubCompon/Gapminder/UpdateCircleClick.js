@@ -104,10 +104,6 @@ if(justClicked[0] === 'high'){
 
   if(filt_data.length === nTimes){ // Complete data series for all times
 
-    const test = [ filt_data  ]
-    console.log(test)
-    console.log(test[0])
-
     zoom_group.selectAll('path-trace-firm') 
       .data([ filt_data  ]) // data is array because object to create is path element (multiple points)
       .enter()
@@ -246,8 +242,6 @@ if(justClicked[0] === 'dehigh') {
   }
 
   console.log('dehigh')
-  console.log('Current trace elements')
-  console.log(svg.selectAll('.trace').toString())
 
   svg.selectAll('.trace') //De-highlight trace
       .filter(d => d.length > 1 ?  d[0].name === justClicked[1] : d.name === justClicked[1]) // d[0] is first element of path if element is path element
