@@ -8,13 +8,15 @@ export default function UpdateN(allNames, maxNfirms,
                                 OpacityRange, OpacityDomain, OpacityExponent, AdaptDisp // For use in clearSVG
                                 ){
 
-console.log("Top N Update") 
+console.log("Top N Update")
 
 const svg = d3.select(".svg-content-responsive")
 const zoom_group = d3.select('.zoom_group_g')
 const selRank = 'rank-' + sizeSel
 
 const nFirmsHigh = maxNfirms - nFirms
+console.log("nFirmsHigh", nFirmsHigh)
+console.log("Sizeinc  reasing", Sizeincreasing)
 
 /*  */
 /* Update svg background click event */
@@ -56,23 +58,26 @@ if(colGroup !== "Show All"){
 }
 
 /*  */
-/* Change display as a function of allNames */
+/* Change display */
 /*  */
 
+// All names TRUE
 if(allNames === "true"){
 
   colGroup_lab
   .filter(function(d){
     return Sizeincreasing === 'true' ? 
-            d[selRank] <= nFirms : 
-            d[selRank] >= nFirmsHigh
+    d[selRank] <= nFirms : 
+    d[selRank] >= nFirmsHigh
   })
   .attr('display', 'inline')
 
 
   colGroup_circ
   .filter(function(d){
-    return Sizeincreasing === 'true' ? d[selRank] <= nFirms : d[selRank] >= nFirmsHigh
+    return Sizeincreasing === 'true' ? 
+    d[selRank] <= nFirms : 
+    d[selRank] >= nFirmsHigh
   })
   .attr('display', 'inline')
 
@@ -81,7 +86,7 @@ if(allNames === "true"){
     const high = d3.select(this).attr('data-highlighted')
     return Sizeincreasing === 'true' ? 
             d[selRank] > nFirms && high === 'false' : 
-            d[selRank] >= nFirmsHigh && high === 'false'
+            d[selRank] <= nFirmsHigh && high === 'false'
   })
   .attr('display', 'none')
 
@@ -90,11 +95,12 @@ if(allNames === "true"){
     const high = d3.select(this).attr('data-highlighted')
     return Sizeincreasing === 'true' ? 
             d[selRank] > nFirms && high === 'false' : 
-            d[selRank] >= nFirmsHigh && high === 'false'
+            d[selRank] <= nFirmsHigh && high === 'false'
   })
   .attr('display', 'none')
 }
 
+// All names FALSE
 if(allNames === "false"){
 
   colGroup_circ
@@ -111,7 +117,7 @@ if(allNames === "false"){
     const high = d3.select(this).attr('data-highlighted')
     return Sizeincreasing === 'true' ? 
             d[selRank] > nFirms && high === 'false' : 
-            d[selRank] > nFirmsHigh && high === 'false'
+            d[selRank] <= nFirmsHigh && high === 'false'
   })
   .attr('display', 'none')
 

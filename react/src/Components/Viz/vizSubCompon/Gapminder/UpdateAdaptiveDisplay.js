@@ -127,7 +127,6 @@ if(adaptDisps === "false"){
 
   // Firm labels
   if(zoom_group.attr('data-high-count') === "0"){  
-    console.log("ZERO high COUNT")
     svg
       .selectAll('.firmLabel')
       .transition()
@@ -139,7 +138,6 @@ if(adaptDisps === "false"){
   }
 
   if(zoom_group.attr('data-high-count') !== "0"){  
-    console.log("NON zero high COUNT")
     svg
       .selectAll('.firmLabel')
       .transition()
