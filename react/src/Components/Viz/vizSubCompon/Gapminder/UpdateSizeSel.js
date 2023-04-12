@@ -11,7 +11,7 @@ export default function UpdateSizeSel(XDomain, YDomain, XRange, YRange,
 console.log("Sizes selector Update") 
 
 const svg = d3.select(".svg-content-responsive")
-const label_mult_nudge = 0.12; // label nudge away from circles
+const label_nudge = 0.12; // label nudge away from circles
 const zoom_group = d3.select('.zoom_group_g')
 
 const x = d3.scaleLinear()
@@ -57,13 +57,13 @@ if(adaptDisps === "true"){
     .duration(700)
     .attr('x', function(d){
       if(SizeIncreasing === "true"){ 
-        return x(d.x + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return x(d.x + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
+        return x(d.x + label_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
+        return x(d.x + label_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
     }) // adjust for size of circle
     .attr('y', function(d){
       if(SizeIncreasing === "true"){ 
-        return y(d.y + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return y(d.y + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
+        return y(d.y + label_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
+        return y(d.y + label_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
     })
 
     // svg.selectAll('.firmLabel')
@@ -78,13 +78,13 @@ if(adaptDisps === "true"){
     .duration(700)
     .attr('x', function(d){
       if(SizeIncreasing === "true"){ 
-        return x(d.x + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return x(d.x + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
+        return x(d.x + label_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
+        return x(d.x + label_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
     }) // adjust for size of circle
     .attr('y', function(d){
       if(SizeIncreasing === "true"){ 
-        return y(d.y + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return y(d.y + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
+        return y(d.y + label_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
+        return y(d.y + label_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
     })
     .attr('font-size', function(d){
         if(SizeIncreasing === "true"){ 
@@ -105,13 +105,13 @@ if(adaptDisps === "true"){
     .duration(700)
     .attr('x', function(d){
       if(SizeIncreasing === "true"){ 
-        return x(d.x + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return x(d.x + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
+        return x(d.x + label_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
+        return x(d.x + label_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
     }) // adjust for size of circle
     .attr('y', function(d){
       if(SizeIncreasing === "true"){ 
-        return y(d.y + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return y(d.y + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
+        return y(d.y + label_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
+        return y(d.y + label_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
     })
     .attr('font-size', function(d){
         if(SizeIncreasing === "true"){ 
@@ -127,13 +127,13 @@ if(adaptDisps === "true"){
     .duration(700)
     .attr('x', function(d){
       if(SizeIncreasing === "true"){ 
-        return x(d.x - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return x(d.x - label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
+        return x(d.x - label_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
+        return x(d.x - label_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
     }) // adjust for size of circle
     .attr('y', function(d){
       if(SizeIncreasing === "true"){ 
-        return y(d.y - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return y(d.y - label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
+        return y(d.y - label_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
+        return y(d.y - label_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
     })
   
   }
@@ -149,8 +149,8 @@ if(adaptDisps === "false"){
   //   .selectAll('.firmLabel')
   //   .transition()
   //   .duration(700)
-  //   .attr('x', function(d){ return x(d.x + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) }) 
-  //   .attr('y', function(d){return y(d.y + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  })
+  //   .attr('x', function(d){ return x(d.x + label_nudge*(Math.sqrt(4) / trans_d3.k) ) }) 
+  //   .attr('y', function(d){return y(d.y + label_nudge*(Math.sqrt(4) / trans_d3.k) )  })
   
   // Firm labels
   if(zoom_group.attr('data-high-count') === "0"){  
@@ -158,8 +158,8 @@ if(adaptDisps === "false"){
       .selectAll('.firmLabel')
       .transition()
       .duration(700)
-      .attr('x', function(d){ return x(d.x + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  }) // adjust for size of circle
-      .attr('y', function(d){ return y(d.y + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) })
+      .attr('x', function(d){ return x(d.x + label_nudge*(Math.sqrt(4) / trans_d3.k) )  }) // adjust for size of circle
+      .attr('y', function(d){ return y(d.y + label_nudge*(Math.sqrt(4) / trans_d3.k) ) })
       .attr('font-size', 12/trans_d3.k)
       .attr('opacity', OpacityRange[1])
   }
@@ -169,8 +169,8 @@ if(adaptDisps === "false"){
       .selectAll('.firmLabel')
       .transition()
       .duration(700)
-      .attr('x', function(d){ return x(d.x + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  }) // adjust for size of circle
-      .attr('y', function(d){ return y(d.y + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) })
+      .attr('x', function(d){ return x(d.x + label_nudge*(Math.sqrt(4) / trans_d3.k) )  }) // adjust for size of circle
+      .attr('y', function(d){ return y(d.y + label_nudge*(Math.sqrt(4) / trans_d3.k) ) })
       .attr('font-size', 12/trans_d3.k)
       .attr('opacity', function(d){
         return d3.select(this).attr("data-highlighted") === "false" ? OpacityRange[0] : OpacityRange[1]
@@ -184,13 +184,13 @@ if(adaptDisps === "false"){
   .duration(700)
   .attr('x', function(d){
     if(SizeIncreasing === "true"){ 
-      return x(d.x - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) } else {
-      return x(d.x - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  }
+      return x(d.x - label_nudge*(Math.sqrt(4) / trans_d3.k) ) } else {
+      return x(d.x - label_nudge*(Math.sqrt(4) / trans_d3.k) )  }
   }) // adjust for size of circle
   .attr('y', function(d){
     if(SizeIncreasing === "true"){ 
-      return y(d.y - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) } else {
-      return y(d.y - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  }
+      return y(d.y - label_nudge*(Math.sqrt(4) / trans_d3.k) ) } else {
+      return y(d.y - label_nudge*(Math.sqrt(4) / trans_d3.k) )  }
   })
   
 }

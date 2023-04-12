@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 
-export default function UpdateAdaptiveDisplay(XDomain, YDomain, XRange, YRange,
+export default function UpdateAdaptiveDisplay(
+                                            XDomain, YDomain, XRange, YRange,
                                             SizeExponent, SizeRange, SizeDomain, SizeIncreasing,
                                             FontRange, FontDomain, FontExponent, 
                                             OpacityRange, OpacityDomain, OpacityExponent,
@@ -10,7 +11,7 @@ export default function UpdateAdaptiveDisplay(XDomain, YDomain, XRange, YRange,
 console.log("Adaptive Size Update")
 
 const svg = d3.select(".svg-content-responsive")
-const label_mult_nudge = 0.12; // label nudge away from circles
+const label_nudge = 0.12; // label nudge away from circles
 const zoom_group = d3.select('.zoom_group_g')
 
 const x = d3.scaleLinear()
@@ -32,139 +33,112 @@ const opacityScale = d3.scalePow()
               .domain(OpacityDomain)
               .range(OpacityRange)
 
+let xfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    xfunc = (d, tdk = 1) => x(d.x) + (size(d[sizeSel]) / tdk) + label_nudge;
+  } else {
+    xfunc = (d, tdk = 1) => x(d.x) + (size(SizeDomain[1] - d[sizeSel]) / tdk) + label_nudge;
+  }
+} else {
+  xfunc = (d, tdk = 1) => x(d.x) + 4/tdk + label_nudge;
+}
+
+let yfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    yfunc = (d, tdk = 1) => y(d.y) - (size(d[sizeSel]) / tdk) - label_nudge;
+  } else {
+    yfunc = (d, tdk = 1) => y(d.y) - (size(SizeDomain[1] - d[sizeSel]) / tdk) - label_nudge;
+  }
+} else {
+  yfunc = (d, tdk = 1) => y(d.y) - 4/tdk + label_nudge;
+}
+
+let fontfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    fontfunc = (d, tdk = 1) => fontScale(d[sizeSel]) / tdk;
+  } else {
+    fontfunc = (d, tdk = 1) => fontScale(SizeDomain[1] - d[sizeSel]) / tdk;
+  }
+} else {
+  fontfunc = (d, tdk = 1) => 12 / tdk;
+}
+
+let xYLfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    xYLfunc = (d, tdk = 1) => x(d.x) - (size(d[sizeSel]) / tdk) - label_nudge;
+  } else {
+    xYLfunc = (d, tdk = 1) => x(d.x) - (size(SizeDomain[1] - d[sizeSel]) / tdk) - label_nudge;
+  }
+} else {
+  xYLfunc = (d, tdk = 1) => x(d.x) - 4/tdk + label_nudge;
+}
+
+let yYLfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    yYLfunc = (d, tdk = 1) => y(d.y) + (size(d[sizeSel]) / tdk) + label_nudge;
+  } else {
+    yYLfunc = (d, tdk = 1) => y(d.y) + (size(SizeDomain[1] - d[sizeSel]) / tdk) + label_nudge;
+  }
+} else {
+  yYLfunc = (d, tdk = 1) => y(d.y) + 4/tdk + label_nudge;
+}
+
+let rfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    rfunc = (d, tdk = 1) => size(d[sizeSel]) / tdk;
+  } else {
+    rfunc = (d, tdk = 1) => size(SizeDomain[1] - d[sizeSel]) / tdk;
+  }
+} else {
+  rfunc = (d, tdk = 1) => 4 / tdk;
+}
+
+let opacityfunc;
+  if(adaptDisps === 'true'){
+    if(SizeIncreasing === "true"){ 
+      opacityfunc = (d) => opacityScale(d[sizeSel]) } else {
+      opacityfunc = (d) => opacityScale(SizeDomain[1] - d[sizeSel])}
+  } else {
+      opacityfunc = (d) => OpacityRange[1]
+  }
+
 /*  */
 /* Update current sizes */
 /*  */
 
-if(adaptDisps === "true"){
+// Circles
+svg
+  .selectAll('circle')
+  .transition()
+  .duration(700)
+  .attr("r", d => rfunc(d, trans_d3.k))
 
-  // Circles
-  svg
-    .selectAll('circle')
-    .transition()
-    .duration(700)
-    .attr("r", function(d){
-                if(SizeIncreasing === "true"){ 
-                  return   size(d[sizeSel]) / trans_d3.k } else {
-                  return   size(SizeDomain[1]-d[sizeSel]) / trans_d3.k  }
-                })
+// Firm labels
 
-  // Firm labels
-  if(zoom_group.attr('data-high-count') === "0"){
-    svg
-    .selectAll('.firmLabel')
-    .transition()
-    .duration(700)
-    .attr('x', function(d){
-      if(SizeIncreasing === "true"){ 
-        return x(d.x + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return x(d.x + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
-    }) // adjust for size of circle
-    .attr('y', function(d){
-      if(SizeIncreasing === "true"){ 
-        return y(d.y + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return y(d.y + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
-    })
-    .attr('font-size', function(d){
-        if(SizeIncreasing === "true"){ 
-          return fontScale(d[sizeSel])/trans_d3.k } else {
-          return fontScale(SizeDomain[1] - d[sizeSel])/trans_d3.k}
-    })
-    .attr('opacity', function(d){
-        if(SizeIncreasing === "true"){ 
-          return opacityScale(d[sizeSel]) } else {
-          return opacityScale(SizeDomain[1] - d[sizeSel])} 
-    })
-    }
+const fLabs = svg
+        .selectAll('.firmLabel')
+        .transition()
+        .duration(700)
+        .attr('x', d => xfunc(d, trans_d3.k)) 
+        .attr('y', d => yfunc(d, trans_d3.k))
+        .attr('font-size', d => fontfunc(d, trans_d3.k))
 
-    if(zoom_group.attr('data-high-count') !== "0"){
-      svg
-      .selectAll('.firmLabel')
-      .transition()
-      .duration(700)
-      .attr('x', function(d){
-        if(SizeIncreasing === "true"){ 
-          return x(d.x + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-          return x(d.x + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
-      }) // adjust for size of circle
-      .attr('y', function(d){
-        if(SizeIncreasing === "true"){ 
-          return y(d.y + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-          return y(d.y + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
-      })
-      .attr('font-size', function(d){
-          if(SizeIncreasing === "true"){ 
-            return fontScale(d[sizeSel])/trans_d3.k } else {
-            return fontScale(SizeDomain[1] - d[sizeSel])/trans_d3.k}
-      })
-      }
-
-  // Time labels
-  svg
-    .selectAll('.time-label-trace-firm')
-    .transition()
-    .duration(700)
-    .attr('x', function(d){
-      if(SizeIncreasing === "true"){ 
-        return x(d.x - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return x(d.x - label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
-    }) // adjust for size of circle
-    .attr('y', function(d){
-      if(SizeIncreasing === "true"){ 
-        return y(d.y - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return y(d.y - label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) )  }
-    })
+if(zoom_group.attr('data-high-count') === "0"){
+  fLabs.attr('opacity', opacityfunc)
 }
 
-if(adaptDisps === "false"){
-
-  // Circles
-  svg
-    .selectAll('circle')
-    .transition()
-    .duration(700)
-    .attr("r", d => 4 / trans_d3.k)
-
-  // Firm labels
-  if(zoom_group.attr('data-high-count') === "0"){  
-    svg
-      .selectAll('.firmLabel')
-      .transition()
-      .duration(700)
-      .attr('x', function(d){ return x(d.x + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  }) // adjust for size of circle
-      .attr('y', function(d){ return y(d.y + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) })
-      .attr('font-size', 12/trans_d3.k)
-      .attr('opacity', OpacityRange[1])
-  }
-
-  if(zoom_group.attr('data-high-count') !== "0"){  
-    svg
-      .selectAll('.firmLabel')
-      .transition()
-      .duration(700)
-      .attr('x', function(d){ return x(d.x + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  }) // adjust for size of circle
-      .attr('y', function(d){ return y(d.y + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) })
-      .attr('font-size', 12/trans_d3.k)
-      .attr('opacity', function(d){
-        return d3.select(this).attr("data-highlighted") === "false" ? OpacityRange[0] : OpacityRange[1]
-      })
-  }
-
-  // Time labels
-  svg
-    .selectAll('.time-label-trace-firm')
-    .transition()
-    .duration(700)
-    .attr('x', function(d){
-      if(SizeIncreasing === "true"){ 
-        return x(d.x - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) } else {
-        return x(d.x - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  }
-    }) // adjust for size of circle
-    .attr('y', function(d){
-      if(SizeIncreasing === "true"){ 
-        return y(d.y - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) } else {
-        return y(d.y - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  }
-    })
-}
+// Trace time labels
+svg
+  .selectAll('.time-label-trace-firm')
+  .transition()
+  .duration(700)
+  .attr('x', d => xYLfunc(d, trans_d3.k)) 
+  .attr('y', d => yYLfunc(d, trans_d3.k))
 
 }

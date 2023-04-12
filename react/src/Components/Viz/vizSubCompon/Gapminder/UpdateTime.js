@@ -30,7 +30,7 @@ export default function UpdateTime(
 
   const zoom_group = d3.select(".zoom_group_g");
   const svg = d3.select(".svg-content-responsive");
-  const label_mult_nudge = 0.12; // label nudge away from circles
+  const label_nudge = 0.12; // label nudge away from circles
   const arrow_text_dodge = 0.5; // nudge text away from arrow
 
   /* Time Label */
@@ -74,73 +74,121 @@ export default function UpdateTime(
     .domain(OpacityDomain)
     .range(OpacityRange);
 
+  const f_circ = zoom_group.selectAll(".circle-firm").data(
+    data.filter((d) => d.time === time),
+    (d) => d.name // d=>d.name is animation key
+  );
+
+/*  */
+// State-dependent attribute setting functions
+/*  */
+
+  let radius;
+    if (adaptDisps === "true") {
+      if (SizeIncreasing === "true") {
+        radius = (d) => size(d[sizeSel]) / trans_d3.k;
+      } else {
+        radius = (d) => size(SizeDomain[1] - d[sizeSel]) / trans_d3.k;
+      }
+    } else {
+      radius = () => 4 / trans_d3.k;
+    }
+  
+  let fill;
+    if (SizeIncreasing === "true") {
+      fill = (d) => color(d[colorSel]);
+    } else {
+      fill = (d) => color(max_data - d[colorSel]);
+    }
+
+  let xfunc;
+
+  if (adaptDisps === "true") {
+    if (SizeIncreasing === "true") {
+      xfunc = (d) => x(d.x + label_nudge * (Math.sqrt(size(d[sizeSel])) / trans_d3.k));
+    } else {
+      xfunc = (d) => x(d.x +label_nudge * (Math.sqrt(size(SizeDomain[1] - d[sizeSel])) / trans_d3.k)
+      );
+    }
+  } else {
+    xfunc = (d) => x(d.x + (label_nudge * Math.sqrt(4)) / trans_d3.k);
+  }
+
+  let yfunc;
+
+  if (adaptDisps === "true") {
+    if (SizeIncreasing === "true") {
+      yfunc = (d) => y(d.y + label_nudge * (Math.sqrt(size(d[sizeSel])) / trans_d3.k));
+    } else {
+      yfunc = (d) => y(d.y +label_nudge * (Math.sqrt(size(SizeDomain[1] - d[sizeSel])) / trans_d3.k)
+      );
+    }
+  } else {
+    yfunc = (d) => y(d.y + (label_nudge * Math.sqrt(4)) / trans_d3.k);
+  }
+
+  let fontfunc;
+
+  if (adaptDisps === "true") {
+    if (SizeIncreasing === "true") {
+      fontfunc = (d) => fontScale(d[sizeSel]) / trans_d3.k;
+    } else {
+      fontfunc = (d) => fontScale(SizeDomain[1] - d[sizeSel]) / trans_d3.k;
+    }
+  } else {
+    fontfunc = 12 / trans_d3.k;
+  }
+
+
+  let opacityfunc;
+  if (adaptDisps === "true") {
+    if (SizeIncreasing === "true") {
+      opacityfunc = (d) => opacityScale(d[sizeSel]);
+    } else {
+      opacityfunc = (d) => opacityScale(SizeDomain[1] - d[sizeSel]);
+    }
+  } else {
+    opacityfunc = OpacityRange[1];
+  }
+
   /*  */
   /* Update Firm circles */
   /*  */
 
   /* Transition circles with non-missing data */
 
-  const f_circ = zoom_group.selectAll(".circle-firm").data(
-    data.filter((d) => d.time === time),
-    (d) => d.name // d=>d.name is animation key
-  );
-
-  if (Colortype === "discrete") {
-    f_circ
+if (Colortype === "discrete") {
+  
+  f_circ
     .transition()
     .duration(200)
     .ease(d3.easeLinear)
     .attr("cx", (d) => x(d.x))
     .attr("cy", (d) => y(d.y))
-    .attr("r", function (d) {
-      if (adaptDisps === "true") {
-        if (SizeIncreasing === "true") {
-          return size(d[sizeSel]) / trans_d3.k;
-        } else {
-          return size(SizeDomain[1] - d[sizeSel]) / trans_d3.k;
-        }
-      } else {
-        return 4 / trans_d3.k;
-      }
-    })
+    .attr("r", radius)
     .transition()
     .duration(1) // adding an extra transition guarantees the circles are only visible after they have moved
     .ease(d3.easeLinear)
     .attr('visibility', 'visible')
+
   }
 
-  if(Colortype === "continuous") {
-    f_circ
+if (Colortype === "continuous") {
+
+  f_circ
     .transition()
     .duration(200)
     .ease(d3.easeLinear)
     .attr("cx", (d) => x(d.x))
     .attr("cy", (d) => y(d.y))
-    .attr("r", function (d) {
-      if (adaptDisps === "true") {
-        if (SizeIncreasing === "true") {
-          return size(d[sizeSel]) / trans_d3.k;
-        } else {
-          return size(SizeDomain[1] - d[sizeSel]) / trans_d3.k;
-        }
-      } else {
-        return 4 / trans_d3.k;
-      }
-    })
-    .attr("fill", function (d) {
-      if (SizeIncreasing === "true") {
-        return color(d[colorSel]);
-      }
-      if (SizeIncreasing === "false") {
-        return color(max_data - d[colorSel]);
-      }
-    })
+    .attr("r", radius)
+    .attr('fill', fill)
     .transition()
     .duration(1) // adding an extra transition guarantees the circles are only visible after they have moved
     .ease(d3.easeLinear)
     .attr('visibility', 'visible')
+
   }
-   
 
   /* Hide circles with missing data */
 
@@ -160,76 +208,27 @@ export default function UpdateTime(
     (d) => d.name
   ); // d=>d.name is animation key
 
+ 
+
   labels
     .transition()
     .duration(200)
     .ease(d3.easeLinear)
-    .attr("x", function (d) {
-      if (adaptDisps === "true") {
-        if (SizeIncreasing === "true") {
-          return x(
-            d.x + label_mult_nudge * (Math.sqrt(size(d[sizeSel])) / trans_d3.k)
-          );
-        } else {
-          return x(
-            d.x +
-              label_mult_nudge *
-                (Math.sqrt(size(SizeDomain[1] - d[sizeSel])) / trans_d3.k)
-          );
-        }
-      } else {
-        return x(d.x + (label_mult_nudge * Math.sqrt(4)) / trans_d3.k);
-      }
-    }) // adjust for size of circle
-    .attr("y", function (d) {
-      if (adaptDisps === "true") {
-        if (SizeIncreasing === "true") {
-          return y(
-            d.y + label_mult_nudge * (Math.sqrt(size(d[sizeSel])) / trans_d3.k)
-          );
-        } else {
-          return y(
-            d.y +
-              label_mult_nudge *
-                (Math.sqrt(size(SizeDomain[1] - d[sizeSel])) / trans_d3.k)
-          );
-        }
-      } else {
-        return y(d.y + label_mult_nudge * (Math.sqrt(4) / trans_d3.k));
-      }
-    })
-    .attr("font-size", function (d) {
-      if (adaptDisps === "true") {
-        if (SizeIncreasing === "true") {
-          return fontScale(d[sizeSel]) / trans_d3.k;
-        } else {
-          return fontScale(SizeDomain[1] - d[sizeSel]) / trans_d3.k;
-        }
-      } else {
-        return 12 / trans_d3.k;
-      }
-    }) 
+    .attr("x", xfunc) 
+    .attr("y", yfunc)
+    .attr("font-size", fontfunc) 
     .transition()
     .duration(1) // adding an extra transition guarantees the labels are only visible after they have moved.
                 // Using on.('end') method instead (https://stackoverflow.com/a/10692220/14095529) creates severe lags in the time animation 
     .attr('visibility', 'visible')
 
   if(zoom_group.attr('data-high-count') === 0){
+
     labels
     .transition()
     .duration(200)
     .ease(d3.easeLinear)
-    .attr('opacity', function (d) {
-      if (adaptDisps === "true") {
-        if (SizeIncreasing === "true") {
-          return opacityScale(d[sizeSel]);
-        } else {
-          return opacityScale(SizeDomain[1] - d[sizeSel]);
-        }
-      } else {
-        return OpacityRange[1];
-      }
-    })
+    .attr('opacity', opacityfunc)
   }  
                                                               
 /* Hide labels with missing data */

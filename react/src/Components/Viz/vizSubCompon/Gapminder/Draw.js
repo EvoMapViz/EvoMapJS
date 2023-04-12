@@ -26,7 +26,7 @@ console.log('DRAW')
 const width = Width;
 const height = Height;
 const margin = Margin
-const label_mult_nudge = 0.12; // label nudge away from circles
+const label_nudge = 0.12; // label nudge away from circles
 const arrow_text_dodge = 0.5; // nudge text away from arrow
 
 const width_c2 = '40px; min-width: 5px; justify-content: center;">' // impacts style of tooltip columns
@@ -93,45 +93,51 @@ const y = d3.scaleLinear()
             .range(YRange)
 
 
-const sizeSelMeta = meta.filter(d => d.name === sizeSel)
+// const sizeSelMeta = meta.filter(d => d.name === sizeSel)
 
-var increasing = 'true'
-if(typeof sizeSelMeta[0].scale_increasing !== 'undefined'){increasing = sizeSelMeta[0].scale_increasing}
-const dom = d3.extent(data, d => d[sizeSel])
-var unit = ""
-if(typeof sizeSelMeta[0].unit !== 'undefined'){unit = sizeSelMeta[0].unit}
+// var unit = ""
+// if(typeof sizeSelMeta[0].unit !== 'undefined'){unit = sizeSelMeta[0].unit}
 
-var locExponent = 1
-if(typeof sizeSelMeta[0].scale_exponent !== 'undefined'){locExponent = Number(sizeSelMeta[0].scale_exponent)}
-var maxSize = 50
-if(typeof sizeSelMeta[0].scale_maxSize !== 'undefined'){maxSize = Number(sizeSelMeta[0].scale_maxSize)}
-var minSize = 1
-if(typeof sizeSelMeta[0].scale_minSize !== 'undefined'){minSize = Number(sizeSelMeta[0].scale_minSize)}
+// var locExponent = 1
+// if(typeof sizeSelMeta[0].scale_exponent !== 'undefined'){locExponent = Number(sizeSelMeta[0].scale_exponent)}
+// var maxSize = 50
+// if(typeof sizeSelMeta[0].scale_maxSize !== 'undefined'){maxSize = Number(sizeSelMeta[0].scale_maxSize)}
+// var minSize = 1
+// if(typeof sizeSelMeta[0].scale_minSize !== 'undefined'){minSize = Number(sizeSelMeta[0].scale_minSize)}
 
 const size = d3.scalePow()
             .exponent(SizeExponent)
             .domain(SizeDomain)
             .range(SizeRange)
 
+var color = ''
 
 if(Colortype === 'discrete'){
-  var color = d3.scaleOrdinal() // https://stackoverflow.com/questions/20847161/how-can-i-generate-as-many-colors-as-i-want-using-d3
+  color = d3.scaleOrdinal() // https://stackoverflow.com/questions/20847161/how-can-i-generate-as-many-colors-as-i-want-using-d3
                 .domain(Colordomain)
                 .range(Colorrange) 
 }
 
 if(Colortype === 'continuous'){
-  var color = d3.scaleThreshold() // Requires similar update in ColorLegend/Draw.js and Draw.js
+  color = d3.scaleThreshold() // Requires similar update in ColorLegend/Draw.js and Draw.js
                 .domain(Colordomain)
                 .range(Colorrange);
 }
 
+const fontScale = d3.scalePow()
+                .exponent(FontExponent)
+                .domain(FontDomain)
+                .range(FontRange)
+const opacityScale = d3.scalePow()
+              .exponent(OpacityExponent)
+              .domain(OpacityDomain)
+              .range(OpacityRange)
 
 const max_data = d3.max(data, d => d[colorSel])
 
 /*  */
 //
-// Time label
+// Large bottom left time label
 //
 /*  */
 
@@ -144,6 +150,110 @@ svg.append('text')
   .attr('font-weight', 500)
   .attr('font-size', 60)
   .text(times[0]);
+
+
+/*  */
+//
+// State-dependent attribute setting functions
+//
+/*  */
+
+let xfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    xfunc = (d, tdk = 1) => x(d.x) + (size(d[sizeSel]) / tdk) + label_nudge;
+  } else {
+    xfunc = (d, tdk = 1) => x(d.x) + (size(SizeDomain[1] - d[sizeSel]) / tdk) + label_nudge;
+  }
+} else {
+  xfunc = (d, tdk = 1) => x(d.x) + 4/tdk + label_nudge;
+}
+
+let yfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    yfunc = (d, tdk = 1) => y(d.y) - (size(d[sizeSel]) / tdk) - label_nudge;
+  } else {
+    yfunc = (d, tdk = 1) => y(d.y) - (size(SizeDomain[1] - d[sizeSel]) / tdk) - label_nudge;
+  }
+} else {
+  yfunc = (d, tdk = 1) => y(d.y) - 4/tdk + label_nudge;
+}
+
+let fontfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    fontfunc = (d, tdk = 1) => fontScale(d[sizeSel]) / tdk;
+  } else {
+    fontfunc = (d, tdk = 1) => fontScale(SizeDomain[1] - d[sizeSel]) / tdk;
+  }
+} else {
+  fontfunc = (d, tdk = 1) => 12 / tdk;
+}
+
+let xYLfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    xYLfunc = (d, tdk = 1) => x(d.x) - (size(d[sizeSel]) / tdk) - label_nudge;
+  } else {
+    xYLfunc = (d, tdk = 1) => x(d.x) - (size(SizeDomain[1] - d[sizeSel]) / tdk) - label_nudge;
+  }
+} else {
+  xYLfunc = (d, tdk = 1) => x(d.x) - 4/tdk + label_nudge;
+}
+
+let yYLfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    yYLfunc = (d, tdk = 1) => y(d.y) + (size(d[sizeSel]) / tdk) + label_nudge;
+  } else {
+    yYLfunc = (d, tdk = 1) => y(d.y) + (size(SizeDomain[1] - d[sizeSel]) / tdk) + label_nudge;
+  }
+} else {
+  yYLfunc = (d, tdk = 1) => y(d.y) + 4/tdk + label_nudge;
+}
+
+let rfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    rfunc = (d, tdk = 1) => size(d[sizeSel]) / tdk;
+  } else {
+    rfunc = (d, tdk = 1) => size(SizeDomain[1] - d[sizeSel]) / tdk;
+  }
+} else {
+  rfunc = (d, tdk = 1) => 4 / tdk;
+}
+
+let fillfunc;
+  if (SizeIncreasing === "true") {
+    fillfunc = (d) => color(d[colorSel]);
+  } else {
+    fillfunc = (d) => color(max_data - d[colorSel]);
+  }
+
+let displayfunc;
+  if (Colorincreasing === "true") {
+    displayfunc = (d) => d[selRank] <= nFirms ? "inline" : "none";
+  }
+  if (Colorincreasing === "false") {
+    displayfunc = (d) => d[selRank] >= maxNfirms - nFirms ? "inline" : "none";
+  }
+
+let opacityfunc;
+  if(adaptDisps === 'true'){
+    if(SizeIncreasing === "true"){ 
+      opacityfunc = (d) => opacityScale(d[sizeSel]) } else {
+      opacityfunc = (d) => opacityScale(SizeDomain[1] - d[sizeSel])}
+  } else {
+      opacityfunc = (d) => OpacityRange[1]
+  }
+
+let sortfunc;
+  if (SizeIncreasing === "true") {
+    sortfunc = (a,b) =>  d3.ascending(a[sizeSel], b[sizeSel]);
+  } else {
+    sortfunc = (a,b) =>  d3.descending(a[sizeSel], b[sizeSel]);
+  }
 
 /*  */
 //
@@ -159,17 +269,6 @@ var zoom = d3.zoom()
   .scaleExtent([.5, 20])  
   .extent([[0, 0], [width, height]])
   .on("zoom", zoomed);
-
-// var xAxis = svg.append("g")
-//               .attr("class", "axis axis--x")  
-//               .attr("transform", "translate(0," + height + ")")
-//               .attr('stroke-width', 0)
-//               .call(d3.axisBottom(x)).selectAll("text").remove();;
-
-// var yAxis = svg.append("g")
-//             .attr("class", "axis axis--y")
-//             .attr('stroke-width', 0)
-//             .call(d3.axisLeft(y)).selectAll("text").remove();;
 
 var trans_d3 = {k:1, x:0, y:60}
 
@@ -187,160 +286,85 @@ var zoom_group = svg
                   .attr("transform", 'translate(0,60) scale(1)') // Sets initial transform
 backFore.call(zoom.transform, d3.zoomIdentity.translate(0,60)) // Sets corresponding initial
 
-const fontScale = d3.scalePow()
-                .exponent(FontExponent)
-                .domain(FontDomain)
-                .range(FontRange)
-const opacityScale = d3.scalePow()
-              .exponent(OpacityExponent)
-              .domain(OpacityDomain)
-              .range(OpacityRange)
-
 function zoomed({transform}) {
-
-  
   let trans_d3 = transform
   setTrans_d3(transform);
 
   // Update firms circles and labels
   /*  */
 
-  // ADAPTIVE display
-  if(adaptDisps === 'true'){
+  // Circles
+  zoom_group
+    .attr("transform", trans_d3)
+    .selectAll('circle')
+    .attr("r", d => rfunc(d, trans_d3.k))
     
-    if(SizeIncreasing === "true"){
-
-      // Circles
-      zoom_group
-        .attr("transform", trans_d3)
-        .selectAll('circle')
-        .attr("r", d => size(d[sizeSel]) / trans_d3.k)
-        
-      // Firm labels  
-      zoom_group  
-        .selectAll('.firmLabel')
-        .attr('x', d => x(d.x + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) )
-        .attr('y', d => y(d.y + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) )
-        .attr('font-size', d => fontScale(d[sizeSel])/trans_d3.k )
-      
-      // Trace labels
-      zoom_group  
-        .selectAll('.time-label-trace-firm')
-        .attr('x', d => x(d.x - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) ) 
-        .attr('y', d => y(d.y - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) )
-        .attr('font-size', 12/trans_d3.k)
-    }
-
-    if(SizeIncreasing === "false"){
-      
-      // Circles
-      zoom_group
-        .attr("transform", trans_d3)
-        .selectAll('circle')
-        .attr("r", d =>size(SizeDomain[1]-d[sizeSel]) / trans_d3.k)
-
-      // Firm labels
-      zoom_group 
-        .selectAll('.firmLabel')
-        .attr('x', d => x(d.x + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) ) )
-        .attr('y', d => y(d.y + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) ) )
-        .attr('font-size', d => fontScale(SizeDomain[1] - d[sizeSel])/trans_d3.k )
-      
-      // Trace labels
-      zoom_group
-        .selectAll('.time-label-trace-firm')
-        .attr('x', d => x(d.x + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) ) ) 
-        .attr('y', d => y(d.y + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) ) )
-        .attr('font-size', 12/trans_d3.k)
-    }
-  } 
+  // Firm labels  
+  zoom_group  
+    .selectAll('.firmLabel')
+    .attr('x', d => xfunc(d, trans_d3.k))
+    .attr('y', d => yfunc(d, trans_d3.k))
+    .attr('font-size', d => fontfunc(d, trans_d3.k))
   
-  // NON ADAPTIVE display
-  if(adaptDisps === 'false'){
-
-    //Circles
-    zoom_group //Apply zoom to groups rather than individual elements for better performance: https://stackoverflow.com/questions/51562401/d3-slow-zoomable-heatmap
-      .attr("transform", trans_d3)
-      .selectAll('circle')
-      .attr("r", 4/trans_d3.k) // Still need to make sure circles don't grow in size upon zoom.
-
-    // Firm labels
-    zoom_group
-      .selectAll('.firmLabel')
-      .attr('x', function(d){ return x(d.x + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) }) 
-      .attr('y', function(d){return y(d.y + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  })
-      .attr('font-size', 12/ trans_d3.k)
-
-    // Trace labels
-    if(SizeIncreasing === "true"){
-      zoom_group  
-        .selectAll('.time-label-trace-firm')
-        .attr('x', d => x(d.x - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) ) 
-        .attr('y', d => y(d.y - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) )
-        .attr('font-size', 12/trans_d3.k)
-    }
-
-    if(SizeIncreasing === "false"){
-      zoom_group
-        .selectAll('.time-label-trace-firm')
-        .attr('x', d => x(d.x + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) ) ) 
-        .attr('y', d => y(d.y + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) ) )
-        .attr('font-size', 12/trans_d3.k)
-    }
-  }
-
+  // Trace year labels
+  zoom_group  
+    .selectAll('.time-label-trace-firm')
+    .attr('x', d => xYLfunc(d, trans_d3.k)) 
+    .attr('y', d => yYLfunc(d, trans_d3.k))
+    .attr('font-size', 12/trans_d3.k)
+  
   // Explainer arrows
   /*  */
 
   if(isArrows){
+    // Arrows
     zoom_group
     .selectAll('.explainer-arrow')
     .attr("stroke-width", 2/trans_d3.k)
 
-  zoom_group
-    .selectAll('.explainer-arrow')
-    .attr("stroke-width", 2/trans_d3.k)
+    zoom_group
+      .selectAll('.explainer-arrow')
+      .attr("stroke-width", 2/trans_d3.k)
 
-  // Adjust explainer arrow heads  
-  zoom_group
-    .selectAll('#my-arrow')
-    .remove()
+    zoom_group
+      .selectAll('#my-arrow')
+      .remove()
 
-  const arrow = arrow9( Math.min(1/trans_d3.k, 1) ) // scale parameter
-  .id("my-arrow")
+    // Arrow heads
+    const arrow = arrow9( Math.min(1/trans_d3.k, 1) ) // scale parameter
+    .id("my-arrow")
 
-  zoom_group.call(arrow);
+    zoom_group.call(arrow);
 
-  // Adjust explainer arrow text
-  d3.select('#my-arrow')
-    .selectAll('path')
-    .attr("fill", "#C0C0C0")
+    d3.select('#my-arrow')
+      .selectAll('path')
+      .attr("fill", "#C0C0C0")
 
-  d3.selectAll('.arrow-text')
-  .attr('x', function(d){
-    const alpha = Math.abs(d.y/d.x)
-    return( 
-      x(
-        d.x + Math.sign(d.x) * ( 
-          (arrow_text_dodge/trans_d3.k)/(Math.sqrt(1 + alpha**2)) 
+    // Arrow explainer text
+    d3.selectAll('.arrow-text')
+      .attr('x', function(d){
+        const alpha = Math.abs(d.y/d.x)
+        return( 
+          x(
+            d.x + Math.sign(d.x) * ( 
+              (arrow_text_dodge/trans_d3.k)/(Math.sqrt(1 + alpha**2)) 
+              )
           )
-      )
-    )
-  })
-  .attr('y', function(d){
-    const alpha = Math.abs(d.y/d.x)
-    return( 
-      y(
-        d.y + Math.sign(d.y) * ( 
-          (arrow_text_dodge/trans_d3.k) * (alpha/(Math.sqrt(1 + alpha**2))) 
+        )
+      })
+      .attr('y', function(d){
+        const alpha = Math.abs(d.y/d.x)
+        return( 
+          y(
+            d.y + Math.sign(d.y) * ( 
+              (arrow_text_dodge/trans_d3.k) * (alpha/(Math.sqrt(1 + alpha**2))) 
+              )
           )
-      )
-    )
-  })
-  .attr('font-size', 12/trans_d3.k)
-  }
-
-}
+        )
+      })
+      .attr('font-size', 12/trans_d3.k)
+  } // End of "isArrows" if statement
+} // End of new zoom function  
 
 /*  */
 // Zoom Buttons
@@ -648,42 +672,16 @@ zoom_group
   ) // d=>d.name is animation key
   .enter()
   .append("circle")
-  .sort(function (a, b) {
-    if (increasing === "true") {
-      return d3.ascending(a[sizeSel], b[sizeSel]);
-    } else {
-      return d3.descending(a[sizeSel], b[sizeSel]);
-    }
-  })
+  .sort(sortfunc)
   .classed("zoom-group", true)
   .classed("circle-firm", true)
   .attr("data-highlighted", false)
-  .attr("fill", function (d) {
-    if (increasing === "true") {
-      return color(d[colorSel]);
-    }
-    if (increasing === "false") {
-      return color(max_data - d[colorSel]);
-    }
-  })
+  .attr("fill", fillfunc)
   .attr("cx", (d) => x(d.x))
   .attr("cy", (d) => y(d.y))
-  .attr("r", function (d) {
-    if (increasing === "true") {
-      return size(d[sizeSel]) / trans_d3.k;
-    } else {
-      return size(dom[1] - d[sizeSel]) / trans_d3.k;
-    }
-  })
+  .attr("r", d => rfunc(d, trans_d3.k))
   .attr('opacity', OpacityRange[1])
-  .attr("display", function (d) {
-    if (Colorincreasing === "true") {
-      return d[selRank] <= nFirms ? "inline" : "none";
-    }
-    if (Colorincreasing === "false") {
-      return d[selRank] >= maxNfirms - nFirms ? "inline" : "none";
-    }
-  })
+  .attr("display", displayfunc)
   /* Click events */
   .on("click", function (event, d) {
     let tthis = d3.select(this);
@@ -742,52 +740,16 @@ zoom_group.selectAll('label-firms')
   ) // d=>d.name is animation key
   .enter()
   .append('text')
-  .sort(function(a, b){
-    if(increasing === "true"){ 
-      return   d3.ascending(a[sizeSel], b[sizeSel]) } else {
-      return   d3.descending(a[sizeSel], b[sizeSel])  }
-    })
+  .sort(sortfunc)
   .classed('firmLabel', true)
   .classed('zoom-group', true)
   .classed('unselectable', true)
   .text(d => d.label)
   .attr('data-highlighted', false)
-  .attr('x', function(d){
-    if(adaptDisps === 'true'){
-      if(increasing === "true"){ 
-        return x(d.x + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return x(d.x + label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  }
-    } else {
-        return x(d.x + label_mult_nudge*(Math.sqrt(size(4)) / trans_d3.k) )
-    }
-  }) // adjust for size of circle
-  .attr('y', function(d){
-    if(adaptDisps === 'true'){
-      if(increasing === "true"){ 
-        return y(d.y + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-        return y(d.y + label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  }
-    } else {
-        return y(d.y + label_mult_nudge*(Math.sqrt(size(4)) / trans_d3.k) )
-    }
-  })
-  .attr('font-size', function(d){
-    if(adaptDisps === 'true'){
-      if(increasing === "true"){ 
-        return fontScale(d[sizeSel])/trans_d3.k } else {
-        return fontScale(dom[1] - d[sizeSel])/trans_d3.k}
-    } else {
-        return 12/trans_d3.k
-    }
-  })
-  .attr('opacity', function(d){
-    if(adaptDisps === 'true'){
-      if(increasing === "true"){ 
-        return opacityScale(d[sizeSel]) } else {
-        return opacityScale(dom[1] - d[sizeSel])}
-    } else {
-        return OpacityRange[1]
-    }
-  })
+  .attr('x', d => xfunc(d, trans_d3.k)) // adjust for size of circle
+  .attr('y', d => yfunc(d, trans_d3.k))
+  .attr('font-size', d => fontfunc(d, trans_d3.k))
+  .attr('opacity', opacityfunc)
   .attr('display', 'none')
   .filter((d) => d.time !== minTime) // Hide labels whose time is not minTime
   .attr("visibility", "hidden");

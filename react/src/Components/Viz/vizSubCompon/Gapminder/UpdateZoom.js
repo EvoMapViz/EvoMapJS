@@ -21,11 +21,8 @@ const svg = d3.select(".svg-content-responsive")
 
 const width = Width;
 const height = Height;
-const label_mult_nudge = 0.12; // label nudge away from circles
+const label_nudge = 0.12; // label nudge away from circles
 const arrow_text_dodge = 0.5; // nudge text away from arrow
-
-const increasing = SizeIncreasing
-const dom = d3.extent(data, d => d[sizeSel])
 
 const x = d3.scaleLinear()
             .domain(XDomain)
@@ -41,10 +38,72 @@ const fontScale = d3.scalePow()
                 .exponent(FontExponent)
                 .domain(FontDomain)
                 .range(FontRange)
-const opacityScale = d3.scalePow()
-              .exponent(OpacityExponent)
-              .domain(OpacityDomain)
-              .range(OpacityRange)
+
+let xfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    xfunc = (d, tdk = 1) => x(d.x) + (size(d[sizeSel]) / tdk) + label_nudge;
+  } else {
+    xfunc = (d, tdk = 1) => x(d.x) + (size(SizeDomain[1] - d[sizeSel]) / tdk) + label_nudge;
+  }
+} else {
+  xfunc = (d, tdk = 1) => x(d.x) + 4/tdk + label_nudge;
+}
+
+let yfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    yfunc = (d, tdk = 1) => y(d.y) - (size(d[sizeSel]) / tdk) - label_nudge;
+  } else {
+    yfunc = (d, tdk = 1) => y(d.y) - (size(SizeDomain[1] - d[sizeSel]) / tdk) - label_nudge;
+  }
+} else {
+  yfunc = (d, tdk = 1) => y(d.y) - 4/tdk + label_nudge;
+}
+
+let fontfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    fontfunc = (d, tdk = 1) => fontScale(d[sizeSel]) / tdk;
+  } else {
+    fontfunc = (d, tdk = 1) => fontScale(SizeDomain[1] - d[sizeSel]) / tdk;
+  }
+} else {
+  fontfunc = (d, tdk = 1) => 12 / tdk;
+}
+
+let xYLfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    xYLfunc = (d, tdk = 1) => x(d.x) - (size(d[sizeSel]) / tdk) - label_nudge;
+  } else {
+    xYLfunc = (d, tdk = 1) => x(d.x) - (size(SizeDomain[1] - d[sizeSel]) / tdk) - label_nudge;
+  }
+} else {
+  xYLfunc = (d, tdk = 1) => x(d.x) - 4/tdk + label_nudge;
+}
+
+let yYLfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    yYLfunc = (d, tdk = 1) => y(d.y) + (size(d[sizeSel]) / tdk) + label_nudge;
+  } else {
+    yYLfunc = (d, tdk = 1) => y(d.y) + (size(SizeDomain[1] - d[sizeSel]) / tdk) + label_nudge;
+  }
+} else {
+  yYLfunc = (d, tdk = 1) => y(d.y) + 4/tdk + label_nudge;
+}
+
+let rfunc;
+if (adaptDisps === "true") {
+  if (SizeIncreasing === "true") {
+    rfunc = (d, tdk = 1) => size(d[sizeSel]) / tdk;
+  } else {
+    rfunc = (d, tdk = 1) => size(SizeDomain[1] - d[sizeSel]) / tdk;
+  }
+} else {
+  rfunc = (d, tdk = 1) => 4 / tdk;
+}
 
 /*  */            
 // Zoom elements
@@ -56,9 +115,6 @@ var zoom = d3.zoom()
   .on("zoom", zoomed);
 
 var zoom_group = d3.select(".zoom_group_g")
-var xAxis = svg.select("axis--x")
-var yAxis = svg.select("axis--y")
-        
 /*  */            
 // New Zoom elements
 /*  */
@@ -70,90 +126,25 @@ function zoomed({transform}) {
   // Update firms circles and labels
   /*  */
 
-  // ADAPTIVE display
-  if(adaptDisps === 'true'){
+  // Circles
+  zoom_group
+    .attr("transform", trans_d3)
+    .selectAll('circle')
+    .attr("r", d => rfunc(d, trans_d3.k))
     
-    if(SizeIncreasing === "true"){
-
-      // Circles
-      zoom_group
-        .attr("transform", trans_d3)
-        .selectAll('circle')
-        .attr("r", d => size(d[sizeSel]) / trans_d3.k)
-        
-      // Firm labels  
-      zoom_group  
-        .selectAll('.firmLabel')
-        .attr('x', d => x(d.x + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) )
-        .attr('y', d => y(d.y + label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) )
-        .attr('font-size', d => fontScale(d[sizeSel])/trans_d3.k )
-      
-      // Trace labels
-      zoom_group  
-        .selectAll('.time-label-trace-firm')
-        .attr('x', d => x(d.x - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) ) 
-        .attr('y', d => y(d.y - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) )
-        .attr('font-size', 12/trans_d3.k)
-    }
-
-    if(SizeIncreasing === "false"){
-      
-      // Circles
-      zoom_group
-        .attr("transform", trans_d3)
-        .selectAll('circle')
-        .attr("r", d =>size(SizeDomain[1]-d[sizeSel]) / trans_d3.k)
-
-      // Firm labels
-      zoom_group 
-        .selectAll('.firmLabel')
-        .attr('x', d => x(d.x + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) ) )
-        .attr('y', d => y(d.y + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) ) )
-        .attr('font-size', d => fontScale(SizeDomain[1] - d[sizeSel])/trans_d3.k )
-      
-      // Trace labels
-      zoom_group
-        .selectAll('.time-label-trace-firm')
-        .attr('x', d => x(d.x + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) ) ) 
-        .attr('y', d => y(d.y + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) ) )
-        .attr('font-size', 12/trans_d3.k)
-    }
-  } 
+  // Firm labels  
+  zoom_group  
+    .selectAll('.firmLabel')
+    .attr('x', d => xfunc(d, trans_d3.k))
+    .attr('y', d => yfunc(d, trans_d3.k))
+    .attr('font-size', d => fontfunc(d, trans_d3.k))
   
-  // NON ADAPTIVE display
-  if(adaptDisps === 'false'){
-
-    //Circles
-    zoom_group //Apply zoom to groups rather than individual elements for better performance: https://stackoverflow.com/questions/51562401/d3-slow-zoomable-heatmap
-      .attr("transform", trans_d3)
-      .selectAll('circle')
-      .attr("r", 4/trans_d3.k) // Still need to make sure circles don't grow in size upon zoom.
-
-    // Firm labels
-    zoom_group
-      .selectAll('.firmLabel')
-      .attr('x', function(d){ return x(d.x + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) }) 
-      .attr('y', function(d){return y(d.y + label_mult_nudge*(Math.sqrt(4) / trans_d3.k) )  })
-      .attr('font-size', 12/ trans_d3.k)
-
-    // Trace labels
-    if(SizeIncreasing === "true"){
-      zoom_group  
-        .selectAll('.time-label-trace-firm')
-        .attr('x', d => x(d.x - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) ) 
-        .attr('y', d => y(d.y - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) )
-        .attr('font-size', 12/trans_d3.k)
-    }
-
-    if(SizeIncreasing === "false"){
-      zoom_group
-        .selectAll('.time-label-trace-firm')
-        .attr('x', d => x(d.x + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) ) ) 
-        .attr('y', d => y(d.y + label_mult_nudge*(Math.sqrt(size(SizeDomain[1]-d[sizeSel])) / trans_d3.k) ) )
-        .attr('font-size', 12/trans_d3.k)
-    }
-  }
-    
+  // Trace labels
+  zoom_group  
+    .selectAll('.time-label-trace-firm')
+    .attr('x', d => xYLfunc(d, trans_d3.k)) 
+    .attr('y', d => yYLfunc(d, trans_d3.k))
+    .attr('font-size', 12/trans_d3.k)
   
   // Explainer arrows
   /*  */

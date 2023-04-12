@@ -114,8 +114,21 @@ const cust_style = {    // https://codesandbox.io/s/10r714wp0l?file=/src/index.j
     selectProps
   }) {
 
-    const acronym = abbreviate(data.value.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()}), // Copilot: in string "str", make every letter lower case except for the first letter of each word which is upper case
-                               {length: 8})
+    const camel_case = data.value.replace(/\w\S*/g, function(txt){ //https://teamtreehouse.com/community/can-someone-explain-the-logic-of-replacews-to-me
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+      })
+
+    let acronym = ''
+
+    try {
+      acronym = abbreviate(camel_case, {length: 8}) // remove special characters from txt
+    }
+    catch(err) {
+      acronym = camel_case
+      console.log('Warning: Could not apply abbreviate function from abbreviate module to ' + camel_case + 'string')
+      console.log(err)
+    }
+                               
 
     return (
       <div {...innerProps}>

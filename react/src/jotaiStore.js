@@ -1,4 +1,5 @@
 import { atom } from "jotai";
+
 import circle_data from "./data/circles.json"
 import meta_data from "./data/metadata.json"
 import arrow_data from "./data/arrows.json"
@@ -154,6 +155,7 @@ if(typeof sizeSelMeta[0].scale_minSize !== 'undefined'){min_size = Number(sizeSe
 const size_range = [min_size, max_size]
 
 let allTimes = circle_data.map(d => d.time)
+console.log(allTimes)
 allTimes = [... new Set(allTimes)]
 const domain_Timesize = d3.extent(circle_data.filter(d => d.time === allTimes[0]), d => d[sizeOptions[0].name])
 
@@ -203,7 +205,7 @@ let roundable = meta_data
 roundable = roundable.concat(['x','y'])
 roundable = [...new Set(roundable)]
 
-var newData = circle_data.filter(d=> d.mkvalt !== null && d.name !== null)
+var newData = circle_data
 
 // Round continuous variable (and coordinates) for better animation performance
 roundable.map(function(e){ 
@@ -280,8 +282,8 @@ const maxNfirms = atom(numbFirms);
 
 const nFirms = atom(Math.round(numbFirms/10))
 
-let alltimes = newData.map(d => parseInt(d.time))
-let locmin = Math.min(...alltimes)
+let alltimes = newData.map(d => d.time).sort()
+let locmin = alltimes[0]
 const minTime = atom(locmin);
 const locmax = Math.max(...alltimes)
 const maxTime = atom(locmax);
