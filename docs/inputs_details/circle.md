@@ -20,7 +20,7 @@ parent: Inputs - Details
 
    - *Acceptable*: Any integer or string.
 
-   {:warning:}
+  {: .warning}
    If the time period is a string, it will be sorted in alphabetical order. 
    For example, if you provide a complete year/month/date string, it must be formatted as `YYYY-MM-DD` (e.g., `1998-01-01`) to be sorted correctly.
 
