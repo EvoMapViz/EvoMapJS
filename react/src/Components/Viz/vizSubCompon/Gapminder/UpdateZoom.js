@@ -2,108 +2,21 @@ import * as d3 from 'd3';
 import svgButton from "./utils/svgButton";
 import arrow9 from './utils/arrow9.js';
 
-export default function UpdateZoom( data,
-                                    Width, Height,
-                                    XDomain, YDomain, XRange, YRange,
-                                    SizeExponent, SizeRange, SizeDomain, SizeIncreasing,
-                                    FontRange, FontDomain, FontExponent, OpacityRange, OpacityDomain, OpacityExponent,
-                                    adaptDisps, sizeSel,
-                                    trans_d3, setTrans_d3,
-                                    isArrows){
+export default function UpdateZoom( Width, Height,
+                                    setTrans_d3,
+                                    isArrows,
+                                    x,y,
+                                    xfunc, yfunc, xYLfunc, yYLfunc, rfunc, fontfunc
+                                    ){
 
 console.log("Update Zoom") 
+console.log(xfunc)
 
 /*  */
 /* Parameters and scales */
 /*  */
 
-const svg = d3.select(".svg-content-responsive")
-
-const width = Width;
-const height = Height;
-const label_nudge = 0.12; // label nudge away from circles
 const arrow_text_dodge = 0.5; // nudge text away from arrow
-
-const x = d3.scaleLinear()
-            .domain(XDomain)
-            .range(XRange)
-const y = d3.scaleLinear()
-            .domain(YDomain) 
-            .range(YRange) 
-const size = d3.scalePow()
-            .exponent(SizeExponent)
-            .domain(SizeDomain)
-            .range(SizeRange)
-const fontScale = d3.scalePow()
-                .exponent(FontExponent)
-                .domain(FontDomain)
-                .range(FontRange)
-
-let xfunc;
-if (adaptDisps === "true") {
-  if (SizeIncreasing === "true") {
-    xfunc = (d, tdk = 1) => x(d.x) + (size(d[sizeSel]) / tdk) + label_nudge;
-  } else {
-    xfunc = (d, tdk = 1) => x(d.x) + (size(SizeDomain[1] - d[sizeSel]) / tdk) + label_nudge;
-  }
-} else {
-  xfunc = (d, tdk = 1) => x(d.x) + 4/tdk + label_nudge;
-}
-
-let yfunc;
-if (adaptDisps === "true") {
-  if (SizeIncreasing === "true") {
-    yfunc = (d, tdk = 1) => y(d.y) - (size(d[sizeSel]) / tdk) - label_nudge;
-  } else {
-    yfunc = (d, tdk = 1) => y(d.y) - (size(SizeDomain[1] - d[sizeSel]) / tdk) - label_nudge;
-  }
-} else {
-  yfunc = (d, tdk = 1) => y(d.y) - 4/tdk + label_nudge;
-}
-
-let fontfunc;
-if (adaptDisps === "true") {
-  if (SizeIncreasing === "true") {
-    fontfunc = (d, tdk = 1) => fontScale(d[sizeSel]) / tdk;
-  } else {
-    fontfunc = (d, tdk = 1) => fontScale(SizeDomain[1] - d[sizeSel]) / tdk;
-  }
-} else {
-  fontfunc = (d, tdk = 1) => 12 / tdk;
-}
-
-let xYLfunc;
-if (adaptDisps === "true") {
-  if (SizeIncreasing === "true") {
-    xYLfunc = (d, tdk = 1) => x(d.x) - (size(d[sizeSel]) / tdk) - label_nudge;
-  } else {
-    xYLfunc = (d, tdk = 1) => x(d.x) - (size(SizeDomain[1] - d[sizeSel]) / tdk) - label_nudge;
-  }
-} else {
-  xYLfunc = (d, tdk = 1) => x(d.x) - 4/tdk + label_nudge;
-}
-
-let yYLfunc;
-if (adaptDisps === "true") {
-  if (SizeIncreasing === "true") {
-    yYLfunc = (d, tdk = 1) => y(d.y) + (size(d[sizeSel]) / tdk) + label_nudge;
-  } else {
-    yYLfunc = (d, tdk = 1) => y(d.y) + (size(SizeDomain[1] - d[sizeSel]) / tdk) + label_nudge;
-  }
-} else {
-  yYLfunc = (d, tdk = 1) => y(d.y) + 4/tdk + label_nudge;
-}
-
-let rfunc;
-if (adaptDisps === "true") {
-  if (SizeIncreasing === "true") {
-    rfunc = (d, tdk = 1) => size(d[sizeSel]) / tdk;
-  } else {
-    rfunc = (d, tdk = 1) => size(SizeDomain[1] - d[sizeSel]) / tdk;
-  }
-} else {
-  rfunc = (d, tdk = 1) => 4 / tdk;
-}
 
 /*  */            
 // Zoom elements
@@ -111,7 +24,7 @@ if (adaptDisps === "true") {
 
 var zoom = d3.zoom()
   .scaleExtent([.5, 20])  
-  .extent([[0, 0], [width, height]])
+  .extent([[0, 0], [Width, Height]])
   .on("zoom", zoomed);
 
 var zoom_group = d3.select(".zoom_group_g")

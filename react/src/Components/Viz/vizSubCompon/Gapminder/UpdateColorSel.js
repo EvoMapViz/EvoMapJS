@@ -1,21 +1,16 @@
 import * as d3 from 'd3';
 import clearSVG from "./utils/clearSVG";
 
-export default function UpdateColorSel(data, meta,
+export default function UpdateColorSel(data,
                                       colorSel, 
-                                      Colortype, Colorrange, Colordomain, Colorincreasing,
-                                      SizeIncreasing,
                                       setJustClicked, allNames,
-                                      sizeSel, time, OpacityRange, OpacityDomain, OpacityExponent, AdaptDisp){
+                                      fillfunc,
+                                      sizeSel, time, OpacityRange, OpacityDomain, OpacityExponent){
 
 console.log("Color selector Update");
 
 const svg = d3.select(".svg-content-responsive");
-
 const circ = svg.selectAll(".circle-firm");
-const lab = svg.selectAll(".firmLabel");
-const trace = svg.selectAll(".trace");
-
 const selRank = 'rank-' + sizeSel;
 
 // Update on-click event so setJustClicked and thereby traces added later on have the right cluster (d[colorSel]) associated with them.
@@ -50,47 +45,10 @@ circ.on("click", function (event, d) {
 });
 
 // Update colors and attributes
-if (Colortype === "discrete") {
-  const color = d3
-    .scaleOrdinal() // https://stackoverflow.com/questions/20847161/how-can-i-generate-as-many-colors-as-i-want-using-d3
-    .domain(Colordomain)
-    .range(Colorrange);
 
-  circ
-    //.attr("data-colgroup", (d) => d[colorSel])
-    .transition()
-    .duration(700)
-    .attr("fill", (d) => color(d[colorSel]));
-
-  //lab.attr("data-colgroup", (d) => d[colorSel]);
-  //trace.attr("data-colgroup", (d) => d[colorSel]);
-}
-
-if (Colortype === "continuous") {
-  
-  const color = d3
-    .scaleThreshold() // Requires similar update in ColorLegend/Draw.js and Draw.js
-    .domain(Colordomain)
-    .range(Colorrange);
-
-  if (Colorincreasing === "true") {
-    circ
-      //attr("data-colgroup", (d) => d[colorSel])
-      .transition()
-      .duration(700)
-      .attr("fill", (d) => color(d[colorSel]));
-  }
-  if (Colorincreasing === "false") {
-
-    circ
-      //.attr("data-colgroup", (d) => d[colorSel])
-      .transition()
-      .duration(700)
-      .attr("fill", (d) => color(d[colorSel]));
-  }
-
-  //lab.attr("data-colgroup", (d) => d[colorSel]);
-  //trace.attr("data-colgroup", (d) => d[colorSel]);
-}
+circ
+  .transition()
+  .duration(700)
+  .attr("fill", fillfunc);
 
 }

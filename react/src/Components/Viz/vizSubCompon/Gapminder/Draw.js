@@ -6,15 +6,12 @@ import svgButton from "./utils/svgButton";
 
 export default function Draw(data, meta, arrows, isArrows,
                               Width, Height, Margin, Share,
-                              XDomain, YDomain, XRange, YRange,
-                              allFirms, allNames, maxNfirms, minTime,
-                              Colortype, Colorrange, Colorbins, Colordomain, Colorincreasing,
-                              SizeUnit, SizeExponent, SizeDomain, SizeRange, SizeIncreasing,
-                              FontExponent, FontDomain, FontRange,
-                              OpacityExponent, OpacityDomain, OpacityRange,
-                              adaptDisps, time, nFirms,
+                              allFirms, minTime,
                               sizeSel, colorSel,
-                              setTrans_d3, setJustClicked, locSetData,
+                              setTrans_d3, setJustClicked, 
+                              OpacityRange,
+                              x,y,
+                              xfunc, yfunc, xYLfunc, yYLfunc, rfunc, fontfunc, opacityfunc, fillfunc, displayfunc, sortfunc,
                               refcur){
 
 console.log('DRAW')
@@ -26,7 +23,6 @@ console.log('DRAW')
 const width = Width;
 const height = Height;
 const margin = Margin
-const label_nudge = 0.12; // label nudge away from circles
 const arrow_text_dodge = 0.5; // nudge text away from arrow
 
 const width_c2 = '40px; min-width: 5px; justify-content: center;">' // impacts style of tooltip columns
@@ -84,57 +80,6 @@ const toolVarList = meta
 /* Scales */
 const times = d3.extent(data, d => d.time);
 
-const x = d3.scaleLinear()
-            .domain(XDomain)
-            .range(XRange)
-
-const y = d3.scaleLinear()
-            .domain(YDomain) //-4 leaves room for time label
-            .range(YRange)
-
-
-// const sizeSelMeta = meta.filter(d => d.name === sizeSel)
-
-// var unit = ""
-// if(typeof sizeSelMeta[0].unit !== 'undefined'){unit = sizeSelMeta[0].unit}
-
-// var locExponent = 1
-// if(typeof sizeSelMeta[0].scale_exponent !== 'undefined'){locExponent = Number(sizeSelMeta[0].scale_exponent)}
-// var maxSize = 50
-// if(typeof sizeSelMeta[0].scale_maxSize !== 'undefined'){maxSize = Number(sizeSelMeta[0].scale_maxSize)}
-// var minSize = 1
-// if(typeof sizeSelMeta[0].scale_minSize !== 'undefined'){minSize = Number(sizeSelMeta[0].scale_minSize)}
-
-const size = d3.scalePow()
-            .exponent(SizeExponent)
-            .domain(SizeDomain)
-            .range(SizeRange)
-
-var color = ''
-
-if(Colortype === 'discrete'){
-  color = d3.scaleOrdinal() // https://stackoverflow.com/questions/20847161/how-can-i-generate-as-many-colors-as-i-want-using-d3
-                .domain(Colordomain)
-                .range(Colorrange) 
-}
-
-if(Colortype === 'continuous'){
-  color = d3.scaleThreshold() // Requires similar update in ColorLegend/Draw.js and Draw.js
-                .domain(Colordomain)
-                .range(Colorrange);
-}
-
-const fontScale = d3.scalePow()
-                .exponent(FontExponent)
-                .domain(FontDomain)
-                .range(FontRange)
-const opacityScale = d3.scalePow()
-              .exponent(OpacityExponent)
-              .domain(OpacityDomain)
-              .range(OpacityRange)
-
-const max_data = d3.max(data, d => d[colorSel])
-
 /*  */
 //
 // Large bottom left time label
@@ -150,110 +95,6 @@ svg.append('text')
   .attr('font-weight', 500)
   .attr('font-size', 60)
   .text(times[0]);
-
-
-/*  */
-//
-// State-dependent attribute setting functions
-//
-/*  */
-
-let xfunc;
-if (adaptDisps === "true") {
-  if (SizeIncreasing === "true") {
-    xfunc = (d, tdk = 1) => x(d.x) + (size(d[sizeSel]) / tdk) + label_nudge;
-  } else {
-    xfunc = (d, tdk = 1) => x(d.x) + (size(SizeDomain[1] - d[sizeSel]) / tdk) + label_nudge;
-  }
-} else {
-  xfunc = (d, tdk = 1) => x(d.x) + 4/tdk + label_nudge;
-}
-
-let yfunc;
-if (adaptDisps === "true") {
-  if (SizeIncreasing === "true") {
-    yfunc = (d, tdk = 1) => y(d.y) - (size(d[sizeSel]) / tdk) - label_nudge;
-  } else {
-    yfunc = (d, tdk = 1) => y(d.y) - (size(SizeDomain[1] - d[sizeSel]) / tdk) - label_nudge;
-  }
-} else {
-  yfunc = (d, tdk = 1) => y(d.y) - 4/tdk + label_nudge;
-}
-
-let fontfunc;
-if (adaptDisps === "true") {
-  if (SizeIncreasing === "true") {
-    fontfunc = (d, tdk = 1) => fontScale(d[sizeSel]) / tdk;
-  } else {
-    fontfunc = (d, tdk = 1) => fontScale(SizeDomain[1] - d[sizeSel]) / tdk;
-  }
-} else {
-  fontfunc = (d, tdk = 1) => 12 / tdk;
-}
-
-let xYLfunc;
-if (adaptDisps === "true") {
-  if (SizeIncreasing === "true") {
-    xYLfunc = (d, tdk = 1) => x(d.x) - (size(d[sizeSel]) / tdk) - label_nudge;
-  } else {
-    xYLfunc = (d, tdk = 1) => x(d.x) - (size(SizeDomain[1] - d[sizeSel]) / tdk) - label_nudge;
-  }
-} else {
-  xYLfunc = (d, tdk = 1) => x(d.x) - 4/tdk + label_nudge;
-}
-
-let yYLfunc;
-if (adaptDisps === "true") {
-  if (SizeIncreasing === "true") {
-    yYLfunc = (d, tdk = 1) => y(d.y) + (size(d[sizeSel]) / tdk) + label_nudge;
-  } else {
-    yYLfunc = (d, tdk = 1) => y(d.y) + (size(SizeDomain[1] - d[sizeSel]) / tdk) + label_nudge;
-  }
-} else {
-  yYLfunc = (d, tdk = 1) => y(d.y) + 4/tdk + label_nudge;
-}
-
-let rfunc;
-if (adaptDisps === "true") {
-  if (SizeIncreasing === "true") {
-    rfunc = (d, tdk = 1) => size(d[sizeSel]) / tdk;
-  } else {
-    rfunc = (d, tdk = 1) => size(SizeDomain[1] - d[sizeSel]) / tdk;
-  }
-} else {
-  rfunc = (d, tdk = 1) => 4 / tdk;
-}
-
-let fillfunc;
-  if (SizeIncreasing === "true") {
-    fillfunc = (d) => color(d[colorSel]);
-  } else {
-    fillfunc = (d) => color(max_data - d[colorSel]);
-  }
-
-let displayfunc;
-  if (Colorincreasing === "true") {
-    displayfunc = (d) => d[selRank] <= nFirms ? "inline" : "none";
-  }
-  if (Colorincreasing === "false") {
-    displayfunc = (d) => d[selRank] >= maxNfirms - nFirms ? "inline" : "none";
-  }
-
-let opacityfunc;
-  if(adaptDisps === 'true'){
-    if(SizeIncreasing === "true"){ 
-      opacityfunc = (d) => opacityScale(d[sizeSel]) } else {
-      opacityfunc = (d) => opacityScale(SizeDomain[1] - d[sizeSel])}
-  } else {
-      opacityfunc = (d) => OpacityRange[1]
-  }
-
-let sortfunc;
-  if (SizeIncreasing === "true") {
-    sortfunc = (a,b) =>  d3.ascending(a[sizeSel], b[sizeSel]);
-  } else {
-    sortfunc = (a,b) =>  d3.descending(a[sizeSel], b[sizeSel]);
-  }
 
 /*  */
 //

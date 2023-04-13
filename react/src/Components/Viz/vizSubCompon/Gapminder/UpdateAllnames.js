@@ -1,8 +1,6 @@
 import * as d3 from 'd3';
 
-export default function UpdateAllnames(allNames,
-                                       colorSel, setJustClicked, data, sizeSel, time, OpacityRange, OpacityDomain, OpacityExponent
-                                       ){
+export default function UpdateAllnames(allNames){
 
 console.log("All Names Update")
 

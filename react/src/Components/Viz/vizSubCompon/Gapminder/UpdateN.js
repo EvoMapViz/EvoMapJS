@@ -15,8 +15,6 @@ const zoom_group = d3.select('.zoom_group_g')
 const selRank = 'rank-' + sizeSel
 
 const nFirmsHigh = maxNfirms - nFirms
-console.log("nFirmsHigh", nFirmsHigh)
-console.log("Sizeinc  reasing", Sizeincreasing)
 
 /*  */
 /* Update svg background click event */

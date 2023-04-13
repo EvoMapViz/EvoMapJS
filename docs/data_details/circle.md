@@ -18,7 +18,11 @@ parent: Inputs - Details
 
 > <span style="font-size:larger;"><code>time</code></span> : the time period for the observation.
 
-   - *Acceptable*: Any integer.
+   - *Acceptable*: Any integer or string.
+
+   {:warning:}
+   If the time period is a string, it will be sorted in alphabetical order. 
+   For example, if you provide a complete year/month/date string, it must be formatted as `YYYY-MM-DD` (e.g., `1998-01-01`) to be sorted correctly.
 
 > <span style="font-size:larger;"><code>x</code></span> : the x coordinate of the unit at `time`.
 

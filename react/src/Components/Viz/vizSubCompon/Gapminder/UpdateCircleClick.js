@@ -2,64 +2,16 @@ import * as d3 from 'd3';
 import clearSVG from "./utils/clearSVG";
 
 export default function UpdateCircleClick(data, time, justClicked,
-                                          XDomain, YDomain, XRange, YRange,
-                                          SizeExponent, SizeRange, SizeDomain, SizeIncreasing,
-                                          OpacityRange, OpacityDomain, OpacityExponent, AdaptDisp, // To set highlight intensity as upper bound of range and use in clearSVG
-                                          adaptDisps, sizeSel, allNames, nFirms, nTimes, timeLabs,
+                                          OpacityRange, OpacityDomain, OpacityExponent, AdaptDisp, // To set highlight intensity as upper bound of range AND use in clearSVG
+                                          sizeSel, allNames, nFirms, nTimes, timeLabs,
+                                          x,y,
+                                          xYLfunc, yYLfunc, rfunc, 
                                           trans_d3){
 
 console.log("High Update") 
 
 const zoom_group = d3.select('.zoom_group_g')
 const svg = d3.select(".svg-content-responsive")
-const increasing = SizeIncreasing
-const dom = d3.extent(data, d => d[sizeSel])
-const label_nudge = 0.12; // time label nudge away from circles
-
-
-const x = d3.scaleLinear()
-            .domain(XDomain)
-            .range(XRange)
-const y = d3.scaleLinear()
-            .domain(YDomain) 
-            .range(YRange)
-const size = d3.scalePow()
-            .exponent(SizeExponent)
-            .domain(SizeDomain)
-            .range(SizeRange)
-
-let xYLfunc;
-if (adaptDisps === "true") {
-  if (SizeIncreasing === "true") {
-    xYLfunc = (d, tdk = 1) => x(d.x) - (size(d[sizeSel]) / tdk) - label_nudge;
-  } else {
-    xYLfunc = (d, tdk = 1) => x(d.x) - (size(SizeDomain[1] - d[sizeSel]) / tdk) - label_nudge;
-  }
-} else {
-  xYLfunc = (d, tdk = 1) => x(d.x) - 4/tdk + label_nudge;
-}
-
-let yYLfunc;
-if (adaptDisps === "true") {
-  if (SizeIncreasing === "true") {
-    yYLfunc = (d, tdk = 1) => y(d.y) + (size(d[sizeSel]) / tdk) + label_nudge;
-  } else {
-    yYLfunc = (d, tdk = 1) => y(d.y) + (size(SizeDomain[1] - d[sizeSel]) / tdk) + label_nudge;
-  }
-} else {
-  yYLfunc = (d, tdk = 1) => y(d.y) + 4/tdk + label_nudge;
-}
-
-let rfunc;
-if (adaptDisps === "true") {
-  if (SizeIncreasing === "true") {
-    rfunc = (d, tdk = 1) => size(d[sizeSel]) / tdk;
-  } else {
-    rfunc = (d, tdk = 1) => size(SizeDomain[1] - d[sizeSel]) / tdk;
-  }
-} else {
-  rfunc = (d, tdk = 1) => 4 / tdk;
-}
 
 /* ----- */        
 /*  */
