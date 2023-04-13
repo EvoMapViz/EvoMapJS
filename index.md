@@ -18,7 +18,7 @@ To install the app *locally*:
 - The app should open automatically in your default browser. 
 If it does not, open a browser and navigate to [http://localhost:3000/](http://localhost:3000/). 
 
-See [https://evomapviz.github.io/EvoMapJS/docs/deploy/](https://evomapviz.github.io/EvoMapJS/docs/deploy/) for a guide on how to deploy the app *online*.
+See the [Deploy online](https://evomapviz.github.io/EvoMapJS/docs/deploy/) section for a guide on how to deploy the app *online*.
 
 # Branch management and usage
 

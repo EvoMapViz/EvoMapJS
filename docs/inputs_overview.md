@@ -10,6 +10,7 @@ The app requires the three `json` input files listed below.
 Each of these three `json` is made of a single array of objects. 
 The objects themselves can only contain key-value pairs. 
 The three `json` files must be located in the `src/data` folder.
+See 
 
 ### `circles.json` 
 {: .mb-lg-3 }
