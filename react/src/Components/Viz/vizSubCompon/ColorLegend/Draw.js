@@ -9,6 +9,11 @@ export default function Draw(data, meta,
                                     winWidth){
 
 console.log('DRAWING color legend')
+console.log('colorSel: ', colorSel)
+console.log('colorType: ', Colortype)
+console.log('colorRange: ', Colorrange)
+console.log('colorBins: ', Colorbins)
+console.log('colorDomain: ', Colordomain)
 
 const colorSelMeta = meta.filter((d) => d.name === colorSel);
 const yGap = 55;

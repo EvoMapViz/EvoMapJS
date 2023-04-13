@@ -18,8 +18,8 @@ import {useAtom} from 'jotai';
 import {data, arrows, 
         adaptDisps, allNames, timeLabs, 
         nFirms, maxNfirms, Time, minTime, maxTime, metaData, sizeSel, colorSel, sizeSelLabel, colorSelLabel, colgroup,
-        colorType, colorDomain, colorRange, colorBins, colorIncreasing, colorExtremes,
-        sizeIncreasing, sizeExponent, sizeDomain, sizeRange, arrowsSel} 
+        colorOptions, colorType, colorDomain, colorRange, colorBins, colorIncreasing, colorExtremes,
+        sizeOptions, sizeIncreasing, sizeExponent, sizeDomain, sizeRange, arrowsSel} 
         from 'jotaiStore.js';
 import {interpolatePlasma} from "d3-scale-chromatic";
 
@@ -33,11 +33,8 @@ const NavbarArrow = () => {
     const [locmaxTime, ] = useAtom(maxTime)
     const [, locSetColgroup] = useAtom(colgroup)
     
-    const sizeOptions = locMeta
-                        .filter(d =>  d.type === "continuous" && d.tooltip !== 'only')
-                        .map(d => ({"value": d.name, "label": d.label}) )
-                        .sort((a, b) => a.label.localeCompare(b.label))
-    const defaultSizeOption = sizeOptions[0]
+    let [locSizeOptions, ] = useAtom(sizeOptions)
+    locSizeOptions = locSizeOptions.map(d => ({"value": d.name, "label": d.label}))
     
     const arrowOptions = locArrows
                             .filter(d => d.time === locminTime)
@@ -49,10 +46,9 @@ const NavbarArrow = () => {
     const [, locSetSizeSel] = useAtom(sizeSel)
     const [, locSetSizeSelLabel] = useAtom(sizeSelLabel)
     
-    const colorOptions = locMeta
-                          .filter(d => d.tooltip !== 'only')
-                          .map(d => ({"value": d.name, "label": d.label}) )
-    const defaultColorOption = colorOptions[0]
+    let [locColorOptions, ] = useAtom(colorOptions)
+    locColorOptions = locColorOptions.map(d => ({"value": d.name, "label": d.label}))
+    
     const [ ,locSetColorSel] = useAtom(colorSel)
     const [ ,locSetColorSelLabel] = useAtom(colorSelLabel)
     const [ ,locSetColortype] = useAtom(colorType)
@@ -247,9 +243,9 @@ const cust_style = {
                                     <ReactSelect
                                         className="basic-single"
                                         classNamePrefix="select"
-                                        defaultValue={defaultSizeOption}
+                                        defaultValue={locSizeOptions[0]}
                                         name="size"
-                                        options = {sizeOptions}
+                                        options = {locSizeOptions}
                                         onChange={handleSizeChange}
                                         styles = {cust_style}
                                         components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }} //https://stackoverflow.com/questions/54961077/react-select-is-there-a-way-to-remove-the-button-on-the-right-that-expand-the-l
@@ -267,9 +263,9 @@ const cust_style = {
                                     <ReactSelect
                                         className="basic-single"
                                         classNamePrefix="select"
-                                        defaultValue={defaultColorOption}
+                                        defaultValue={locColorOptions[0]}
                                         name="color"
-                                        options = {colorOptions}
+                                        options = {locColorOptions}
                                         onChange={handleColorChange}
                                         styles = {cust_style}
                                         components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }} //https://stackoverflow.com/questions/54961077/react-select-is-there-a-way-to-remove-the-button-on-the-right-that-expand-the-l
