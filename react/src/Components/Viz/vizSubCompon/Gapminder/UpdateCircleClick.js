@@ -2,31 +2,16 @@ import * as d3 from 'd3';
 import clearSVG from "./utils/clearSVG";
 
 export default function UpdateCircleClick(data, time, justClicked,
-                                          XDomain, YDomain, XRange, YRange,
-                                          SizeExponent, SizeRange, SizeDomain, SizeIncreasing,
-                                          OpacityRange, OpacityDomain, OpacityExponent, AdaptDisp, // To set highlight intensity as upper bound of range and use in clearSVG
-                                          adaptDisps, sizeSel, allNames, nFirms, nTimes, timeLabs,
+                                          OpacityRange, OpacityDomain, OpacityExponent, AdaptDisp, // To set highlight intensity as upper bound of range AND use in clearSVG
+                                          sizeSel, allNames, nFirms, nTimes, timeLabs,
+                                          x,y,
+                                          xYLfunc, yYLfunc, rfunc, 
                                           trans_d3){
 
 console.log("High Update") 
 
 const zoom_group = d3.select('.zoom_group_g')
 const svg = d3.select(".svg-content-responsive")
-const increasing = SizeIncreasing
-const dom = d3.extent(data, d => d[sizeSel])
-const label_mult_nudge = 0.12; // time label nudge away from circles
-
-
-const x = d3.scaleLinear()
-            .domain(XDomain)
-            .range(XRange)
-const y = d3.scaleLinear()
-            .domain(YDomain) 
-            .range(YRange)
-const size = d3.scalePow()
-            .exponent(SizeExponent)
-            .domain(SizeDomain)
-            .range(SizeRange)
 
 /* ----- */        
 /*  */
@@ -78,7 +63,7 @@ if(justClicked[0] === 'background'){
 if(justClicked[0] === 'high'){                                                      
   justClicked[2] // Highlight main firm circle
     .attr("data-highlighted", 'true')
-    .attr('opacity', OpacityRange[1])
+    .attr('opacity', 1)
     .style('stroke', 'black')
     .on("mouseout", function(d) { //special mouseout to keep clicked stroke
       d3.select('.tooltip')
@@ -89,8 +74,7 @@ if(justClicked[0] === 'high'){
 
   d3.selectAll('.firmLabel') //Highlight firm label
     .filter(function(d) {return d.name === justClicked[1]})
-    // .attr('fill-opacity', OpacityRange[1])
-    .attr('opacity', OpacityRange[1])
+    .attr('opacity', 1)
     .attr('display', 'inline')
     .attr("data-highlighted", 'true')
 
@@ -151,7 +135,7 @@ if(justClicked[0] === 'high'){
 
   /* Add circle trace */  
   
-  let f_trace = zoom_group.selectAll('circle-trace-firm') 
+  zoom_group.selectAll('circle-trace-firm') 
     .data(filt_data)
     .enter()
     .append('circle')
@@ -165,18 +149,8 @@ if(justClicked[0] === 'high'){
     .attr('cx', d => x(d.x))
     .attr('cy', d => y(d.y))
     .attr('opacity', OpacityRange[0]) 
+    .attr("r", d => rfunc(d, trans_d3.k) )
     .lower() 
-
-    if(adaptDisps === 'true'){
-      f_trace
-        .attr("r", function(d){
-                        if(SizeIncreasing === "true"){ 
-                          return   size(d[sizeSel]) / trans_d3.k } else {
-                          return   size(SizeDomain[1]-d[sizeSel]) / trans_d3.k  }
-                        })
-    } else {
-      f_trace.attr("r", d => 4 / trans_d3.k)
-    }
 
       /* Add time label trace */  
 
@@ -195,28 +169,13 @@ if(justClicked[0] === 'high'){
       .attr('fill', 'grey')
       .attr('stroke', 'black')
       .text(d => d.time)
-      .attr('x', function(d){ // adjust for size of circle
-        if(adaptDisps === 'true'){
-          if(increasing === "true"){ 
-            return x(d.x - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-            return x(d.x - label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  
-          }
-        }
-        if(adaptDisps === 'false'){return x(d.x - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) }
-      }) 
-      .attr('y', function(d){
-        if(adaptDisps === 'true'){
-          if(increasing === "true"){ 
-            return y(d.y - label_mult_nudge*(Math.sqrt(size(d[sizeSel])) / trans_d3.k) ) } else {
-            return y(d.y - label_mult_nudge*(Math.sqrt(size(dom[1]-d[sizeSel])) / trans_d3.k) )  
-          }
-        }
-        if(adaptDisps === 'false'){return y(d.y - label_mult_nudge*(Math.sqrt(4) / trans_d3.k) ) }
-      })
+      .attr('x', d => xYLfunc(d, trans_d3.k) )
+      .attr('y', d => yYLfunc(d, trans_d3.k) )
       .attr('font-size', 12/trans_d3.k)
       .attr('opacity', OpacityRange[0])
       .attr("text-anchor", "end") // https://stackoverflow.com/questions/13188125/d3-add-multiple-classes-with-function
       .attr("visibility", d =>  timeLabs === 'true' ? "visible" : "hidden")
+      .lower() 
 } 
 
 /*  */

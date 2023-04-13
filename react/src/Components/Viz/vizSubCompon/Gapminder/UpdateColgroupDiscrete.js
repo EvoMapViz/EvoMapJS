@@ -16,11 +16,6 @@ const f_circ_Nshow = f_circ
                         if(Sizeincreasing === 'true'){ return d[selRank] <= nFirms}
                         if(Sizeincreasing === 'false'){return d[selRank] >= (maxNfirms - nFirms)}  
                       })
-// const f_trace_Nshow = f_trace
-//                       .filter(function(d){
-//                         if(Sizeincreasing === 'true'){ return d[selRank] <= nFirms}
-//                         if(Sizeincreasing === 'false'){return d[selRank] >= (maxNfirms - nFirms)}  
-//                       })
 const f_lab_Nshow = f_lab
                       .filter(function(d){
                         if(Sizeincreasing === 'true'){ return d[selRank] <= nFirms}
