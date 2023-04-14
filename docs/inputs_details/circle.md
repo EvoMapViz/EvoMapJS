@@ -32,28 +32,31 @@ parent: Inputs - Details
 
    - *Acceptable*: Any number.
  
+   {: .note}
+   x and y coordinates are rounded to 2 decimal places when data is loaded into the app to improve performance.
+
 #### Optional
 {: .mb-lg-3 }
 
 > <span style="font-size:larger;"><code>continuous_feature_1</code></span> : a continuous feature of the unit at `time`.
 
-   - *Acceptable*: Any string or number.
+   - *Acceptable*: Any number.
 
  ⋮
 
 > <span style="font-size:larger;"><code>continuous_feature_c</code></span> : a continuous feature of the unit at `time`.
 
-   - *Acceptable*: Any string or number.
+   - *Acceptable*: Any number.
 
 > <span style="font-size:larger;"><code>discrete_feature_1</code></span> : a discrete feature of the unit at `time`.
 
-   - *Acceptable*: Any string or number.
+   - *Acceptable*: Any string.
 
  ⋮
  
 > <span style="font-size:larger;"><code>discrete_feature_d</code></span> : a discrete feature of the unit at `time`.
 
-   - *Acceptable*: Any string or number.
+   - *Acceptable*: Any string.
 
 
 ## Further requirements and info
