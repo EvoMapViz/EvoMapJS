@@ -9,12 +9,13 @@ console.log("Cluster CONTINUOUS Update")
 const selRank = 'rank-' + sizeSel
 
 let bounds = colGroup.split(',')
-bounds = bounds.map(function(d){ // handles rounding problems at top and bottom of scale (extremest value not included upon colGrouping)
+bounds = bounds.map(function(d){ // handles rounding problems at top and bottom of scale (most extreme value not included upon colGrouping)
   let numb = Number(d)
   if(numb < Colorbins[0]){return numb-1}
   if(numb > Colorbins[Colorbins.length - 1]){return numb + 1}
   return numb
   })
+console.log('bounds: ', bounds)
 SetColorbounds(bounds)
 
 const svg = d3.select(".svg-content-responsive")

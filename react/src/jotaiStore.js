@@ -80,32 +80,34 @@ var bins = []
 var domain = []
 var range = []
 var increasing = 'true'
+const disc_color_range = ['#1f77b4',
+'#ff7f0e',
+'#2ca02c',
+'#d62728',
+'#9467bd',
+'#8c564b',
+'#e377c2',
+'#7f7f7f',
+'#bcbd22',
+'#17becf',
+'#882255',
+'#117733',
+'#88CCEE',
+'#DDCC77',
+'#AA4499',
+'#44AA99',
+'#332288',
+'#999933',
+'#CC6677',
+'#DDDDDD',
+'#000000']
+// https://github.com/vanderlindenma/firms_gapminder_v3_build/issues/4
+// For other option: https://stackoverflow.com/questions/20847161/how-can-i-generate-as-many-colors-as-i-want-using-d3
+// http://jnnnnn.github.io/category-colors-constrained.html
 
 if(selType === 'discrete'){
   domain = circle_data.sort((a, b) => d3.ascending(a[default_color_sel.name], b[default_color_sel.name])).map(d => d[default_color_sel.name])
-  range = ['#1f77b4',
-  '#ff7f0e',
-  '#2ca02c',
-  '#d62728',
-  '#9467bd',
-  '#8c564b',
-  '#e377c2',
-  '#7f7f7f',
-  '#bcbd22',
-  '#17becf',
-  '#882255',
-  '#117733',
-  '#88CCEE',
-  '#DDCC77',
-  '#AA4499',
-  '#44AA99',
-  '#332288',
-  '#999933',
-  '#CC6677',
-  '#DDDDDD',
-  '#000000'] // https://github.com/vanderlindenma/firms_gapminder_v3_build/issues/4
-  // For other option: https://stackoverflow.com/questions/20847161/how-can-i-generate-as-many-colors-as-i-want-using-d3
-  // http://jnnnnn.github.io/category-colors-constrained.html
+  range = disc_color_range 
 }
 
 let colExtremes = [0,1] // Bounds for continuous color selection within the plasma scale "interpolatePlasma" (widest bounds are [0,1])
@@ -119,8 +121,9 @@ if(selType === 'continuous'){
               Math.round(d3.quantile(circle_data.map(d => d[default_color_sel.name]), 0.4)),
               Math.round(d3.quantile(circle_data.map(d => d[default_color_sel.name]), 0.6)),
               Math.round(d3.quantile(circle_data.map(d => d[default_color_sel.name]), 0.8)),
-              Math.round(d3.quantile(circle_data.map(d => d[default_color_sel.name]), 1))
                 ]
+    
+    bins = [...new Set(bins)] 
   }  
 
   domain = bins
@@ -138,6 +141,7 @@ console.log('jotai color domain: ', domain)
 const colorDomain = atom(domain)
 const colorType = atom(selType)
 const colorRange = atom(range)
+const discColorRange = atom(disc_color_range)
 const colorBins = atom(bins)
 const colorIncreasing = atom(increasing)
 const colorBounds = atom([]) // For bounds related to continuous colgroup selection
@@ -312,7 +316,7 @@ export {adaptDisps, allNames, timeLabs, display,
         colgroup,
         arrowsSel,
         sizeOptions, sizeSel, colorSel, sizeSelLabel, colorSelLabel,
-        colorOptions, colorType, colorDomain, colorRange, colorBins, colorIncreasing, colorBounds, colorExtremes,
+        colorOptions, colorType, colorDomain, colorRange, colorBins, colorIncreasing, colorBounds, colorExtremes, discColorRange,
         Share, Width, Height, Margin, 
         xDomain, yDomain, xRange, yRange, 
         sizeIncreasing, sizeUnit, 

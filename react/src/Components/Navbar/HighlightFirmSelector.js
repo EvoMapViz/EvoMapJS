@@ -151,7 +151,7 @@ const cust_style = {    // https://codesandbox.io/s/10r714wp0l?file=/src/index.j
                         <ReactSelect
                             isMulti
                             name = "highlight"
-                            options = {firmOptions}  
+                            options = {firmOptions.sort((a, b) => a.label.localeCompare(b.label))}  
                             className="basic-multi-select"
                             classNamePrefix="select"
                             value= {selected}
