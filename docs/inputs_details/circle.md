@@ -40,13 +40,13 @@ parent: Inputs - Details
 
 > <span style="font-size:larger;"><code>continuous_feature_1</code></span> : a continuous feature of the unit at `time`.
 
-   - *Acceptable*: Any number.
+   - *Acceptable*: Any number (float or integer).
 
  ⋮
 
 > <span style="font-size:larger;"><code>continuous_feature_c</code></span> : a continuous feature of the unit at `time`.
 
-   - *Acceptable*: Any number.
+   - *Acceptable*: Any number (float or integer).
 
 > <span style="font-size:larger;"><code>discrete_feature_1</code></span> : a discrete feature of the unit at `time`.
 
