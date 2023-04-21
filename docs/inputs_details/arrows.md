@@ -33,6 +33,16 @@ parent: Inputs - Details
 Support for missing time periods has not been tested. 
 For *each* arrow identified in `arrows.json`, it is safest to provide `x` and `y` coordinates for *all* time periods included in `circle.json`. 
 
+#### Optional
+
+> <span style="font-size:larger;"><code>length</code></span> : The standardized length of the arrow expressed as a percentage of the maximum distance of all circles to the (0,0) origin.
+
+   - *Acceptable*: A number.
+   - If a length `l` is supplied at time `t`, the corresponding arrow arrow at time `t` will be drawn with a length of `l * max_distance_to_origin` where `max_distance_to_origin` is the maximum distance of all circles to the (0,0) origin.
+   - The orientation of the arrow remains determined by the required `x` and `y` coordinates.
+   - If no `length` is provided, the `x` and `y` coordinates are taken as absolute location parameters and directly used to draw the arrow.
+
+
 ## Prototype of valid format
 
 ```
