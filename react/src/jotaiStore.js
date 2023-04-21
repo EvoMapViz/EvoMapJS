@@ -201,8 +201,40 @@ const opacityRange = atom(opacity_range)
 /* "Explainer" arrow data */
 /*  */
 
-const arrows = atom(arrow_data)
-const isArrows = atom(arrow_data.length > 0)
+const raw_arrows = arrow_data
+const any_arrows = raw_arrows.length > 0
+console.log(any_arrows)
+const isArrows = atom(any_arrows)
+
+const max_distance = circle_data.map(d => Math.pow(
+  Math.pow(d.x,2) + Math.pow(d.y,2),
+  0.5
+  )).reduce((a, b) => Math.max(a, b))
+
+// Transform arrow data into format usable by visualization
+
+let new_arrows = raw_arrows
+
+if(any_arrows && typeof raw_arrows[0].length !== 'undefined'){
+  new_arrows = raw_arrows.map(
+      function(d){
+      const alpha_x = (d.length * max_distance) / Math.pow(
+        Math.pow(d.x,2) + Math.pow(d.y,4)/Math.pow(d.x,2)
+        ,0.5)
+      const alpha_y = d.y * alpha_x / d.x
+
+      return ({
+        'name': d.name,
+        'x': d.x * alpha_x,
+        'y': d.y * alpha_y,
+        'time' : d.time
+      })
+    }  
+  )
+}
+
+const arrows = atom(new_arrows)
+
 
 /*  */
 /* Main Circle Data */

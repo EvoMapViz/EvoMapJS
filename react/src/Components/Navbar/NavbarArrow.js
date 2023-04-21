@@ -38,7 +38,7 @@ const NavbarArrow = () => {
     
     const arrowOptions = locArrows
                             .filter(d => d.time === locminTime)
-                            .map(d => ({"value": d.name, "label": d.name}) )
+                            .map(d => ({"value": d.name.toString(), "label": d.name}) )
     const [selected, setSelected] = useState([]); // Select-all "local" state for multi-selection in arrow selector
 
     const [, locSetArrowSel] = useAtom(arrowsSel)
