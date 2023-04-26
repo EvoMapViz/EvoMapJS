@@ -15,7 +15,7 @@ nav_order: 5
 
 #### Existing turnkey deployement synced with Github repository.
 
-  - If you would like to use the latest stable version of the app, update the `uexp/master` branch to the latest commit of the `main` branch (e.g., through a pull request).
+  - If you would like to use the latest stable version of the app and the `uexp/master` branch is behind the `main` branch, update the `uexp/master` branch to the latest commit of the `main` branch (e.g., through a pull request).
   - Clone the `uexp/master` branch from [https://github.com/EvoMapViz/EvoMapJS](https://github.com/EvoMapViz/EvoMapJS).
   - Edit `circle.json`, `metadata.json`, or `arrows.json` locally in the `src/data` folder.
   - Commit your changes using `git` and push them to the Github repository.
