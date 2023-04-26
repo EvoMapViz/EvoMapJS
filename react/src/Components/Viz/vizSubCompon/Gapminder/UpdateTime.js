@@ -2,145 +2,65 @@ import * as d3 from "d3";
 
 export default function UpdateTime(
   data, arrows, isArrows,
-  XDomain,
-  YDomain,
-  XRange,
-  YRange,
   time,
-  valueSizes,
-  sizeSel,
-  colorSel,
-  SizeExponent,
-  SizeRange,
-  SizeDomain,
-  SizeIncreasing,
-  FontRange,
-  FontDomain,
-  FontExponent,
-  OpacityRange,
-  OpacityDomain,
-  OpacityExponent,
-  Colortype,
-  Colorrange,
-  Colorbins,
-  Colordomain,
+  Colortype, 
+  x,y,
+  xfunc, yfunc, rfunc, fontfunc, opacityfunc, fillfunc,
   trans_d3
 ) {
-  console.log("Update Main Circles");
+  console.log("Update Time");
 
   const zoom_group = d3.select(".zoom_group_g");
   const svg = d3.select(".svg-content-responsive");
-  const label_mult_nudge = 0.12; // label nudge away from circles
   const arrow_text_dodge = 0.5; // nudge text away from arrow
 
   /* Time Label */
   svg.selectAll(".timeLabel").text(time);
 
-  /* Scales */
-
-  const x = d3.scaleLinear().domain(XDomain).range(XRange);
-  const y = d3
-    .scaleLinear()
-    .domain(YDomain) //-4 leaves room for time label
-    .range(YRange);
-
-  var color = []
-  if (Colortype === "discrete") {
-    color = d3
-      .scaleOrdinal() // https://stackoverflow.com/questions/20847161/how-can-i-generate-as-many-colors-as-i-want-using-d3
-      .domain(Colordomain)
-      .range(Colorrange);
-  }
-  if (Colortype === "continuous") {
-    color = d3
-      .scaleThreshold() // Requires similar update in ColorLegend/Draw.js and Draw.js
-      .domain(Colordomain)
-      .range(Colorrange);
-  }
-  const max_data = d3.max(data, (d) => d[colorSel]);
-  const size = d3
-    .scalePow()
-    .exponent(SizeExponent)
-    .domain(SizeDomain)
-    .range(SizeRange);
-  const fontScale = d3
-    .scalePow()
-    .exponent(FontExponent)
-    .domain(FontDomain)
-    .range(FontRange);
-  const opacityScale = d3
-    .scalePow()
-    .exponent(OpacityExponent)
-    .domain(OpacityDomain)
-    .range(OpacityRange);
 
   /*  */
   /* Update Firm circles */
   /*  */
-
-  /* Transition circles with non-missing data */
 
   const f_circ = zoom_group.selectAll(".circle-firm").data(
     data.filter((d) => d.time === time),
     (d) => d.name // d=>d.name is animation key
   );
 
-  if (Colortype === "discrete") {
-    f_circ
-    .transition()
-    .duration(200)
-    .ease(d3.easeLinear)
-    .attr("cx", (d) => x(d.x))
-    .attr("cy", (d) => y(d.y))
-    .attr("r", function (d) {
-      if (valueSizes === "true") {
-        if (SizeIncreasing === "true") {
-          return size(d[sizeSel]) / trans_d3.k;
-        } else {
-          return size(SizeDomain[1] - d[sizeSel]) / trans_d3.k;
-        }
-      } else {
-        return 4 / trans_d3.k;
-      }
-    })
-    .transition()
-    .duration(1) // adding an extra transition guarantees the circles are only visible after they have moved
-    .ease(d3.easeLinear)
-    .attr('visibility', 'visible')
-  }
+  /* Transition circles with non-missing data */
 
-  if(Colortype === "continuous") {
+  if (Colortype === "discrete") {
+    
     f_circ
-    .transition()
-    .duration(200)
-    .ease(d3.easeLinear)
-    .attr("cx", (d) => x(d.x))
-    .attr("cy", (d) => y(d.y))
-    .attr("r", function (d) {
-      if (valueSizes === "true") {
-        if (SizeIncreasing === "true") {
-          return size(d[sizeSel]) / trans_d3.k;
-        } else {
-          return size(SizeDomain[1] - d[sizeSel]) / trans_d3.k;
-        }
-      } else {
-        return 4 / trans_d3.k;
-      }
-    })
-    .attr("fill", function (d) {
-      if (SizeIncreasing === "true") {
-        return color(d[colorSel]);
-      }
-      if (SizeIncreasing === "false") {
-        return color(max_data - d[colorSel]);
-      }
-    })
-    .transition()
-    .duration(1) // adding an extra transition guarantees the circles are only visible after they have moved
-    .ease(d3.easeLinear)
-    .attr('visibility', 'visible')
-  }
-   
+      .transition()
+      .duration(200)
+      .ease(d3.easeLinear)
+      .attr("cx", (d) => x(d.x))
+      .attr("cy", (d) => y(d.y))
+      .attr("r", d => rfunc(d, trans_d3.k))
+      .transition()
+      .duration(1) // adding an extra transition guarantees the circles are only visible after they have moved
+      .ease(d3.easeLinear)
+      .attr('visibility', 'visible')
+
+    }
+
+  if (Colortype === "continuous") {
+
+    f_circ
+      .transition()
+      .duration(200)
+      .ease(d3.easeLinear)
+      .attr("cx", (d) => x(d.x))
+      .attr("cy", (d) => y(d.y))
+      .attr("r", d => rfunc(d, trans_d3.k))
+      .attr('fill', fillfunc)
+      .transition()
+      .duration(1) // adding an extra transition guarantees the circles are only visible after they have moved
+      .ease(d3.easeLinear)
+      .attr('visibility', 'visible')
+
+    }
 
   /* Hide circles with missing data */
 
@@ -160,70 +80,28 @@ export default function UpdateTime(
     (d) => d.name
   ); // d=>d.name is animation key
 
+ 
+
   labels
     .transition()
     .duration(200)
     .ease(d3.easeLinear)
-    .attr("x", function (d) {
-      if (valueSizes === "true") {
-        if (SizeIncreasing === "true") {
-          return x(
-            d.x + label_mult_nudge * (Math.sqrt(size(d[sizeSel])) / trans_d3.k)
-          );
-        } else {
-          return x(
-            d.x +
-              label_mult_nudge *
-                (Math.sqrt(size(SizeDomain[1] - d[sizeSel])) / trans_d3.k)
-          );
-        }
-      } else {
-        return x(d.x + (label_mult_nudge * Math.sqrt(4)) / trans_d3.k);
-      }
-    }) // adjust for size of circle
-    .attr("y", function (d) {
-      if (valueSizes === "true") {
-        if (SizeIncreasing === "true") {
-          return y(
-            d.y + label_mult_nudge * (Math.sqrt(size(d[sizeSel])) / trans_d3.k)
-          );
-        } else {
-          return y(
-            d.y +
-              label_mult_nudge *
-                (Math.sqrt(size(SizeDomain[1] - d[sizeSel])) / trans_d3.k)
-          );
-        }
-      } else {
-        return y(d.y + label_mult_nudge * (Math.sqrt(4) / trans_d3.k));
-      }
-    })
-    .attr("font-size", function (d) {
-      if (valueSizes === "true") {
-        if (SizeIncreasing === "true") {
-          return fontScale(d[sizeSel]) / trans_d3.k;
-        } else {
-          return fontScale(SizeDomain[1] - d[sizeSel]) / trans_d3.k;
-        }
-      } else {
-        return 12 / trans_d3.k;
-      }
-    })
-    .attr("opacity", function (d) {
-      if (valueSizes === "true") {
-        if (SizeIncreasing === "true") {
-          return opacityScale(d[sizeSel]);
-        } else {
-          return opacityScale(SizeDomain[1] - d[sizeSel]);
-        }
-      } else {
-        return 0.7;
-      }
-    })
+    .attr("x", d => xfunc(d, trans_d3.k)) 
+    .attr("y", d => yfunc(d, trans_d3.k))
+    .attr("font-size", d => fontfunc(d, trans_d3.k)) 
     .transition()
     .duration(1) // adding an extra transition guarantees the labels are only visible after they have moved.
-                 // Using on.('end') method instead (https://stackoverflow.com/a/10692220/14095529) creates severe lags in the time animation 
+                // Using on.('end') method instead (https://stackoverflow.com/a/10692220/14095529) creates severe lags in the time animation 
     .attr('visibility', 'visible')
+
+  if(zoom_group.attr('data-high-count') === 0){
+
+    labels
+    .transition()
+    .duration(200)
+    .ease(d3.easeLinear)
+    .attr('opacity', d => opacityfunc(d))
+  }  
                                                               
 /* Hide labels with missing data */
 

@@ -3,12 +3,12 @@ import clearSVG from "./utils/clearSVG";
 
 export default function UpdateN(allNames, maxNfirms,
                                 Sizeincreasing, nFirms, colGroup, setJustClicked,
-                                data, sizeSel, colorSel,  time,
+                                data, sizeSel, colorSel, time,
                                 Colortype, Colorbounds,
-                                OpacityRange, OpacityDomain, OpacityExponent // For use in clearSVG
+                                OpacityRange, OpacityDomain, OpacityExponent, AdaptDisp // For use in clearSVG
                                 ){
 
-console.log("Top N Update") 
+console.log("Top N Update")
 
 const svg = d3.select(".svg-content-responsive")
 const zoom_group = d3.select('.zoom_group_g')
@@ -22,7 +22,7 @@ const nFirmsHigh = maxNfirms - nFirms
 
 svg.on('click', function(event){
   if(event.target.className.baseVal === "svg-content-responsive"){ // if click is not also firm or other element in group
-    clearSVG(svg, allNames, data, sizeSel, time, OpacityRange, OpacityDomain,  OpacityExponent)
+    clearSVG(svg, allNames, data, sizeSel, time, OpacityRange, OpacityDomain,  OpacityExponent, AdaptDisp)
     zoom_group.attr('data-high-count', 0) // Counts number of highlighted elements (firms) in group, to trigger `clearSVG` when de-highlighting the last highlighted element
     setJustClicked(['background'])
   }
@@ -56,23 +56,26 @@ if(colGroup !== "Show All"){
 }
 
 /*  */
-/* Change display as a function of allNames */
+/* Change display */
 /*  */
 
+// All names TRUE
 if(allNames === "true"){
 
   colGroup_lab
   .filter(function(d){
     return Sizeincreasing === 'true' ? 
-            d[selRank] <= nFirms : 
-            d[selRank] >= nFirmsHigh
+    d[selRank] <= nFirms : 
+    d[selRank] >= nFirmsHigh
   })
   .attr('display', 'inline')
 
 
   colGroup_circ
   .filter(function(d){
-    return Sizeincreasing === 'true' ? d[selRank] <= nFirms : d[selRank] >= nFirmsHigh
+    return Sizeincreasing === 'true' ? 
+    d[selRank] <= nFirms : 
+    d[selRank] >= nFirmsHigh
   })
   .attr('display', 'inline')
 
@@ -81,7 +84,7 @@ if(allNames === "true"){
     const high = d3.select(this).attr('data-highlighted')
     return Sizeincreasing === 'true' ? 
             d[selRank] > nFirms && high === 'false' : 
-            d[selRank] >= nFirmsHigh && high === 'false'
+            d[selRank] <= nFirmsHigh && high === 'false'
   })
   .attr('display', 'none')
 
@@ -90,11 +93,12 @@ if(allNames === "true"){
     const high = d3.select(this).attr('data-highlighted')
     return Sizeincreasing === 'true' ? 
             d[selRank] > nFirms && high === 'false' : 
-            d[selRank] >= nFirmsHigh && high === 'false'
+            d[selRank] <= nFirmsHigh && high === 'false'
   })
   .attr('display', 'none')
 }
 
+// All names FALSE
 if(allNames === "false"){
 
   colGroup_circ
@@ -111,7 +115,7 @@ if(allNames === "false"){
     const high = d3.select(this).attr('data-highlighted')
     return Sizeincreasing === 'true' ? 
             d[selRank] > nFirms && high === 'false' : 
-            d[selRank] > nFirmsHigh && high === 'false'
+            d[selRank] <= nFirmsHigh && high === 'false'
   })
   .attr('display', 'none')
 

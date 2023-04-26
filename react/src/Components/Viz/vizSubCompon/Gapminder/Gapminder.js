@@ -1,12 +1,13 @@
-import { useRef, useEffect, useContext } from "react";
+import { useRef, useEffect} from "react";
 import * as d3 from 'd3';
 import Draw from "./Draw.js"
 import UpdateTime from "./UpdateTime.js";
 import UpdateCircleClick from "./UpdateCircleClick.js";
 import UpdateHighlightSel from "./UpdateHighlightSel.js";
 import UpdateAllnames from "./UpdateAllnames.js";
+import UpdateTimeLabs from "./UpdateTimeLabs.js";
 import UpdateN from "./UpdateN.js";
-import UpdateAdaptiveSizes from "./UpdateAdaptiveSizes.js";
+import UpdateAdaptiveDisplay from "./UpdateAdaptiveDisplay.js";
 import UpdateSizeSel from "./UpdateSizeSel.js";
 import UpdateColorSel from "./UpdateColorSel.js";
 import UpdateArrows from "./UpdateArrows.js";
@@ -20,12 +21,12 @@ import "./Gapminder.css"
 import { data, metaData,
          Width, Height, Margin,
          xDomain, yDomain, xRange, yRange,
-         allFirms, allNames, maxNfirms, minTime, nTimes,
-         valueSizes, Time, nFirms, sizeSel, colorSel, colgroup, arrowsSel,
+         allFirms, allNames, maxNfirms, minTime, nTimes, timeLabs,
+         adaptDisps, Time, nFirms, sizeSel, colorSel, colgroup, arrowsSel,
          transD3, 
          justClicked, justSelHigh, 
          colorType, colorDomain, colorRange, colorBins, colorIncreasing, colorBounds, 
-         sizeIncreasing, sizeUnit, sizeExponent, sizeDomain, sizeRange,
+         sizeIncreasing, sizeExponent, sizeDomain, sizeRange,
          fontExponent, fontDomain, fontRange,
          opacityExponent, opacityDomain, opacityRange, Share, 
          arrows, isArrows} from 'jotaiStore.js';
@@ -33,11 +34,16 @@ import { useAtom } from 'jotai'
 
 export default function Gapminder() {
 
+  /*  */
+  //
+  // State imports
+  //
+  /*  */
+
   const ref = useRef()
   const didMountRef = useRef(false); // Used below to prevent Draw but not Update on initial render (https://stackoverflow.com/questions/53253940/make-react-useeffect-hook-not-run-on-initial-render)
 
-
-  const [locData, locSetData ] = useAtom(data)
+  const [locData, ] = useAtom(data)
   const [locMeta, ] = useAtom(metaData)
   const [locArrows, ] = useAtom(arrows)
   const [locIsArrows, ] = useAtom(isArrows)
@@ -65,7 +71,6 @@ export default function Gapminder() {
 
   const [locSizeSel,] = useAtom(sizeSel)
   const [locSizeIncreasing,] = useAtom(sizeIncreasing)
-  const [locSizeUnit, ] = useAtom(sizeUnit)
   const [locSizeExponent, ] = useAtom(sizeExponent)
   const [locSizeDomain, ] = useAtom(sizeDomain)
   const [locSizeRange, ] = useAtom(sizeRange)
@@ -80,117 +85,268 @@ export default function Gapminder() {
   const [locOpacityDomain, ] = useAtom(opacityDomain)
   const [locOpacityRange, ] = useAtom(opacityRange)
 
-  const [locValueSizes,] = useAtom(valueSizes)
+  const [locAdaptDisp,] = useAtom(adaptDisps)
   const [locAllNames,] = useAtom(allNames)
   const [locAllFirms,] = useAtom(allFirms)
+  const [locTimeLabs,] = useAtom(timeLabs)
   const [locMaxnfirms,] = useAtom(maxNfirms)
   const [locMintime,] = useAtom(minTime)
   const [locNTimes,] = useAtom(nTimes)
   const [locNfirms,] = useAtom(nFirms)
   const [locTransD3, locSetTransD3 ] = useAtom(transD3)
   const [locJustClicked, locSetJustClicked] = useAtom(justClicked)
-  const [locJustSelHigh, locSetJustSelHigh] = useAtom(justSelHigh)
-
+  const [locJustSelHigh, ] = useAtom(justSelHigh)
 
   const varType = locMeta
                       .filter(d => d.name === locColorSel)
                       .map(d => d.type)
   
 /*  */
-/* Initialize */
+//
+// State-dependent attribute setting functions
+//
+/*  */
+
+/*  */
+/* Scales */
+/*  */
+
+const locSelRank = 'rank-' + locSizeSel
+
+const x = d3.scaleLinear()
+            .domain(locXDomain)
+            .range(locXRange)
+
+const y = d3.scaleLinear()
+            .domain(locYDomain) //-4 leaves room for time label
+            .range(locYRange)
+
+const size = d3.scalePow()
+            .exponent(locSizeExponent)
+            .domain(locSizeDomain)
+            .range(locSizeRange)
+
+let color;
+if(locColortype === 'discrete'){
+  color = d3.scaleOrdinal() // https://stackoverflow.com/questions/20847161/how-can-i-generate-as-many-colors-as-i-want-using-d3
+                .domain(locColordomain)
+                .range(locColorrange) 
+}
+if(locColortype === 'continuous'){
+  color = d3.scaleThreshold() // Requires similar update in ColorLegend/Draw.js and Draw.js
+                .domain(locColordomain)
+                .range(locColorrange);
+}
+
+const fontScale = d3.scalePow()
+                .exponent(locFontExponent)
+                .domain(locFontDomain)
+                .range(locFontRange)
+const opacityScale = d3.scalePow()
+              .exponent(locOpacityExponent)
+              .domain(locOpacityDomain)
+              .range(locOpacityRange)
+
+/*  */
+/* Attribute setting functions */
+/*  */
+
+let xfunc;
+if (locAdaptDisp === "true") {
+  if (locSizeIncreasing === "true") {
+    xfunc = (d, tdk = 1) => x(d.x) + (size(d[locSizeSel]) / tdk) ;
+  } else {
+    xfunc = (d, tdk = 1) => x(d.x) + (size(locSizeDomain[1] - d[locSizeSel]) / tdk) ;
+  }
+} else {
+  xfunc = (d, tdk = 1) => x(d.x) + 4/tdk ;
+}
+
+let yfunc;
+if (locAdaptDisp === "true") {
+  if (locSizeIncreasing === "true") {
+    yfunc = (d, tdk = 1) => y(d.y) - (size(d[locSizeSel]) / tdk) ;
+  } else {
+    yfunc = (d, tdk = 1) => y(d.y) - (size(locSizeDomain[1] - d[locSizeSel]) / tdk) ;
+  }
+} else {
+  yfunc = (d, tdk = 1) => y(d.y) - 4/tdk ;
+}
+
+let fontfunc;
+if (locAdaptDisp === "true") {
+  if (locSizeIncreasing === "true") {
+    fontfunc = (d, tdk = 1) => fontScale(d[locSizeSel]) / tdk;
+  } else {
+    fontfunc = (d, tdk = 1) => fontScale(locSizeDomain[1] - d[locSizeSel]) / tdk;
+  }
+} else {
+  fontfunc = (d, tdk = 1) => 12 / tdk;
+}
+
+let xYLfunc;
+if (locAdaptDisp === "true") {
+  if (locSizeIncreasing === "true") {
+    xYLfunc = (d, tdk = 1) => x(d.x) - (size(d[locSizeSel]) / tdk) ;
+  } else {
+    xYLfunc = (d, tdk = 1) => x(d.x) - (size(locSizeDomain[1] - d[locSizeSel]) / tdk) ;
+  }
+} else {
+  xYLfunc = (d, tdk = 1) => x(d.x) - 4/tdk ;
+}
+
+let yYLfunc;
+if (locAdaptDisp === "true") {
+  if (locSizeIncreasing === "true") {
+    yYLfunc = (d, tdk = 1) => y(d.y) + (size(d[locSizeSel]) / tdk) ;
+  } else {
+    yYLfunc = (d, tdk = 1) => y(d.y) + (size(locSizeDomain[1] - d[locSizeSel]) / tdk) ;
+  }
+} else {
+  yYLfunc = (d, tdk = 1) => y(d.y) + 4/tdk ;
+}
+
+let rfunc;
+if (locAdaptDisp === "true") {
+  if (locSizeIncreasing === "true") {
+    rfunc = (d, tdk = 1) => size(d[locSizeSel]) / tdk;
+  } else {
+    rfunc = (d, tdk = 1) => size(locSizeDomain[1] - d[locSizeSel]) / tdk;
+  }
+} else {
+  rfunc = (d, tdk = 1) => 4 / tdk;
+}
+
+let fillfunc;
+  if (locColortype === "discrete") {
+    fillfunc = (d) => color(d[locColorSel]);
+  } else {
+    if (locSizeIncreasing === "true") {
+      fillfunc = (d) => color(d[locColorSel]);
+    } else {
+      fillfunc = (d) => color(locColordomain[1] - d[locColorSel]);
+    }
+  }
+  
+let displayfunc;
+  if (locColorincreasing === "true") {
+    displayfunc = (d) => d[locSelRank] <= locNfirms ? "inline" : "none";
+  }
+  if (locColorincreasing === "false") {
+    displayfunc = (d) => d[locSelRank] >= maxNfirms - locNfirms ? "inline" : "none";
+  }
+
+let opacityfunc;
+  if(locAdaptDisp === 'true'){
+    if(locSizeIncreasing === "true"){ 
+      opacityfunc = (d) => opacityScale(d[locSizeSel]) } else {
+      opacityfunc = (d) => opacityScale(locSizeDomain[1] - d[locSizeSel])}
+  } else {
+      opacityfunc = (d) => locOpacityRange[1]
+  }
+
+let sortfunc;
+  if (locSizeIncreasing === "true") {
+    sortfunc = (a,b) =>  d3.ascending(a[locSizeSel], b[locSizeSel]);
+  } else {
+    sortfunc = (a,b) =>  d3.descending(a[locSizeSel], b[locSizeSel]);
+  }
+
+/*  */
+//
+// State-dependent attribute setting functions
+//
 /*  */
 
 useEffect(() => {
   Draw(locData, locMeta, locArrows, locIsArrows,
         locWidth, locHeight, locMargin, locShare,
-        locXDomain, locYDomain, locXRange, locYRange,
-        locAllFirms, locAllNames,locMaxnfirms, locMintime,
-        locColortype,locColorrange, locColorbins, locColordomain, locColorincreasing,
-        locSizeUnit, locSizeExponent, locSizeDomain, locSizeRange, locSizeIncreasing,
-        locFontExponent, locFontDomain, locFontRange,
-        locOpacityExponent, locOpacityDomain, locOpacityRange,
-        locValueSizes, locTime, locNfirms,
+        locAllFirms, locMintime,
         locSizeSel, locColorSel, 
-        locSetTransD3, locSetJustClicked, locSetData,
+        locSetTransD3, locSetJustClicked, 
+        locOpacityRange,
+        x,y,
+        xfunc,yfunc, xYLfunc, yYLfunc, rfunc, fontfunc, opacityfunc, fillfunc, displayfunc, sortfunc,
         ref.current)
 }, []) // [] implies code will run only once => similar to didMount
 
 /*  */
-/* Updates */
+//
+// State-dependent attribute setting functions
+//
 /*  */
 
 /* Zoom */
 
 useEffect(() => {
   if (didMountRef.current){ // Prevents run on initial render
-    return UpdateZoom(locData,
-                      locWidth, locHeight,
-                      locXDomain, locYDomain, locXRange, locYRange,
-                      locSizeExponent, locSizeRange, locSizeDomain, locSizeIncreasing,
-                      locFontRange, locFontDomain, locFontExponent, 
-                      locOpacityRange, locOpacityDomain, locOpacityExponent,
-                      locValueSizes, locSizeSel,
-                      locTransD3, locSetTransD3,
-                      locIsArrows)}  
-}, [locValueSizes, locSizeSel, locTime])
+    return UpdateZoom(locWidth, locHeight,
+                      locSetTransD3,
+                      locIsArrows,
+                      x,y,
+                      xfunc, yfunc, xYLfunc, yYLfunc, rfunc, fontfunc,
+                      )}  
+}, [locAdaptDisp, locSizeSel, locTime])
 
 /* Main circle/label animation */
 
 useEffect(() => {
-  if (didMountRef.current){ // Prevents run on initial render 
+  if (didMountRef.current){ 
     return UpdateTime(locData, locArrows, locIsArrows,
-                             locXDomain, locYDomain, locXRange, locYRange,
-                             locTime, locValueSizes, locSizeSel, locColorSel,
-                             locSizeExponent, locSizeRange, locSizeDomain, locSizeIncreasing,
-                             locFontRange, locFontDomain, locFontExponent, 
-                             locOpacityRange, locOpacityDomain, locOpacityExponent,
-                             locColortype,locColorrange, locColorbins, locColordomain, 
-                             locTransD3)} 
-}, [locData, locTime, locAllFirms]) // [] contains states which, upon change, will trigger execution of Update function
+                      locTime,
+                      locColortype,
+                      x,y,
+                      xfunc, yfunc, rfunc, fontfunc, opacityfunc, fillfunc,
+                      locTransD3,
+                      )} 
+}, [locData, locTime, locAllFirms]) 
 
 /* Size selector */
 
 useEffect(() => {
-  if (didMountRef.current){ // Prevents run on initial render 
-    return UpdateSizeSel(locXDomain, locYDomain, locXRange, locYRange,
-                         locSizeExponent, locSizeRange, locSizeDomain, locSizeIncreasing,
-                         locFontRange, locFontDomain, locFontExponent, 
-                         locOpacityRange, locOpacityDomain, locOpacityExponent,
-                         locValueSizes, locSizeSel,
-                         locTransD3)} 
+  if (didMountRef.current){ 
+    return UpdateSizeSel(locOpacityRange,
+                         locAdaptDisp, 
+                         xfunc, yfunc, xYLfunc, yYLfunc, rfunc, fontfunc, opacityfunc, 
+                         locTransD3,
+                         )} 
 }, [locSizeSel])
 
 /* Color selector */
 
 useEffect(() => {
-  if (didMountRef.current){ // Prevents run on initial render
-    return UpdateColorSel(locData, locMeta,
+  if (didMountRef.current){ 
+    return UpdateColorSel(locData,
                           locColorSel,
-                          locColortype,locColorrange, locColordomain, locColorincreasing, 
-                          locSizeIncreasing,
                           locSetJustClicked, locAllNames,
-                          locSizeSel, locTime, opacityRange, opacityDomain, opacityExponent // For use in clearSVG
+                          fillfunc,
+                          locSizeSel, locTime, opacityRange, opacityDomain, opacityExponent, locAdaptDisp, // For use in clearSVG
                           )} 
 }, [locColorSel])
 
 /* Show all names */
 
 useEffect(() => {
-  if (didMountRef.current){  // Prevents run on initial render 
-    return UpdateAllnames(locAllNames,
-                          locColorSel, locSetJustClicked, locData, locSizeSel, locTime, opacityRange, opacityDomain, opacityExponent // For use in updating clearSVG click event
-                          )} 
+  if (didMountRef.current){  
+    return UpdateAllnames(locAllNames)} 
 }, [locAllNames, locSizeSel])
+
+/* Show/Hide time labels upon highlight */
+
+useEffect(() => {
+  if (didMountRef.current){  
+    return UpdateTimeLabs(locTimeLabs)} 
+}, [locTimeLabs])
 
 /* Max. number of firms N */
 
 useEffect(() => {
-  if (didMountRef.current){  // Prevents run on initial render 
+  if (didMountRef.current){  
     return UpdateN(locAllNames, locMaxnfirms,
                    locSizeIncreasing, locNfirms, locColgroup, locSetJustClicked,
                    locData, locSizeSel, locColorSel, locTime,
                    locColortype, locColorbounds,
-                   opacityRange, opacityDomain, opacityExponent // For use in clearSVG
+                   opacityRange, opacityDomain, opacityExponent, locAdaptDisp // For use in clearSVG
                    )} 
 }, [locNfirms, locSizeSel])
 
@@ -198,18 +354,16 @@ useEffect(() => {
 
 useEffect(() => {
   if (didMountRef.current){ // Prevents run on initial render
-    return UpdateAdaptiveSizes(locXDomain, locYDomain, locXRange, locYRange,
-                              locSizeExponent, locSizeRange, locSizeDomain, locSizeIncreasing,
-                              locFontRange, locFontDomain, locFontExponent, 
-                              locOpacityRange, locOpacityDomain, locOpacityExponent,
-                              locValueSizes, locSizeSel,
-                              locTransD3)}  
-}, [locValueSizes])
+    return UpdateAdaptiveDisplay(
+                              xfunc, yfunc, xYLfunc, yYLfunc, rfunc, fontfunc, opacityfunc,
+                              locTransD3
+                              )}  
+}, [locAdaptDisp])
 
 /* Colgroup */
 
   useEffect(() => {
-    if (didMountRef.current){                                       // Prevents run on initial render 
+    if (didMountRef.current){                                       
       if (varType[0] === "discrete"){
         return UpdateColgroupDiscrete(locColgroup, locNfirms, locSizeSel, locColorSel, locAllNames,
                                       locSizeIncreasing, locMaxnfirms) } 
@@ -224,14 +378,14 @@ useEffect(() => {
 // From Viz
 
 useEffect(() => {
-  if (didMountRef.current){  // Prevents run on initial render 
+  if (didMountRef.current){  
     const zoom_group = d3.select('.zoom_group_g')
     // if (zoom_group.attr('data-high-count') !== '0'){ // Go through highlight routine only if last click was NOT dehighlight of last highlighted 
       return UpdateCircleClick(locData, locTime, locJustClicked,
-                              locXDomain, locYDomain, locXRange, locYRange,
-                              locSizeExponent, locSizeRange, locSizeDomain, locSizeIncreasing,
-                              locOpacityRange, locOpacityDomain, locOpacityExponent, 
-                              locValueSizes, locSizeSel, locAllNames, locNfirms, locNTimes,
+                              locOpacityRange, locOpacityDomain, locOpacityExponent, locAdaptDisp,
+                              locSizeSel, locAllNames, locNfirms, locNTimes, locTimeLabs,
+                              x,y,
+                              xYLfunc, yYLfunc, rfunc, 
                               locTransD3)
                             // } 
     }
@@ -240,19 +394,19 @@ useEffect(() => {
 // From Selector
 
 useEffect(() => {
-  if (didMountRef.current){ // Prevents run on initial render 
+  if (didMountRef.current){ 
     const zoom_group = d3.select('.zoom_group_g')
     if (zoom_group.attr('data-high-count') !== '0'){ // Go through highlight routine only if last click was NOT dehighlight of last highlighted 
       return UpdateHighlightSel(locData, locJustSelHigh, 
-                                locXDomain, locYDomain, locXRange, locYRange,
-                                locSizeExponent, locSizeRange, locSizeDomain, locSizeIncreasing,
                                 locOpacityRange, // To set highlight intensity as upper bound of range
-                                locValueSizes, locSizeSel,locAllNames, locNfirms, locNTimes,
+                                locSizeSel,locAllNames, locNfirms, locNTimes, locTimeLabs,
+                                x,y,
+                                xYLfunc, yYLfunc, rfunc, 
                                 locTransD3)} 
     if (zoom_group.attr('data-high-count') === '0'){
-      clearSVG(zoom_group, allNames,
+      clearSVG(zoom_group, locAllNames,
                locData, locSizeSel, locTime,
-               opacityRange, opacityDomain, opacityExponent)
+               locOpacityRange, locOpacityDomain, locOpacityExponent, locAdaptDisp)
     }
   
   }

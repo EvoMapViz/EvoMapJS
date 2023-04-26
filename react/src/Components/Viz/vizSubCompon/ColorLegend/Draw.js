@@ -9,6 +9,11 @@ export default function Draw(data, meta,
                                     winWidth){
 
 console.log('DRAWING color legend')
+console.log('colorSel: ', colorSel)
+console.log('colorType: ', Colortype)
+console.log('colorRange: ', Colorrange)
+console.log('colorBins: ', Colorbins)
+console.log('colorDomain: ', Colordomain)
 
 const colorSelMeta = meta.filter((d) => d.name === colorSel);
 const yGap = 55;
@@ -54,13 +59,12 @@ svg.on("click", function (event) {
     setColgroup("Show All");
     svg
       .selectAll(".color_legend")
-      .attr("opacity", 1)
+      .attr('opacity', 1)
       .attr("data-clicked", false);
   }
 });
 
 // Discrete
-
 function clickDiscrete(event) {
   let tthis = svg.selectAll(".color_legend").filter(function (e) {
     return d3.select(this).attr("data-name") === event;
@@ -68,22 +72,21 @@ function clickDiscrete(event) {
   if (tthis.attr("data-clicked") === "false") {
     svg
       .selectAll(".color_legend")
-      .attr("opacity", 0.25)
+      .attr('opacity', 0.25)
       .attr("data-clicked", false);
-    tthis.attr("opacity", 1);
+    tthis.attr('opacity', 1);
     setColgroup(event);
     tthis.attr("data-clicked", true);
   } else if (tthis.attr("data-clicked") === "true") {
     svg
       .selectAll(".color_legend")
-      .attr("opacity", 1)
+      .attr('opacity', 1)
       .attr("data-clicked", false);
     setColgroup("Show All");
   }
 }
 
 // Continuous
-
 function clickContinuous(event) {
   let tthis = svg.selectAll(".color_legend").filter(function (e) {
     return d3.select(this).attr("data-name") === event.toString();
@@ -92,15 +95,15 @@ function clickContinuous(event) {
   if (tthis.attr("data-clicked") === "false") {
     svg
       .selectAll(".color_legend")
-      .attr("opacity", 0.25)
+      .attr('opacity', 0.25)
       .attr("data-clicked", false);
-    tthis.attr("opacity", 1);
+    tthis.attr('opacity', 1);
     setColgroup(tthis.attr("data-bounds"));
     tthis.attr("data-clicked", true);
   } else if (tthis.attr("data-clicked") === "true") {
     svg
       .selectAll(".color_legend")
-      .attr("opacity", 1)
+      .attr('opacity', 1)
       .attr("data-clicked", false);
     setColgroup("Show All");
   }
