@@ -16,9 +16,9 @@ nav_order: 4
   If you'd like to contribute, please create a new branch with prefix `dev/` and submit a pull request.
 
   - The deployment settings can be accessed at:
-    - `main` branch [https://app.netlify.com/sites/main-evomapjs/overview](https://app.netlify.com/sites/main-evomapjs/overview).
-    - `dev/master` branch [https://app.netlify.com/sites/dev-evomapjs/overview](https://app.netlify.com/sites/dev-evomapjs/overview).
-    - `uexp/master` branch [https://app.netlify.com/sites/uexp-evomapjs/overview](https://app.netlify.com/sites/uexp-evomapjs/overview).
+    - `main` branch [https://app.netlify.com/sites/main-evomapjs/](https://app.netlify.com/sites/main-evomapjs/).
+    - `dev/master` branch [https://app.netlify.com/sites/dev-evomapjs/](https://app.netlify.com/sites/dev-evomapjs/).
+    - `uexp/master` branch [https://app.netlify.com/sites/uexp-evomapjs/](https://app.netlify.com/sites/uexp-evomapjs/).
   - The deployed apps can be accessed at:
     - `main` branch [https://main-evomapjs.netlify.app/](https://main-evomapjs.netlify.app/).
     - `dev/master` branch [https://dev-evomapjs.netlify.app/](https://dev-evomapjs.netlify.app/).
