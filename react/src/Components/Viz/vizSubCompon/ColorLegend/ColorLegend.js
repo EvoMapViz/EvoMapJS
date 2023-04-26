@@ -3,7 +3,7 @@ import Draw from "./Draw.js"
 import Update from "./Update.js"
 import './ColorLegend.css'
 
-import { data, colgroup, Time, metaData, colorSel, colorType, colorRange, colorBins, colorDomain, colorIncreasing } from 'jotaiStore.js';
+import { data, Time, colgroup, colorOptions, colorSel, colorType, colorRange, colorBins, colorDomain, colorIncreasing, metaData} from 'jotaiStore.js';
 import { useAtom } from 'jotai'
 
 export default function ColorLegend() {

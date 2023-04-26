@@ -10,7 +10,6 @@ export default function UpdateZoom( Width, Height,
                                     ){
 
 console.log("Update Zoom") 
-console.log(xfunc)
 
 /*  */
 /* Parameters and scales */
