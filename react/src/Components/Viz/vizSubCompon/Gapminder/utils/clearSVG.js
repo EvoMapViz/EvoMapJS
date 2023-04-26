@@ -17,15 +17,14 @@ export default function clearSVG(svg, allNames,
     .remove()
 
     let to_be_dehigh = svg.selectAll('.firmLabel') //Hide labels
+    
     if(allNames === "true"){ 
       to_be_dehigh
-      // .attr('fill-opacity', d => adaptDisp === 'true' ? opacityScale(d[sizeSel]) : 0.7)
       .attr('opacity', d => adaptDisp === 'true' ? opacityScale(d[sizeSel]) : OpacityRange[1])
       .attr('data-highlighted', false)
     } else { 
       to_be_dehigh
       .attr('display', 'none')
-      // .attr('fill-opacity', d => adaptDisp === 'true' ? opacityScale(d[sizeSel]) : 0.7)
       .attr('opacity', d => adaptDisp === 'true' ? opacityScale(d[sizeSel]) : OpacityRange[1])
       .attr('data-highlighted', false)
     }

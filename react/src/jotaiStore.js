@@ -213,22 +213,36 @@ const max_distance = circle_data.map(d => Math.pow(
 
 // Transform arrow data into format usable by visualization
 
-let new_arrows = raw_arrows
+let new_arrows = []
 
-if(any_arrows && typeof raw_arrows[0].length !== 'undefined'){
+if(any_arrows){
+
   new_arrows = raw_arrows.map(
       function(d){
-      const alpha_x = (d.length * max_distance) / Math.pow(
-        Math.pow(d.x,2) + Math.pow(d.y,4)/Math.pow(d.x,2)
-        ,0.5)
-      const alpha_y = d.y * alpha_x / d.x
 
-      return ({
-        'name': d.name,
-        'x': d.x * alpha_x,
-        'y': d.y * alpha_y,
-        'time' : d.time
-      })
+      if(typeof d.length !== 'undefined'){
+
+        const alpha_x = (d.length * max_distance) / Math.pow(
+          Math.pow(d.x,2) + Math.pow(d.y,4)/Math.pow(d.x,2)
+          ,0.5)
+        const alpha_y = d.y * alpha_x / d.x
+  
+        return ({
+          'name': d.name,
+          'x': d.x * alpha_x,
+          'y': d.y * alpha_y,
+          'time' : d.time
+        })
+      } else {
+
+        return ({
+          'name': d.name,
+          'x': d.x,
+          'y': d.y,
+          'time' : d.time
+        })
+
+      }
     }  
   )
 }
