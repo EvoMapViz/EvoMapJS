@@ -1,4 +1,5 @@
 import { atom } from "jotai";
+
 import circle_data from "./data/circles.json"
 import meta_data from "./data/metadata.json"
 import arrow_data from "./data/arrows.json"
@@ -11,10 +12,10 @@ import {interpolatePlasma} from "d3-scale-chromatic";
 /* State variables for user controls */ // Some other variables are defined through initialization inside the Meta-Data section
 /*  */
 
-const valueSizes = atom('true');
+const adaptDisps = atom('true');
 const allNames = atom('false');
-const showTimes = atom('true');
-const display = atom(['valueSizes', 'showTimes'])
+const timeLabs = atom('true');
+const display = atom(['adaptDisps', 'timeLabs'])
 
 const justClicked = atom('');
 const justSelHigh = atom('');
@@ -53,53 +54,60 @@ const yRange = atom(y_range)
 /*  */
 
 const metaData = atom(meta_data)
-const sizeOptions = meta_data
-                        .filter(d =>  d.type === "continuous")
-                        .map(d => ({"name": d.name, "label": d.label}) )
+const sizeOptionsNA = meta_data
+                        .filter(d =>  d.type === "continuous" && d.tooltip !== 'only')
                         .sort((a, b) => a.label.localeCompare(b.label))
-const colorOptions = meta_data
-                        .map(d => ({"name": d.name, "label": d.label}) )
+const colorOptionsNA = meta_data
+                        .filter(d => d.tooltip !== 'only')
                         .sort((a, b) => a.label.localeCompare(b.label))
-const sizeSel = atom(sizeOptions[0].name) // Needs to be manually synchronized with selector's default option in Navbar
-const colorSel = atom(colorOptions[0].name) // Needs to be manually synchronized with selector's default option in Navbar
-const sizeSelLabel = atom(sizeOptions[0].label) // Needs to be manually synchronized with selector's default option in Navbar
-const colorSelLabel = atom(colorOptions[0].label)
+
+const default_color_sel = colorOptionsNA[0]
+const default_size_sel = sizeOptionsNA[0]
+
+const sizeOptions = atom(sizeOptionsNA.map(d => ({"name": d.name, "label": d.label}) ))
+const colorOptions = atom(colorOptionsNA.map(d => ({"name": d.name, "label": d.label}) ))
+const sizeSel = atom(default_size_sel.name) // Needs to be manually synchronized with selector's default option in Navbar
+const colorSel = atom(default_color_sel.name) // Needs to be manually synchronized with selector's default option in Navbar
+const sizeSelLabel = atom(default_size_sel.label) // Needs to be manually synchronized with selector's default option in Navbar
+const colorSelLabel = atom(default_color_sel.label)
 
 // Color Scales
 // Needs to be manually synchronized with similar code in Navbar.js -> handleColorChange()
 
 var selType = "discrete"
-if(typeof meta_data[0].type !== 'undefined'){selType =meta_data[0].type} 
+if(typeof default_color_sel.type !== 'undefined'){selType = default_color_sel.type} 
 var bins = []
 var domain = []
 var range = []
 var increasing = 'true'
+const disc_color_range = ['#1f77b4',
+'#ff7f0e',
+'#2ca02c',
+'#d62728',
+'#9467bd',
+'#8c564b',
+'#e377c2',
+'#7f7f7f',
+'#bcbd22',
+'#17becf',
+'#882255',
+'#117733',
+'#88CCEE',
+'#DDCC77',
+'#AA4499',
+'#44AA99',
+'#332288',
+'#999933',
+'#CC6677',
+'#DDDDDD',
+'#000000']
+// https://github.com/vanderlindenma/firms_gapminder_v3_build/issues/4
+// For other option: https://stackoverflow.com/questions/20847161/how-can-i-generate-as-many-colors-as-i-want-using-d3
+// http://jnnnnn.github.io/category-colors-constrained.html
 
 if(selType === 'discrete'){
-  domain = circle_data.sort((a, b) => d3.ascending(a[colorOptions[0].name], b[colorOptions[0].name])).map(d => d[colorOptions[0].name])
-  range = ['#1f77b4',
-  '#ff7f0e',
-  '#2ca02c',
-  '#d62728',
-  '#9467bd',
-  '#8c564b',
-  '#e377c2',
-  '#7f7f7f',
-  '#bcbd22',
-  '#17becf',
-  '#882255',
-  '#117733',
-  '#88CCEE',
-  '#DDCC77',
-  '#AA4499',
-  '#44AA99',
-  '#332288',
-  '#999933',
-  '#CC6677',
-  '#DDDDDD',
-  '#000000'] // https://github.com/vanderlindenma/firms_gapminder_v3_build/issues/4
-  // For other option: https://stackoverflow.com/questions/20847161/how-can-i-generate-as-many-colors-as-i-want-using-d3
-  // http://jnnnnn.github.io/category-colors-constrained.html
+  domain = circle_data.sort((a, b) => d3.ascending(a[default_color_sel.name], b[default_color_sel.name])).map(d => d[default_color_sel.name])
+  range = disc_color_range 
 }
 
 let colExtremes = [0,1] // Bounds for continuous color selection within the plasma scale "interpolatePlasma" (widest bounds are [0,1])
@@ -109,12 +117,13 @@ if(selType === 'continuous'){
   if(typeof meta_data[0].color_bins !== 'undefined'){
     bins = meta_data[0].color_bins
   } else {
-    bins = [Math.round(d3.quantile(circle_data.map(d => d[colorOptions[0].name]), 0.2)),
-              Math.round(d3.quantile(circle_data.map(d => d[colorOptions[0].name]), 0.4)),
-              Math.round(d3.quantile(circle_data.map(d => d[colorOptions[0].name]), 0.6)),
-              Math.round(d3.quantile(circle_data.map(d => d[colorOptions[0].name]), 0.8)),
-              Math.round(d3.quantile(circle_data.map(d => d[colorOptions[0].name]), 1))
+    bins = [Math.round(d3.quantile(circle_data.map(d => d[default_color_sel.name]), 0.2)),
+              Math.round(d3.quantile(circle_data.map(d => d[default_color_sel.name]), 0.4)),
+              Math.round(d3.quantile(circle_data.map(d => d[default_color_sel.name]), 0.6)),
+              Math.round(d3.quantile(circle_data.map(d => d[default_color_sel.name]), 0.8)),
                 ]
+    
+    bins = [...new Set(bins)] 
   }  
 
   domain = bins
@@ -123,13 +132,16 @@ if(selType === 'continuous'){
   arr = arr.map(d => colExtremes[0] + (d*(1/(arr[arr.length - 1])))*(colExtremes[1]-colExtremes[0]) ) //
   range = arr.map(d => interpolatePlasma(d))
 
-  const colorSelMeta = meta_data.filter(d => d.name === colorOptions[0].name)
+  const colorSelMeta = meta_data.filter(d => d.name === default_color_sel.name)
   if(typeof colorSelMeta[0].scale_increasing !== 'undefined'){increasing = colorSelMeta[0].scale_increasing}
 }
+
+console.log('jotai color domain: ', domain)
 
 const colorDomain = atom(domain)
 const colorType = atom(selType)
 const colorRange = atom(range)
+const discColorRange = atom(disc_color_range)
 const colorBins = atom(bins)
 const colorIncreasing = atom(increasing)
 const colorBounds = atom([]) // For bounds related to continuous colgroup selection
@@ -137,7 +149,7 @@ const colorExtremes = atom(colExtremes) // Bounds for continuous color selection
 
 // Size Scales
 
-const sizeSelMeta = meta_data.filter(d => d.name === sizeOptions[0].name)
+const sizeSelMeta = meta_data.filter(d => d.name === default_size_sel.name)
 
 var size_increasing = 'true'
 if(typeof sizeSelMeta.scale_increasing !== 'undefined'){size_increasing = sizeSelMeta.scale_increasing}
@@ -146,7 +158,7 @@ if(typeof sizeSelMeta.unit !== 'undefined'){size_unit = sizeSelMeta.unit}
 
 var size_exponent = 1
 if(typeof sizeSelMeta[0].scale_exponent !== 'undefined'){size_exponent = Number(sizeSelMeta[0].scale_exponent)}
-const size_domain = d3.extent(circle_data, d => d[sizeOptions[0].name])
+const size_domain = d3.extent(circle_data, d => d[default_size_sel.name])
 var max_size = 50
 if(typeof sizeSelMeta[0].scale_maxSize !== 'undefined'){max_size = Number(sizeSelMeta[0].scale_maxSize)}
 var min_size = 1
@@ -154,8 +166,9 @@ if(typeof sizeSelMeta[0].scale_minSize !== 'undefined'){min_size = Number(sizeSe
 const size_range = [min_size, max_size]
 
 let allTimes = circle_data.map(d => d.time)
+console.log(allTimes)
 allTimes = [... new Set(allTimes)]
-const domain_Timesize = d3.extent(circle_data.filter(d => d.time === allTimes[0]), d => d[sizeOptions[0].name])
+const domain_Timesize = d3.extent(circle_data.filter(d => d.time === allTimes[0]), d => d[default_size_sel.name])
 
 // Font and opacity scales
 
@@ -188,8 +201,40 @@ const opacityRange = atom(opacity_range)
 /* "Explainer" arrow data */
 /*  */
 
-const arrows = atom(arrow_data)
-const isArrows = atom(arrow_data.length > 0)
+const raw_arrows = arrow_data
+const any_arrows = raw_arrows.length > 0
+console.log(any_arrows)
+const isArrows = atom(any_arrows)
+
+const max_distance = circle_data.map(d => Math.pow(
+  Math.pow(d.x,2) + Math.pow(d.y,2),
+  0.5
+  )).reduce((a, b) => Math.max(a, b))
+
+// Transform arrow data into format usable by visualization
+
+let new_arrows = raw_arrows
+
+if(any_arrows && typeof raw_arrows[0].length !== 'undefined'){
+  new_arrows = raw_arrows.map(
+      function(d){
+      const alpha_x = (d.length * max_distance) / Math.pow(
+        Math.pow(d.x,2) + Math.pow(d.y,4)/Math.pow(d.x,2)
+        ,0.5)
+      const alpha_y = d.y * alpha_x / d.x
+
+      return ({
+        'name': d.name,
+        'x': d.x * alpha_x,
+        'y': d.y * alpha_y,
+        'time' : d.time
+      })
+    }  
+  )
+}
+
+const arrows = atom(new_arrows)
+
 
 /*  */
 /* Main Circle Data */
@@ -203,7 +248,7 @@ let roundable = meta_data
 roundable = roundable.concat(['x','y'])
 roundable = [...new Set(roundable)]
 
-var newData = circle_data.filter(d=> d.mkvalt !== null && d.name !== null)
+var newData = circle_data
 
 // Round continuous variable (and coordinates) for better animation performance
 roundable.map(function(e){ 
@@ -241,11 +286,9 @@ newData = newData.map(function(d, index){
     return new_d
   })
 
-console.log('newData', newData)
-
 // Compute ranks for all continuous variables
 
-for (const contVar of sizeOptions.map(d => d.name) ){
+for (const contVar of sizeOptionsNA.map(d => d.name) ){
   for (const time of allTimes){
 
     const filtData = newData.filter(d => d.time === time)
@@ -282,8 +325,8 @@ const maxNfirms = atom(numbFirms);
 
 const nFirms = atom(Math.round(numbFirms/10))
 
-let alltimes = newData.map(d => parseInt(d.time))
-let locmin = Math.min(...alltimes)
+let alltimes = newData.map(d => d.time).sort()
+let locmin = alltimes[0]
 const minTime = atom(locmin);
 const locmax = Math.max(...alltimes)
 const maxTime = atom(locmax);
@@ -300,12 +343,12 @@ const transD3 = atom({'k':1, 'x':0, 'y':0})
 /* State export */
 /*  */
 
-export {valueSizes, allNames, showTimes, display,
+export {adaptDisps, allNames, timeLabs, display,
         justClicked, justSelHigh,
         colgroup,
         arrowsSel,
-        sizeSel, colorSel, sizeSelLabel, colorSelLabel,
-        colorType, colorDomain, colorRange, colorBins, colorIncreasing, colorBounds, colorExtremes,
+        sizeOptions, sizeSel, colorSel, sizeSelLabel, colorSelLabel,
+        colorOptions, colorType, colorDomain, colorRange, colorBins, colorIncreasing, colorBounds, colorExtremes, discColorRange,
         Share, Width, Height, Margin, 
         xDomain, yDomain, xRange, yRange, 
         sizeIncreasing, sizeUnit, 

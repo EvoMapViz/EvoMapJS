@@ -2,9 +2,6 @@ import React, { useLayoutEffect, useRef, useState } from "react"; //https://stac
 
 import IconButton from "@mui/material/IconButton";
 import Slider from "@mui/material/Slider";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import StopIcon from "@mui/icons-material/Stop";
 import PlayIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 
@@ -17,6 +14,9 @@ export default function AtomSlider(props) { //https://stackoverflow.com/question
 
   const smin = props.min
   const smax = props.max 
+
+  console.log('Building play slider')
+
   const [value, setValue] = useAtom(props.atom);
   const [isRunning, setIsRunning] = useState(false);
   const directionRef = useRef("back");
@@ -25,6 +25,7 @@ export default function AtomSlider(props) { //https://stackoverflow.com/question
   const handleChange = (event) => {
     if(event.target.value !== value){ // Otherwise, state change triggered on every "continuous" mouse move, including those that do *not* pass discrete change threshold
       setValue(event.target.value);
+      setIsRunning(false);
     }
   };
 
