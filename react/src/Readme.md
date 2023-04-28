@@ -28,3 +28,10 @@
 - `circle_data` (read from `./data/circle_data.json`): data for circles in main visualization.
 - `meta_data` (read from `./data/metadata.json`): meta data customizing how variables in circle_data interact with the app.
 - `arrow_data` (read from "./data/arrows.json"): optional data for arrows in main visualization.
+
+# Use of HTML/SVG/CSS attributes in vizualisation
+
+## Visibility
+
+- `display` attribute (`none` or `inline`) used for main show/hide from highlights or "Show top N"
+- `visibility` (`visible` or `hidden`) attribute used for missing data.
