@@ -5,6 +5,7 @@ export default function UpdateHighlightsSel(data, justSelHigh,
                                             sizeSel, allNames, nFirms, nTimes, timeLabs,
                                             x,y,
                                             xYLfunc, yYLfunc, rfunc, 
+                                            setClearSvgTrigger, highlightCount,
                                             trans_d3){
 
 console.log("High Sel Update") 
@@ -213,6 +214,10 @@ if(justSelHigh[0] === 'dehigh') {
     // .attr('fill-opacity', 0.25)
     .attr('opacity', OpacityRange[0])
   . attr('display', 'none')
+  }
+
+  if(highlightCount === 0){
+    setClearSvgTrigger(d => d + 1)
   }
 
 }

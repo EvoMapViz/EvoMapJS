@@ -1,14 +1,14 @@
 import * as d3 from 'd3';
-import clearSVG from "./utils/clearSVG";
 
 export default function UpdateCircleClick(data, time, justClicked,
                                           OpacityRange, OpacityDomain, OpacityExponent, AdaptDisp, // To set highlight intensity as upper bound of range AND use in clearSVG
                                           sizeSel, allNames, nFirms, nTimes, timeLabs,
                                           x,y,
                                           xYLfunc, yYLfunc, rfunc, 
+                                          setClearSvgTrigger, highlightCount, setHighlightCount,
                                           trans_d3){
 
-console.log("High Update") 
+console.log("Circle Click Update") 
 
 const zoom_group = d3.select('.zoom_group_g')
 const svg = d3.select(".svg-content-responsive")
@@ -50,8 +50,9 @@ d3.selectAll('.firmLabel')  // Put non-highlighted labels in opacity background
 /*  */
 
 if(justClicked[0] === 'background'){  
-  clearSVG(svg, allNames, data, sizeSel, time, OpacityRange, OpacityDomain,  OpacityExponent, AdaptDisp)
-  zoom_group.attr('data-high-count', 0)
+  console.log('Background click, should clear SVG')
+  setClearSvgTrigger(d => d + 1)
+  setHighlightCount(0)
 }
 
 /* ----- */  
@@ -221,9 +222,9 @@ if(justClicked[0] === 'dehigh') {
     .attr('display', 'none')
   }
 
-  if(zoom_group.attr('data-high-count') === '0'){
-    clearSVG(svg, allNames, data, sizeSel, time, OpacityRange, OpacityDomain,  OpacityExponent, AdaptDisp)
-    zoom_group.attr('data-high-count', 0)
+  if(highlightCount === 0){
+    setClearSvgTrigger(d => d + 1)
+    setHighlightCount(0)
   }
 
 }

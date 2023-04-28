@@ -88,7 +88,7 @@ export const MultiSelectAll = props => { // https://stackoverflow.com/questions/
       value={getValue()}
       onChange={onChange}
       hideSelectedOptions={false}
-      closeMenuOnSelect={false}
+      // closeMenuOnSelect={false}
       isMulti
       styles={cust_style}
       components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }} //https://stackoverflow.com/questions/54961077/react-select-is-there-a-way-to-remove-the-button-on-the-right-that-expand-the-l

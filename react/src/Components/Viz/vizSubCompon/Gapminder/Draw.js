@@ -12,6 +12,7 @@ export default function Draw(data, meta, arrows, isArrows,
                               OpacityRange,
                               x,y,
                               xfunc, yfunc, xYLfunc, yYLfunc, rfunc, fontfunc, opacityfunc, fillfunc, displayfunc, sortfunc,
+                              setClearSvgTrigger, highlightCount, setHighlightCount,
                               refcur){
 
 console.log('DRAW')
@@ -505,7 +506,6 @@ return(LFY[0])
 const selRank = 'rank-' + sizeSel
 
 zoom_group
-  .attr("data-high-count", 0)
   .selectAll("circle-firms")
   .data(
     data.filter((d) => d.time === d.FY),
@@ -526,21 +526,20 @@ zoom_group
   /* Click events */
   .on("click", function (event, d) {
     let tthis = d3.select(this);
-    let cur_count = parseInt(zoom_group.attr("data-high-count"));
     let loc_high = tthis.attr("data-highlighted");
 
     if (loc_high === "true") {
       console.log("DE-highlight click!");
       tthis.attr("data-highlighted", "false");
       setJustClicked(["dehigh", d.name, tthis, d[colorSel], d[selRank]]);
-      zoom_group.attr("data-high-count", cur_count - 1);
+      setHighlightCount(d => d - 1);
     }
 
     if (loc_high === "false") {
       console.log("HIghlight click!");
       tthis.attr("data-highlighted", "true");
       setJustClicked(["high", d.name, tthis, d[colorSel], d[selRank]]);
-      zoom_group.attr("data-high-count", cur_count + 1);
+      setHighlightCount(d => d + 1);
     }
   })
   /* Show tooltip on hover */

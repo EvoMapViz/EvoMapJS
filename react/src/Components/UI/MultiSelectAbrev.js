@@ -109,6 +109,7 @@ export const MultiSelectAbrev = props => {
       onChange={handleChange}
       styles={cust_style}
       hideSelectedOptions={false}
+      // closeMenuOnSelect={false}
       components = {{MultiValueLabel,    //https://stackoverflow.com/questions/68678071/react-select-abreviate-dropdown-names-on-multi-select
                     DropdownIndicator:() => null, //https://stackoverflow.com/questions/54961077/react-select-is-there-a-way-to-remove-the-button-on-the-right-that-expand-the-l
                     IndicatorSeparator:() => null }} 

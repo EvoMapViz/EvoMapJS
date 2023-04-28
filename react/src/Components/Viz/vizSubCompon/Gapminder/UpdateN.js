@@ -1,17 +1,16 @@
 import * as d3 from 'd3';
-import clearSVG from "./utils/clearSVG";
 
 export default function UpdateN(allNames, maxNfirms,
                                 Sizeincreasing, nFirms, colGroup, setJustClicked,
                                 data, sizeSel, colorSel, time,
                                 Colortype, Colorbounds,
-                                OpacityRange, OpacityDomain, OpacityExponent, AdaptDisp // For use in clearSVG
+                                OpacityRange, OpacityDomain, OpacityExponent, AdaptDisp, // For use in clearSVG
+                                setClearSvgTrigger, highlightCount, setHighlightCount
                                 ){
 
 console.log("Top N Update")
 
 const svg = d3.select(".svg-content-responsive")
-const zoom_group = d3.select('.zoom_group_g')
 const selRank = 'rank-' + sizeSel
 
 const nFirmsHigh = maxNfirms - nFirms
@@ -22,8 +21,8 @@ const nFirmsHigh = maxNfirms - nFirms
 
 svg.on('click', function(event){
   if(event.target.className.baseVal === "svg-content-responsive"){ // if click is not also firm or other element in group
-    clearSVG(svg, allNames, data, sizeSel, time, OpacityRange, OpacityDomain,  OpacityExponent, AdaptDisp)
-    zoom_group.attr('data-high-count', 0) // Counts number of highlighted elements (firms) in group, to trigger `clearSVG` when de-highlighting the last highlighted element
+    setClearSvgTrigger(d => d + 1)
+    setHighlightCount(0)
     setJustClicked(['background'])
   }
 });

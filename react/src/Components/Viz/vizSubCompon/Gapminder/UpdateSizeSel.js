@@ -4,6 +4,7 @@ import svgButton from "./utils/svgButton"
 export default function UpdateSizeSel(OpacityRange,
                                       adaptDisps, 
                                       xfunc, yfunc, xYLfunc, yYLfunc, rfunc, fontfunc, opacityfunc, 
+                                      highlightCount,
                                       trans_d3){
 
 console.log("Sizes selector Update") 
@@ -33,7 +34,7 @@ if(adaptDisps === "true"){
     .attr('y', d => yfunc(d, trans_d3.k))              
   
   // Firm labels
-  if(zoom_group.attr('data-high-count') === "0"){
+  if(highlightCount === 0){
     svg
     .selectAll('.firmLabel')
     .transition()
@@ -44,7 +45,7 @@ if(adaptDisps === "true"){
     .attr('opacity', d => opacityfunc(d))
     }
 
-  if(zoom_group.attr('data-high-count') !== "0"){
+  if(highlightCount !== 0){
     svg
     .selectAll('.firmLabel')
     .transition()
@@ -72,7 +73,7 @@ if(adaptDisps === "false"){
     .attr("r", d => 4 / trans_d3.k)
   
   // Firm labels
-  if(zoom_group.attr('data-high-count') === "0"){  
+  if(highlightCount === 0){  
     svg
       .selectAll('.firmLabel')
       .transition()
@@ -83,7 +84,7 @@ if(adaptDisps === "false"){
       .attr('opacity', OpacityRange[1])
   }
 
-  if(zoom_group.attr('data-high-count') !== "0"){  
+  if(highlightCount !== 0){  
     svg
       .selectAll('.firmLabel')
       .transition()

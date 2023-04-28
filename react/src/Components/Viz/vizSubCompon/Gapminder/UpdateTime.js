@@ -6,6 +6,7 @@ export default function UpdateTime(
   Colortype, 
   x,y,
   xfunc, yfunc, rfunc, fontfunc, opacityfunc, fillfunc,
+  highlightCount,
   trans_d3
 ) {
   console.log("Update Time");
@@ -75,14 +76,26 @@ export default function UpdateTime(
 
    /* Transition labels with non-missing data */
 
-  let labels = zoom_group.selectAll(".firmLabel").data(
+  const labels = zoom_group.selectAll(".firmLabel").data(
     data.filter((d) => d.time === time),
     (d) => d.name
   ); // d=>d.name is animation key
 
- 
-
-  labels
+  if(highlightCount === 0){
+    labels
+    .transition()
+    .duration(200)
+    .ease(d3.easeLinear)
+    .attr("x", d => xfunc(d, trans_d3.k)) 
+    .attr("y", d => yfunc(d, trans_d3.k))
+    .attr("font-size", d => fontfunc(d, trans_d3.k)) 
+    .attr('opacity', d => opacityfunc(d))
+    .transition()
+    .duration(1) // adding an extra transition guarantees the labels are only visible after they have moved.
+                // Using on.('end') method instead (https://stackoverflow.com/a/10692220/14095529) creates severe lags in the time animation 
+    .attr('visibility', 'visible')
+  } else {
+    labels
     .transition()
     .duration(200)
     .ease(d3.easeLinear)
@@ -93,15 +106,7 @@ export default function UpdateTime(
     .duration(1) // adding an extra transition guarantees the labels are only visible after they have moved.
                 // Using on.('end') method instead (https://stackoverflow.com/a/10692220/14095529) creates severe lags in the time animation 
     .attr('visibility', 'visible')
-
-  if(zoom_group.attr('data-high-count') === 0){
-
-    labels
-    .transition()
-    .duration(200)
-    .ease(d3.easeLinear)
-    .attr('opacity', d => opacityfunc(d))
-  }  
+  }
                                                               
 /* Hide labels with missing data */
 

@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 
 export default function UpdateAdaptiveDisplay(
                                             xfunc, yfunc, xYLfunc, yYLfunc, rfunc, fontfunc, opacityfunc,
+                                            highlightCount,
                                             trans_d3
                                             ){
 
@@ -32,7 +33,7 @@ const fLabs = svg
         .attr('y', d => yfunc(d, trans_d3.k))
         .attr('font-size', d => fontfunc(d, trans_d3.k))
 
-if(zoom_group.attr('data-high-count') === "0"){
+if(highlightCount === 0){
   fLabs.attr('opacity', opacityfunc)
 }
 

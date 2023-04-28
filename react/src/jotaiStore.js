@@ -352,6 +352,8 @@ const Time = atom(locmin);
 /*  */
 
 const transD3 = atom({'k':1, 'x':0, 'y':0})
+const clearSvgTrigger = atom(0)
+const highlightCount = atom(0)
 
 /*  */
 /* State export */
@@ -375,4 +377,4 @@ export {adaptDisps, allNames, timeLabs, display,
         Time, 
         minTime, maxTime, nTimes,
         data, metaData, arrows, isArrows,
-        transD3};
+        transD3, clearSvgTrigger, highlightCount};
