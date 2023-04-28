@@ -1,34 +1,32 @@
 import React, {useState, Component } from 'react';
 
-import './bulma.min.css';
-import {Box, Columns} from 'react-bulma-components';
-import './App.css';
+import Welcome from './Pages/Welcome';
+import Home from './Pages/Home';
 
-import Viz from 'Components/Viz/Viz' // Absolute path import from src allowed through jsconfig.json in root (https://create-react-app.dev/docs/importing-a-component/, https://stackoverflow.com/questions/45213279/how-to-avoid-using-relative-path-imports-redux-action-action1-in-cre)
-import NavbarArrow from 'Components/Navbar/NavbarArrow'
-import NavbarNoArrow from 'Components/Navbar/NavbarNoArrow'
+import app_settings from './app_settings.json';
 
-import { isArrows} from 'jotaiStore.js';
-import { useAtom } from 'jotai'
+function App() {
 
-const App = () => {
+  const [page, setPage] = useState('welcome');
 
-  const [locIsArrows,] = useAtom(isArrows)
+    const goToMainPage = () => {
+      setPage('home');
+    };
 
-  return (
-    <div className="box">
-    <div className="row header">
-      <Columns>
-        <Columns.Column size ={12}>
-          {locIsArrows ? <NavbarArrow/> : <NavbarNoArrow/>}
-        </Columns.Column>
-      </Columns>
-    </div>
-    <div className="row content">
-      <Viz/>
-    </div>
-  </div>
-  );
+  if(app_settings[0]['mode'] === 'playground'){
+    return (
+      <div>
+        {page === 'welcome' && <Welcome onClick={goToMainPage} />}
+        {page === 'home' && <Home />}
+      </div>
+    );
+  }
+
+  if(app_settings[0]['mode'] === 'production'){
+    return (
+        <Home />
+    );
+  }
 }
 
 export default App;

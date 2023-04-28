@@ -72,7 +72,6 @@ if(justSelHigh[0] === 'high'){
 
   d3.selectAll('.firmLabel') //Highlight firm label
     .filter(function(d) {return justSelHigh[1].includes(d.name)})
-    // .attr('fill-opacity', OpacityRange[1])
     .attr('opacity', 1)
     .attr('display', 'inline')
     .attr("data-highlighted", 'true')

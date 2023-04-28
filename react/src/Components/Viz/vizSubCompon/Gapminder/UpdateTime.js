@@ -103,8 +103,7 @@ export default function UpdateTime(
     .attr("y", d => yfunc(d, trans_d3.k))
     .attr("font-size", d => fontfunc(d, trans_d3.k)) 
     .transition()
-    .duration(1) // adding an extra transition guarantees the labels are only visible after they have moved.
-                // Using on.('end') method instead (https://stackoverflow.com/a/10692220/14095529) creates severe lags in the time animation 
+    .duration(1)
     .attr('visibility', 'visible')
   }
                                                               
