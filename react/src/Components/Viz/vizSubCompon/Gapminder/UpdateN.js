@@ -4,7 +4,6 @@ export default function UpdateN(allNames, maxNfirms,
                                 Sizeincreasing, nFirms, colGroup, setJustClicked,
                                 data, sizeSel, colorSel, time,
                                 Colortype, Colorbounds,
-                                OpacityRange, OpacityDomain, OpacityExponent, AdaptDisp, // For use in clearSVG
                                 setClearSvgTrigger, highlightCount, setHighlightCount
                                 ){
 

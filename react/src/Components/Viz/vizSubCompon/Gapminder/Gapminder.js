@@ -43,7 +43,7 @@ export default function Gapminder() {
 /*  */
 
 const ref = useRef()
-const didMountRef = useRef(false); // Used below to prevent Draw but not Update on initial render (https://stackoverflow.com/questions/53253940/make-react-useeffect-hook-not-run-on-initial-render)
+const didMountRef = useRef(false); // Used below to prevent Updates but not Draw on initial render (https://stackoverflow.com/questions/53253940/make-react-useeffect-hook-not-run-on-initial-render)
 
 const [locData, ] = useAtom(data)
 const [locMeta, ] = useAtom(metaData)
@@ -328,7 +328,6 @@ useEffect(() => {
                           locColorSel,
                           locSetJustClicked, locAllNames,
                           fillfunc,
-                          locSizeSel, locTime, opacityRange, opacityDomain, opacityExponent, locAdaptDisp, // For use in clearSVG
                           locSetClearSvgTrigger, locHighlightCount, locSetHighlightCount
                           )} 
 }, [locColorSel])
@@ -355,7 +354,6 @@ useEffect(() => {
                    locSizeIncreasing, locNfirms, locColgroup, locSetJustClicked,
                    locData, locSizeSel, locColorSel, locTime,
                    locColortype, locColorbounds,
-                   opacityRange, opacityDomain, opacityExponent, locAdaptDisp, // For use in clearSVG
                    locSetClearSvgTrigger, locHighlightCount, locSetHighlightCount
                    )} 
 }, [locNfirms, locSizeSel, locClearSvgTrigger])

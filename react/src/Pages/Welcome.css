@@ -1,3 +1,14 @@
+.errorMessage {
+    display: 'flex';
+    align-items: 'center'
+}
+
+.closeIcon {
+    font-size: 20;
+    opacity: 0.9,
+}
+
+
 html, body {
     font-size: 14px
     }

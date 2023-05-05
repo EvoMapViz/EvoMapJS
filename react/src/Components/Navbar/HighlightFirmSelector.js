@@ -28,8 +28,6 @@ const [selected, setSelected] = useState([]); // Tieing selector to state
 const outsideClick = useRef(false); // Records whether state changes came from outside click (i.e., click inside the viz)
 
 const handleHighlightChange = (event) => {
-  console.log('handleHighlightChange')
-  console.log('original highlightCount: ' + locHighlightCount)
 
   if(!outsideClick.current){  // If does not originate from click (i.e., originates from inside selection)
       // Communicate the change to relevant jotai state
@@ -39,7 +37,6 @@ const handleHighlightChange = (event) => {
       locSetHighlightCount(d => d + diff)
       }
       if(diff < 0){ // Last change was removal
-      console.log('Just removed')
       let old_names = event.map(d => d.value)
       let sel_names = selected.map(d => d.value)
       locSetJustSelHigh(['dehigh', sel_names.filter(d => !old_names.includes(d))])
