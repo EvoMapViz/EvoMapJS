@@ -4,8 +4,8 @@ import raw_circle_data from "./data/circles.json"
 import raw_meta_data from "./data/metadata.json"
 import raw_arrow_data from "./data/arrows.json"
 
-import Welcome from './Pages/Welcome';
-import Home from './Pages/Home';
+import OptionalDataloadPage from './Pages/OptionalDataloadPage';
+import MainVizPage from './Pages/MainVizPage';
 
 import app_settings from './app_settings.json';
 
@@ -20,6 +20,9 @@ function App() {
   const [, locSetRawMetaData] = useAtom(rawMetaData);
   const [, locSetRawArrowData] = useAtom(rawArrowData);
 
+  const [loading, setLoading] = useState(true);
+  setTimeout(() => setLoading(false), 3000); // simulate a 3-second loading time
+
   const goToMainPage = () => {
     setPage('home');
   };
@@ -27,8 +30,10 @@ function App() {
   if(app_settings[0]['mode'] === 'playground'){
     return (
       <div>
-        {page === 'welcome' && <Welcome onClick={goToMainPage} />}
-        {page === 'home' && <Home />}
+        {page === 'welcome' && 
+        <OptionalDataloadPage onClick={goToMainPage} />}
+        {page === 'home' && <MainVizPage />}
+        
       </div>
     );
   }
@@ -40,7 +45,7 @@ function App() {
     locSetRawArrowData(raw_arrow_data);
 
     return (
-        <Home />
+        <MainVizPage />
     );
   }
 }
