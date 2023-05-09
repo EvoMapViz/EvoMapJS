@@ -3,6 +3,8 @@ import React, { useEffect, useRef } from 'react';
 import Button from '@material-ui/core/Button';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
+import BubbleChartOutlinedIcon from '@material-ui/icons/BubbleChartOutlined';
+import CloudUploadOutlinedIcon from '@material-ui/icons/CloudUploadOutlined';
 import { CircularProgress } from '@material-ui/core';
 import ClipLoader from "react-spinners/ClipLoader";
 import { DropzoneDialog } from 'material-ui-dropzone';
@@ -176,7 +178,7 @@ const OptionalDataloadPage = ({ onClick }) => {
           <Button
           elevation={0}
           variant='contained'
-          style = {{width: '150px',
+          style = {{width: '160px',
                     marginTop: '10px',}}
           onClick = {() => {window.location.href = 'https://github.com/EvoMapViz/EvoMapJS'}}
           >
@@ -188,7 +190,7 @@ const OptionalDataloadPage = ({ onClick }) => {
           <Button
           elevation={0}
           variant='contained'
-          style = {{width: '150px',
+          style = {{width: '160px',
                     marginTop: '10px',}}
           onClick = {() => {window.location.href = 'https://evomapviz.github.io/EvoMapJS/'}}
           >
@@ -200,25 +202,28 @@ const OptionalDataloadPage = ({ onClick }) => {
           <Button 
           elevation={0}
             style = {{marginTop: '10px',
-                      width : '150px',  }}
+                      width : '160px',  }}
             variant="contained"
             color = "primary"
             onClick={function(){
               console.log('CLICKED!')
               setLoadingAnim(true)
             }}>
-              Use Demo Data
+            <span style = {{paddingLeft: '5px', paddingRight: '5px'}}> Demo Data </span>
+            <BubbleChartOutlinedIcon/>
           </Button>
 
           <Button 
           elevation={0}
           style = {{marginTop: '10px',
                     marginBottom: '15px',
-                    width : '150px'}}
+                    width : '160px'}}
           variant="contained" 
           color="primary" 
           onClick={() => setOpenDialog(true)}>
-            Upload Data
+           <span style = {{paddingLeft: '5px', paddingRight: '5px'}}> Upload Data </span>
+           {/* <span style = {{float: 'right'}}>  </span> */}
+           <CloudUploadOutlinedIcon/>
           </Button>
         </div> 
       </div>
