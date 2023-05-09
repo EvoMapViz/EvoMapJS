@@ -1,0 +1,23 @@
+.welcome_box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #eeeeee;
+    border-radius: 10px;
+    width: 230px;
+
+}
+
+.svg-wrap {
+  width: 18px;
+  height: 34px;
+  margin-left: 6px;
+}
+
+#progress_container{
+  visibility: hidden;
+  position: absolute;
+  top: 92%;
+  left: 95%;
+}

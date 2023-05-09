@@ -11,7 +11,6 @@ export default function Update(data, meta,
                                     winWidth){
 
 console.log('UPDATING color Legend!')
-console.log('colorBins: ', Colorbins)
 
 /* Make height of responsive SVG function of how many items must be displayed (also function of yGap below) */
 

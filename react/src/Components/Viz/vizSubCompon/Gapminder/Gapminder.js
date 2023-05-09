@@ -14,7 +14,7 @@ import UpdateArrows from "./UpdateArrows.js";
 import UpdateColgroupDiscrete from "./UpdateColgroupDiscrete.js";
 import UpdateColgroupContinuous from "./UpdateColgroupContinuous.js";
 import UpdateZoom from "./UpdateZoom.js"
-import clearSVG from "./utils/clearSVG";
+import ClearSvg from "./ClearSvg.js"
 
 import "./Gapminder.css"
 
@@ -29,81 +29,86 @@ import { data, metaData,
          sizeIncreasing, sizeExponent, sizeDomain, sizeRange,
          fontExponent, fontDomain, fontRange,
          opacityExponent, opacityDomain, opacityRange, Share, 
-         arrows, isArrows} from 'jotaiStore.js';
+         arrows, isArrows,
+         clearSvgTrigger, highlightCount} from 'jotaiStore.js';
 import { useAtom } from 'jotai'
+
 
 export default function Gapminder() {
 
-  /*  */
-  //
-  // State imports
-  //
-  /*  */
+/*  */
+//
+// State imports
+//
+/*  */
 
-  const ref = useRef()
-  const didMountRef = useRef(false); // Used below to prevent Draw but not Update on initial render (https://stackoverflow.com/questions/53253940/make-react-useeffect-hook-not-run-on-initial-render)
+const ref = useRef()
+const didMountRef = useRef(false); // Used below to prevent Updates but not Draw on initial render (https://stackoverflow.com/questions/53253940/make-react-useeffect-hook-not-run-on-initial-render)
 
-  const [locData, ] = useAtom(data)
-  const [locMeta, ] = useAtom(metaData)
-  const [locArrows, ] = useAtom(arrows)
-  const [locIsArrows, ] = useAtom(isArrows)
+const [locData, ] = useAtom(data)
+const [locMeta, ] = useAtom(metaData)
+const [locArrows, ] = useAtom(arrows)
+const [locIsArrows, ] = useAtom(isArrows)
 
-  const [locShare, ] = useAtom(Share)
-  const [locWidth, ] = useAtom(Width)
-  const [locHeight, ] = useAtom(Height)
-  const [locMargin, ] = useAtom(Margin)
+const [locShare, ] = useAtom(Share)
+const [locWidth, ] = useAtom(Width)
+const [locHeight, ] = useAtom(Height)
+const [locMargin, ] = useAtom(Margin)
 
-  const [locXDomain, ] = useAtom(xDomain)
-  const [locYDomain, ] = useAtom(yDomain)
-  const [locXRange, ] = useAtom(xRange)
-  const [locYRange, ] = useAtom(yRange)
+const [locXDomain, ] = useAtom(xDomain)
+const [locYDomain, ] = useAtom(yDomain)
+const [locXRange, ] = useAtom(xRange)
+const [locYRange, ] = useAtom(yRange)
 
-  const [locTime, ] = useAtom(Time)
-  const [locColgroup,] = useAtom(colgroup)
+const [locTime, ] = useAtom(Time)
+const [locColgroup,] = useAtom(colgroup)
 
-  const [locColorSel,] = useAtom(colorSel)
-  const [locColortype,] = useAtom(colorType)
-  const [locColorrange,] = useAtom(colorRange)
-  const [locColorbins,] = useAtom(colorBins)
-  const [locColordomain,] = useAtom(colorDomain)
-  const [locColorincreasing,] = useAtom(colorIncreasing)
-  const [locColorbounds, locSetColorbounds] = useAtom(colorBounds)
+const [locColorSel,] = useAtom(colorSel)
+const [locColortype,] = useAtom(colorType)
+const [locColorrange,] = useAtom(colorRange)
+const [locColorbins,] = useAtom(colorBins)
+const [locColordomain,] = useAtom(colorDomain)
+const [locColorincreasing,] = useAtom(colorIncreasing)
+const [locColorbounds, locSetColorbounds] = useAtom(colorBounds)
 
-  const [locSizeSel,] = useAtom(sizeSel)
-  const [locSizeIncreasing,] = useAtom(sizeIncreasing)
-  const [locSizeExponent, ] = useAtom(sizeExponent)
-  const [locSizeDomain, ] = useAtom(sizeDomain)
-  const [locSizeRange, ] = useAtom(sizeRange)
+const [locSizeSel,] = useAtom(sizeSel)
+const [locSizeIncreasing,] = useAtom(sizeIncreasing)
+const [locSizeExponent, ] = useAtom(sizeExponent)
+const [locSizeDomain, ] = useAtom(sizeDomain)
+const [locSizeRange, ] = useAtom(sizeRange)
 
-  const [locArrowSel, ] = useAtom(arrowsSel)
+const [locArrowSel, ] = useAtom(arrowsSel)
 
-  const [locFontExponent, ] = useAtom(fontExponent)
-  const [locFontDomain, ] = useAtom(fontDomain)
-  const [locFontRange, ] = useAtom(fontRange)
+const [locFontExponent, ] = useAtom(fontExponent)
+const [locFontDomain, ] = useAtom(fontDomain)
+const [locFontRange, ] = useAtom(fontRange)
 
-  const [locOpacityExponent, ] = useAtom(opacityExponent)
-  const [locOpacityDomain, ] = useAtom(opacityDomain)
-  const [locOpacityRange, ] = useAtom(opacityRange)
+const [locOpacityExponent, ] = useAtom(opacityExponent)
+const [locOpacityDomain, ] = useAtom(opacityDomain)
+const [locOpacityRange, ] = useAtom(opacityRange)
 
-  const [locAdaptDisp,] = useAtom(adaptDisps)
-  const [locAllNames,] = useAtom(allNames)
-  const [locAllFirms,] = useAtom(allFirms)
-  const [locTimeLabs,] = useAtom(timeLabs)
-  const [locMaxnfirms,] = useAtom(maxNfirms)
-  const [locMintime,] = useAtom(minTime)
-  const [locNTimes,] = useAtom(nTimes)
-  const [locNfirms,] = useAtom(nFirms)
-  const [locTransD3, locSetTransD3 ] = useAtom(transD3)
-  const [locJustClicked, locSetJustClicked] = useAtom(justClicked)
-  const [locJustSelHigh, ] = useAtom(justSelHigh)
+const [locAdaptDisp,] = useAtom(adaptDisps)
+const [locAllNames,] = useAtom(allNames)
+const [locAllFirms,] = useAtom(allFirms)
+const [locTimeLabs,] = useAtom(timeLabs)
+const [locMaxnfirms,] = useAtom(maxNfirms)
+const [locMintime,] = useAtom(minTime)
+const [locNTimes,] = useAtom(nTimes)
+const [locNfirms,] = useAtom(nFirms)
+const [locTransD3, locSetTransD3 ] = useAtom(transD3)
+const [locJustClicked, locSetJustClicked] = useAtom(justClicked)
+const [locJustSelHigh, ] = useAtom(justSelHigh)
 
-  const varType = locMeta
-                      .filter(d => d.name === locColorSel)
-                      .map(d => d.type)
+const [locClearSvgTrigger, locSetClearSvgTrigger] = useAtom(clearSvgTrigger)
+const [locHighlightCount, locSetHighlightCount] = useAtom(highlightCount)
+
+const varType = locMeta
+                    .filter(d => d.name === locColorSel)
+                    .map(d => d.type)
   
 /*  */
 //
-// State-dependent attribute setting functions
+// State-dependent attribute setting functions and scales
 //
 /*  */
 
@@ -118,7 +123,7 @@ const x = d3.scaleLinear()
             .range(locXRange)
 
 const y = d3.scaleLinear()
-            .domain(locYDomain) //-4 leaves room for time label
+            .domain(locYDomain) 
             .range(locYRange)
 
 const size = d3.scalePow()
@@ -128,12 +133,12 @@ const size = d3.scalePow()
 
 let color;
 if(locColortype === 'discrete'){
-  color = d3.scaleOrdinal() // https://stackoverflow.com/questions/20847161/how-can-i-generate-as-many-colors-as-i-want-using-d3
+  color = d3.scaleOrdinal() 
                 .domain(locColordomain)
                 .range(locColorrange) 
 }
 if(locColortype === 'continuous'){
-  color = d3.scaleThreshold() // Requires similar update in ColorLegend/Draw.js and Draw.js
+  color = d3.scaleThreshold() 
                 .domain(locColordomain)
                 .range(locColorrange);
 }
@@ -254,7 +259,7 @@ let sortfunc;
 
 /*  */
 //
-// State-dependent attribute setting functions
+// Initialize visualization
 //
 /*  */
 
@@ -267,12 +272,13 @@ useEffect(() => {
         locOpacityRange,
         x,y,
         xfunc,yfunc, xYLfunc, yYLfunc, rfunc, fontfunc, opacityfunc, fillfunc, displayfunc, sortfunc,
+        locSetClearSvgTrigger, locHighlightCount, locSetHighlightCount,
         ref.current)
 }, []) // [] implies code will run only once => similar to didMount
 
 /*  */
 //
-// State-dependent attribute setting functions
+// Update visualization
 //
 /*  */
 
@@ -297,6 +303,7 @@ useEffect(() => {
                       locColortype,
                       x,y,
                       xfunc, yfunc, rfunc, fontfunc, opacityfunc, fillfunc,
+                      locHighlightCount,
                       locTransD3,
                       )} 
 }, [locData, locTime, locAllFirms]) 
@@ -308,6 +315,7 @@ useEffect(() => {
     return UpdateSizeSel(locOpacityRange,
                          locAdaptDisp, 
                          xfunc, yfunc, xYLfunc, yYLfunc, rfunc, fontfunc, opacityfunc, 
+                         locHighlightCount,
                          locTransD3,
                          )} 
 }, [locSizeSel])
@@ -320,7 +328,7 @@ useEffect(() => {
                           locColorSel,
                           locSetJustClicked, locAllNames,
                           fillfunc,
-                          locSizeSel, locTime, opacityRange, opacityDomain, opacityExponent, locAdaptDisp, // For use in clearSVG
+                          locSetClearSvgTrigger, locHighlightCount, locSetHighlightCount
                           )} 
 }, [locColorSel])
 
@@ -346,9 +354,9 @@ useEffect(() => {
                    locSizeIncreasing, locNfirms, locColgroup, locSetJustClicked,
                    locData, locSizeSel, locColorSel, locTime,
                    locColortype, locColorbounds,
-                   opacityRange, opacityDomain, opacityExponent, locAdaptDisp // For use in clearSVG
+                   locSetClearSvgTrigger, locHighlightCount, locSetHighlightCount
                    )} 
-}, [locNfirms, locSizeSel])
+}, [locNfirms, locSizeSel, locClearSvgTrigger])
 
 /* Value Sizes */
 
@@ -356,6 +364,7 @@ useEffect(() => {
   if (didMountRef.current){ // Prevents run on initial render
     return UpdateAdaptiveDisplay(
                               xfunc, yfunc, xYLfunc, yYLfunc, rfunc, fontfunc, opacityfunc,
+                              locHighlightCount,
                               locTransD3
                               )}  
 }, [locAdaptDisp])
@@ -379,15 +388,13 @@ useEffect(() => {
 
 useEffect(() => {
   if (didMountRef.current){  
-    const zoom_group = d3.select('.zoom_group_g')
-    // if (zoom_group.attr('data-high-count') !== '0'){ // Go through highlight routine only if last click was NOT dehighlight of last highlighted 
-      return UpdateCircleClick(locData, locTime, locJustClicked,
-                              locOpacityRange, locOpacityDomain, locOpacityExponent, locAdaptDisp,
-                              locSizeSel, locAllNames, locNfirms, locNTimes, locTimeLabs,
-                              x,y,
-                              xYLfunc, yYLfunc, rfunc, 
-                              locTransD3)
-                            // } 
+    return UpdateCircleClick(locData, locTime, locJustClicked,
+                            locOpacityRange, locOpacityDomain, locOpacityExponent, locAdaptDisp,
+                            locSizeSel, locAllNames, locNfirms, locNTimes, locTimeLabs,
+                            x,y,
+                            xYLfunc, yYLfunc, rfunc, 
+                            locSetClearSvgTrigger, locHighlightCount, locSetHighlightCount,
+                            locTransD3)
     }
 }, [locJustClicked])
 
@@ -395,32 +402,45 @@ useEffect(() => {
 
 useEffect(() => {
   if (didMountRef.current){ 
-    const zoom_group = d3.select('.zoom_group_g')
-    if (zoom_group.attr('data-high-count') !== '0'){ // Go through highlight routine only if last click was NOT dehighlight of last highlighted 
-      return UpdateHighlightSel(locData, locJustSelHigh, 
-                                locOpacityRange, // To set highlight intensity as upper bound of range
-                                locSizeSel,locAllNames, locNfirms, locNTimes, locTimeLabs,
-                                x,y,
-                                xYLfunc, yYLfunc, rfunc, 
-                                locTransD3)} 
-    if (zoom_group.attr('data-high-count') === '0'){
-      clearSVG(zoom_group, locAllNames,
-               locData, locSizeSel, locTime,
-               locOpacityRange, locOpacityDomain, locOpacityExponent, locAdaptDisp)
+    if (locHighlightCount !== '0'){ // Go through highlight routine only if last click was NOT dehighlight of last highlighted 
+    return UpdateHighlightSel(locData, locJustSelHigh, 
+                              locOpacityRange, // To set highlight intensity as upper bound of range
+                              locSizeSel,locAllNames, locNfirms, locNTimes, locTimeLabs,
+                              x,y,
+                              xYLfunc, yYLfunc, rfunc, 
+                              locSetClearSvgTrigger, locHighlightCount,
+                              locTransD3)} 
+    if (locHighlightCount === '0'){
+      locSetClearSvgTrigger('t')
     }
-  
   }
-  didMountRef.current = true; // Allows running update functions on future renders 
+  didMountRef.current = true; 
 }, [locJustSelHigh])
 
 /* Explainer arrows */
 
 useEffect(() => {
-  if (didMountRef.current && isArrows){ // didMountRef.current prevents run on initial render
+  if (didMountRef.current && isArrows){ 
     return UpdateArrows(locArrowSel)}  
 }, [locArrowSel])
 
-/* Return DIV element */
+/* Clear SVG */
+
+useEffect(() => {
+  if (didMountRef.current){ 
+    return ClearSvg(locAllNames, 
+                    opacityScale,
+                    locSizeSel,
+                    locOpacityRange,
+                    locAdaptDisp,
+                    locNfirms)}  
+}, [locClearSvgTrigger])
+
+/*  */
+//
+// Return DIV element
+//
+/*  */
 
   return (
     <div

@@ -1,34 +1,53 @@
 import React, {useState, Component } from 'react';
 
-import './bulma.min.css';
-import {Box, Columns} from 'react-bulma-components';
-import './App.css';
+import raw_circle_data from "./data/circles.json"
+import raw_meta_data from "./data/metadata.json"
+import raw_arrow_data from "./data/arrows.json"
 
-import Viz from 'Components/Viz/Viz' // Absolute path import from src allowed through jsconfig.json in root (https://create-react-app.dev/docs/importing-a-component/, https://stackoverflow.com/questions/45213279/how-to-avoid-using-relative-path-imports-redux-action-action1-in-cre)
-import NavbarArrow from 'Components/Navbar/NavbarArrow'
-import NavbarNoArrow from 'Components/Navbar/NavbarNoArrow'
+import OptionalDataloadPage from './Pages/OptionalDataloadPage';
+import MainVizPage from './Pages/MainVizPage';
 
-import { isArrows} from 'jotaiStore.js';
-import { useAtom } from 'jotai'
+import app_settings from './app_settings.json';
 
-const App = () => {
+import { useAtom } from 'jotai';
+import {rawCircleData, rawMetaData, rawArrowData} from 'jotaiStore';
 
-  const [locIsArrows,] = useAtom(isArrows)
+function App() {
 
-  return (
-    <div className="box">
-    <div className="row header">
-      <Columns>
-        <Columns.Column size ={12}>
-          {locIsArrows ? <NavbarArrow/> : <NavbarNoArrow/>}
-        </Columns.Column>
-      </Columns>
-    </div>
-    <div className="row content">
-      <Viz/>
-    </div>
-  </div>
-  );
+  const [page, setPage] = useState('welcome');
+
+  const [, locSetRawCircleData] = useAtom(rawCircleData);
+  const [, locSetRawMetaData] = useAtom(rawMetaData);
+  const [, locSetRawArrowData] = useAtom(rawArrowData);
+
+  const [loading, setLoading] = useState(true);
+  setTimeout(() => setLoading(false), 3000); // simulate a 3-second loading time
+
+  const goToMainPage = () => {
+    setPage('home');
+  };
+
+  if(app_settings[0]['mode'] === 'playground'){
+    return (
+      <div>
+        {page === 'welcome' && 
+        <OptionalDataloadPage onClick={goToMainPage} />}
+        {page === 'home' && <MainVizPage />}
+        
+      </div>
+    );
+  }
+
+  if(app_settings[0]['mode'] === 'production'){
+
+    locSetRawCircleData(raw_circle_data);
+    locSetRawMetaData(raw_meta_data);
+    locSetRawArrowData(raw_arrow_data);
+
+    return (
+        <MainVizPage />
+    );
+  }
 }
 
 export default App;

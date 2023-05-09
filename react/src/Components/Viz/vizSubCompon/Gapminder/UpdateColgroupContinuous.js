@@ -15,7 +15,6 @@ bounds = bounds.map(function(d){ // handles rounding problems at top and bottom 
   if(numb > Colorbins[Colorbins.length - 1]){return numb + 1}
   return numb
   })
-console.log('bounds: ', bounds)
 SetColorbounds(bounds)
 
 const svg = d3.select(".svg-content-responsive")

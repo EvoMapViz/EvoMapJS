@@ -3,7 +3,6 @@ import * as d3 from 'd3';
 export default function UpdateArrows(Arrows){
 
 console.log("Arrow Update") 
-console.log(Arrows)
 
 const explainers = d3.select('.zoom_group_g')
                      .selectAll('.explainer')

@@ -1,364 +1,221 @@
 import { atom } from "jotai";
 
-import circle_data from "./data/circles.json"
-import meta_data from "./data/metadata.json"
-import arrow_data from "./data/arrows.json"
-import abbreviate from "abbreviate";
-import { tidy, select, mutate, rename } from '@tidyjs/tidy';
-import * as d3 from "d3";
-import {interpolatePlasma} from "d3-scale-chromatic";
+console.log('Blank jotaiStore.js')
+
+/*  */
+/* Raw data
+/*  */
+
+const rawCircleData = atom('')
+const rawMetaData = atom('')
+const rawArrowData = atom('')
+const woRawCircleData = atom(null, (get, set, update) => {set(rawCircleData, update)}) // write-only atom to avoid re-rendering, see https://egghead.io/lessons/react-prevent-rerenders-and-add-functionality-with-jotai-write-only-atoms
+const woRawMetaData = atom(null, (get, set, update) => {set(rawMetaData, update)})
+const woRawArrowData = atom(null, (get, set, update) => {set(rawArrowData, update)})
+
 
 /*  */
 /* State variables for user controls */ // Some other variables are defined through initialization inside the Meta-Data section
 /*  */
 
-const adaptDisps = atom('true');
-const allNames = atom('false');
-const timeLabs = atom('true');
-const display = atom(['adaptDisps', 'timeLabs'])
+const adaptDisps = atom('');
+const allNames = atom('');
+const timeLabs = atom('');
+const display = atom('')
+const woAdaptDisps = atom(null, (get, set, update) => {set(adaptDisps, update)})
+const woAllNames = atom(null, (get, set, update) => {set(allNames, update)})
+const woTimeLabs = atom(null, (get, set, update) => {set(timeLabs, update)})
+const woDisplay = atom(null, (get, set, update) => {set(display, update)})
+
 
 const justClicked = atom('');
 const justSelHigh = atom('');
-const colgroup = atom('Show All');
+const colgroup = atom('');
 const arrowsSel = atom('');
+const woJustClicked = atom(null, (get, set, update) => {set(justClicked, update)})
+const woJustSelHigh = atom(null, (get, set, update) => {set(justSelHigh, update)})
+const woColgroup = atom(null, (get, set, update) => {set(colgroup, update)})
+const woArrowsSel = atom(null, (get, set, update) => {set(arrowsSel, update)})
 
 /*  */
 /* Visualization dimensions and positionning */
 /*  */
 
-const share = 80; /* Share in percent of the width reserved for graph (as opposed to legend)  */
-const width = 1000;
-const height = 1000;
-const margin = {top: 10, right: 18, bottom: 18, left: 23};
-const x_domain = [d3.min(circle_data, d => d.x) , 
-                  d3.max(circle_data, d => d.x) 
-                ];
-const y_domain = [d3.min(circle_data, d => d.y) - 4, //-4 leaves room for time label
-                  d3.max(circle_data, d => d.y)
-                ]; 
-const x_range = [0, width]
-const y_range = [height, 0]
+const Share = atom('')
+const Width = atom('')
+const Height = atom('')
+const Margin = atom('')
 
-const Share = atom(share)
-const Width = atom(width)
-const Height = atom(height)
-const Margin = atom(margin)
+const woShare = atom(null, (get, set, update) => {set(Share, update)})
+const woWidth = atom(null, (get, set, update) => {set(Width, update)})
+const woHeight = atom(null, (get, set, update) => {set(Height, update)})
+const woMargin = atom(null, (get, set, update) => {set(Margin, update)})
 
-const xDomain = atom(x_domain)
-const yDomain = atom(y_domain)
-const xRange = atom(x_range)
-const yRange = atom(y_range)
+const xDomain = atom('')
+const yDomain = atom('')
+const xRange = atom('')
+const yRange = atom('')
+const woXDomain = atom(null, (get, set, update) => {set(xDomain, update)})
+const woYDomain = atom(null, (get, set, update) => {set(yDomain, update)})
+const woXRange = atom(null, (get, set, update) => {set(xRange, update)})
+const woYRange = atom(null, (get, set, update) => {set(yRange, update)})
 
 /*  */
 /* Meta-Data */
 /*  */
 
-const metaData = atom(meta_data)
-const sizeOptionsNA = meta_data
-                        .filter(d =>  d.type === "continuous" && d.tooltip !== 'only')
-                        .sort((a, b) => a.label.localeCompare(b.label))
-const colorOptionsNA = meta_data
-                        .filter(d => d.tooltip !== 'only')
-                        .sort((a, b) => a.label.localeCompare(b.label))
+const metaData = atom('')
+const woMetaData = atom(null, (get, set, update) => {set(metaData, update)})
 
-const default_color_sel = colorOptionsNA[0]
-const default_size_sel = sizeOptionsNA[0]
+const sizeOptions = atom('')
+const colorOptions = atom('')
+const sizeSel = atom('') 
+const colorSel = atom('') 
+const sizeSelLabel = atom('') 
+const colorSelLabel = atom('')
+const woSizeOptions = atom(null, (get, set, update) => {set(sizeOptions, update)})
+const woColorOptions = atom(null, (get, set, update) => {set(colorOptions, update)})
+const woSizeSel = atom(null, (get, set, update) => {set(sizeSel, update)})
+const woColorSel = atom(null, (get, set, update) => {set(colorSel, update)})
+const woSizeSelLabel = atom(null, (get, set, update) => {set(sizeSelLabel, update)})
+const woColorSelLabel = atom(null, (get, set, update) => {set(colorSelLabel, update)})
 
-const sizeOptions = atom(sizeOptionsNA.map(d => ({"name": d.name, "label": d.label}) ))
-const colorOptions = atom(colorOptionsNA.map(d => ({"name": d.name, "label": d.label}) ))
-const sizeSel = atom(default_size_sel.name) // Needs to be manually synchronized with selector's default option in Navbar
-const colorSel = atom(default_color_sel.name) // Needs to be manually synchronized with selector's default option in Navbar
-const sizeSelLabel = atom(default_size_sel.label) // Needs to be manually synchronized with selector's default option in Navbar
-const colorSelLabel = atom(default_color_sel.label)
 
 // Color Scales
-// Needs to be manually synchronized with similar code in Navbar.js -> handleColorChange()
 
-var selType = "discrete"
-if(typeof default_color_sel.type !== 'undefined'){selType = default_color_sel.type} 
-var bins = []
-var domain = []
-var range = []
-var increasing = 'true'
-const disc_color_range = ['#1f77b4',
-'#ff7f0e',
-'#2ca02c',
-'#d62728',
-'#9467bd',
-'#8c564b',
-'#e377c2',
-'#7f7f7f',
-'#bcbd22',
-'#17becf',
-'#882255',
-'#117733',
-'#88CCEE',
-'#DDCC77',
-'#AA4499',
-'#44AA99',
-'#332288',
-'#999933',
-'#CC6677',
-'#DDDDDD',
-'#000000']
-// https://github.com/vanderlindenma/firms_gapminder_v3_build/issues/4
-// For other option: https://stackoverflow.com/questions/20847161/how-can-i-generate-as-many-colors-as-i-want-using-d3
-// http://jnnnnn.github.io/category-colors-constrained.html
+const colorDomain = atom('')
+const colorType = atom('')
+const colorRange = atom('')
+const discColorRange = atom('')
+const colorBins = atom('')
+const colorIncreasing = atom('')
+const colorBounds = atom('') 
+const colorExtremes = atom('')
+const woColorDomain = atom(null, (get, set, update) => {set(colorDomain, update)})
+const woColorType = atom(null, (get, set, update) => {set(colorType, update)})
+const woColorRange = atom(null, (get, set, update) => {set(colorRange, update)})
+const woDiscColorRange = atom(null, (get, set, update) => {set(discColorRange, update)})
+const woColorBins = atom(null, (get, set, update) => {set(colorBins, update)})
+const woColorIncreasing = atom(null, (get, set, update) => {set(colorIncreasing, update)})
+const woColorBounds = atom(null, (get, set, update) => {set(colorBounds, update)})
+const woColorExtremes = atom(null, (get, set, update) => {set(colorExtremes, update)})
 
-if(selType === 'discrete'){
-  domain = circle_data.sort((a, b) => d3.ascending(a[default_color_sel.name], b[default_color_sel.name])).map(d => d[default_color_sel.name])
-  range = disc_color_range 
-}
-
-let colExtremes = [0,1] // Bounds for continuous color selection within the plasma scale "interpolatePlasma" (widest bounds are [0,1])
-
-if(selType === 'continuous'){
-  
-  if(typeof meta_data[0].color_bins !== 'undefined'){
-    bins = meta_data[0].color_bins
-  } else {
-    bins = [Math.round(d3.quantile(circle_data.map(d => d[default_color_sel.name]), 0.2)),
-              Math.round(d3.quantile(circle_data.map(d => d[default_color_sel.name]), 0.4)),
-              Math.round(d3.quantile(circle_data.map(d => d[default_color_sel.name]), 0.6)),
-              Math.round(d3.quantile(circle_data.map(d => d[default_color_sel.name]), 0.8)),
-                ]
-    
-    bins = [...new Set(bins)] 
-  }  
-
-  domain = bins
-
-  let arr = [...Array(bins.length + 1).keys()]
-  arr = arr.map(d => colExtremes[0] + (d*(1/(arr[arr.length - 1])))*(colExtremes[1]-colExtremes[0]) ) //
-  range = arr.map(d => interpolatePlasma(d))
-
-  const colorSelMeta = meta_data.filter(d => d.name === default_color_sel.name)
-  if(typeof colorSelMeta[0].scale_increasing !== 'undefined'){increasing = colorSelMeta[0].scale_increasing}
-}
-
-console.log('jotai color domain: ', domain)
-
-const colorDomain = atom(domain)
-const colorType = atom(selType)
-const colorRange = atom(range)
-const discColorRange = atom(disc_color_range)
-const colorBins = atom(bins)
-const colorIncreasing = atom(increasing)
-const colorBounds = atom([]) // For bounds related to continuous colgroup selection
-const colorExtremes = atom(colExtremes) // Bounds for continuous color selection within the plasma scale "interpolatePlasma" (widest bounds are [0,1])
-
-// Size Scales
-
-const sizeSelMeta = meta_data.filter(d => d.name === default_size_sel.name)
-
-var size_increasing = 'true'
-if(typeof sizeSelMeta.scale_increasing !== 'undefined'){size_increasing = sizeSelMeta.scale_increasing}
-var size_unit = ""
-if(typeof sizeSelMeta.unit !== 'undefined'){size_unit = sizeSelMeta.unit}
-
-var size_exponent = 1
-if(typeof sizeSelMeta[0].scale_exponent !== 'undefined'){size_exponent = Number(sizeSelMeta[0].scale_exponent)}
-const size_domain = d3.extent(circle_data, d => d[default_size_sel.name])
-var max_size = 50
-if(typeof sizeSelMeta[0].scale_maxSize !== 'undefined'){max_size = Number(sizeSelMeta[0].scale_maxSize)}
-var min_size = 1
-if(typeof sizeSelMeta[0].scale_minSize !== 'undefined'){min_size = Number(sizeSelMeta[0].scale_minSize)}
-const size_range = [min_size, max_size]
-
-let allTimes = circle_data.map(d => d.time)
-console.log(allTimes)
-allTimes = [... new Set(allTimes)]
-const domain_Timesize = d3.extent(circle_data.filter(d => d.time === allTimes[0]), d => d[default_size_sel.name])
-
-// Font and opacity scales
-
-const font_exponent = 1
-const font_domain = domain_Timesize
-const font_range = [12,18]
-
-const opacity_exponent = 1
-const opacity_domain = domain_Timesize
-const opacity_range = [0.3,0.8]
 
 // Scales parameters into Atoms
 
-const sizeIncreasing = atom(size_increasing)
-const sizeUnit = atom(size_unit)
+const sizeIncreasing = atom('')
+const sizeUnit = atom('')
+const woSizeIncreasing = atom(null, (get, set, update) => {set(sizeIncreasing, update)})
+const woSizeUnit = atom(null, (get, set, update) => {set(sizeUnit, update)})
 
-const sizeExponent = atom(size_exponent)
-const sizeDomain = atom(size_domain) 
-const sizeRange = atom(size_range)
+const sizeExponent = atom('')
+const sizeDomain = atom('') 
+const sizeRange = atom('')
+const woSizeExponent = atom(null, (get, set, update) => {set(sizeExponent, update)})
+const woSizeDomain = atom(null, (get, set, update) => {set(sizeDomain, update)})
+const woSizeRange = atom(null, (get, set, update) => {set(sizeRange, update)})
 
-const fontExponent = atom(font_exponent)
-const fontDomain = atom(font_domain) 
-const fontRange = atom(font_range)
+const fontExponent = atom('')
+const fontDomain = atom('') 
+const fontRange = atom('')
+const woFontExponent = atom(null, (get, set, update) => {set(fontExponent, update)})
+const woFontDomain = atom(null, (get, set, update) => {set(fontDomain, update)})
+const woFontRange = atom(null, (get, set, update) => {set(fontRange, update)})
 
-const opacityExponent = atom(opacity_exponent)
-const opacityDomain = atom(opacity_domain) 
-const opacityRange = atom(opacity_range)
+const opacityExponent = atom('')
+const opacityDomain = atom('') 
+const opacityRange = atom('')
+const woOpacityExponent = atom(null, (get, set, update) => {set(opacityExponent, update)})
+const woOpacityDomain = atom(null, (get, set, update) => {set(opacityDomain, update)})
+const woOpacityRange = atom(null, (get, set, update) => {set(opacityRange, update)})
 
 /*  */
 /* "Explainer" arrow data */
 /*  */
 
-const raw_arrows = arrow_data
-const any_arrows = raw_arrows.length > 0
-console.log(any_arrows)
-const isArrows = atom(any_arrows)
-
-const max_distance = circle_data.map(d => Math.pow(
-  Math.pow(d.x,2) + Math.pow(d.y,2),
-  0.5
-  )).reduce((a, b) => Math.max(a, b))
-
-// Transform arrow data into format usable by visualization
-
-let new_arrows = raw_arrows
-
-if(any_arrows && typeof raw_arrows[0].length !== 'undefined'){
-  new_arrows = raw_arrows.map(
-      function(d){
-      const alpha_x = (d.length * max_distance) / Math.pow(
-        Math.pow(d.x,2) + Math.pow(d.y,4)/Math.pow(d.x,2)
-        ,0.5)
-      const alpha_y = d.y * alpha_x / d.x
-
-      return ({
-        'name': d.name,
-        'x': d.x * alpha_x,
-        'y': d.y * alpha_y,
-        'time' : d.time
-      })
-    }  
-  )
-}
-
-const arrows = atom(new_arrows)
-
+const isArrows = atom('')
+const arrows = atom('')
+const woIsArrows = atom(null, (get, set, update) => {set(isArrows, update)})
+const woArrows = atom(null, (get, set, update) => {set(arrows, update)})
 
 /*  */
 /* Main Circle Data */
 /*  */
 
-/* Data transformations */
-
-let roundable = meta_data
-                  .filter(d => d.type === 'continuous')
-                  .map(d => d.name)
-roundable = roundable.concat(['x','y'])
-roundable = [...new Set(roundable)]
-
-var newData = circle_data
-
-// Round continuous variable (and coordinates) for better animation performance
-roundable.map(function(e){ 
-  
-  let estr = e.toString()
-  
-  newData = tidy(
-    newData,
-    mutate({
-      xflrsix : (d) => Math.round(d[estr]*1000)/1000
-    })
-  )
-
-  newData = tidy(
-    newData,
-    select('-' + estr)
-  )
-
-  newData = tidy(
-    newData,
-    rename({xflrsix: estr})
-  )
-})
-
-// Create short labels
-newData = newData.map(function(d){ 
-    let new_d = d; 
-    new_d['label'] = abbreviate(d.name, {length: 20, keepSeparators: true})
-    return new_d})
-
-// Create unique id
-newData = newData.map(function(d, index){ 
-    let new_d = d; 
-    new_d['id'] = index
-    return new_d
-  })
-
-// Compute ranks for all continuous variables
-
-for (const contVar of sizeOptionsNA.map(d => d.name) ){
-  for (const time of allTimes){
-
-    const filtData = newData.filter(d => d.time === time)
-
-    const ideedTBRankedVals = filtData.map(d => ({'value': typeof d[contVar] !== 'undefined' ? d[contVar] : -Infinity, 
-                                                      // + (Math.random()/100000),//Math.random()/10000 is for tie-breaking purposes
-                                                      'id': d['id']})) 
-    const ranked = ideedTBRankedVals
-                    .sort((a, b) => b['value'] - a['value'])
-                    .map(function(d, index){ 
-                      let new_d = d; 
-                      new_d['rank'] = index + 1
-                      return new_d
-                    })
-
-    ranked.forEach(function(d){
-      const objIndex = newData.findIndex((obj => obj.id === d.id && obj.time === time));
-      newData[objIndex]['rank-' + contVar] = d.rank
-    })
-  } 
-}
-
-const data = atom(newData)
+const data = atom('')
+const woData = atom(null, (get, set, update) => {set(data, update)})
 
 /*  */
 /* Data-dependent states */
 /*  */
 
-let names = newData.map(d => d.name)
-let uniqueNames = [...new Set(names)]
-let numbFirms = uniqueNames.length
-const allFirms = atom(uniqueNames)
-const maxNfirms = atom(numbFirms);
-
-const nFirms = atom(Math.round(numbFirms/10))
-
-let alltimes = newData.map(d => d.time).sort()
-let locmin = alltimes[0]
-const minTime = atom(locmin);
-const locmax = Math.max(...alltimes)
-const maxTime = atom(locmax);
-const nTimes = atom(locmax - locmin + 1);
-const Time = atom(locmin);
+const allFirms = atom('')
+const maxNfirms = atom('');
+const nFirms = atom('')
+const minTime = atom('');
+const maxTime = atom('');
+const nTimes = atom('');
+const Time = atom('');
+const woAllFirms = atom(null, (get, set, update) => {set(allFirms, update)})
+const woMaxNfirms = atom(null, (get, set, update) => {set(maxNfirms, update)})
+const woNFirms = atom(null, (get, set, update) => {set(nFirms, update)})
+const woMinTime = atom(null, (get, set, update) => {set(minTime, update)})
+const woMaxTime = atom(null, (get, set, update) => {set(maxTime, update)})
+const woNTimes = atom(null, (get, set, update) => {set(nTimes, update)})
+const woTime = atom(null, (get, set, update) => {set(Time, update)})
 
 /*  */
 /* Other states */
 /*  */
 
-const transD3 = atom({'k':1, 'x':0, 'y':0})
+const transD3 = atom('')
+const clearSvgTrigger = atom('')
+const highlightCount = atom('')
+const woTransD3 = atom(null, (get, set, update) => {set(transD3, update)})
+const woClearSvgTrigger = atom(null, (get, set, update) => {set(clearSvgTrigger, update)})
+const woHighlightCount = atom(null, (get, set, update) => {set(highlightCount, update)})
 
 /*  */
 /* State export */
 /*  */
 
-export {adaptDisps, allNames, timeLabs, display,
+export {rawCircleData, rawMetaData, rawArrowData,
+        woRawCircleData, woRawMetaData, woRawArrowData,
+        adaptDisps, allNames, timeLabs, display,
+        woAdaptDisps, woAllNames, woTimeLabs, woDisplay,
         justClicked, justSelHigh,
+        woJustClicked, woJustSelHigh,
         colgroup,
+        woColgroup,
         arrowsSel,
+        woArrowsSel,
         sizeOptions, sizeSel, colorSel, sizeSelLabel, colorSelLabel,
+        woSizeOptions, woSizeSel, woColorSel, woSizeSelLabel, woColorSelLabel,
         colorOptions, colorType, colorDomain, colorRange, colorBins, colorIncreasing, colorBounds, colorExtremes, discColorRange,
+        woColorOptions, woColorType, woColorDomain, woColorRange, woColorBins, woColorIncreasing, woColorBounds, woColorExtremes, woDiscColorRange,
         Share, Width, Height, Margin, 
+        woShare, woWidth, woHeight, woMargin,
         xDomain, yDomain, xRange, yRange, 
+        woXDomain, woYDomain, woXRange, woYRange,
         sizeIncreasing, sizeUnit, 
+        woSizeIncreasing, woSizeUnit,
         sizeExponent, sizeDomain, sizeRange, 
+        woSizeExponent, woSizeDomain, woSizeRange,
         fontExponent, fontDomain, fontRange, 
+        woFontExponent, woFontDomain, woFontRange,
         opacityExponent, opacityDomain, opacityRange, 
+        woOpacityExponent, woOpacityDomain, woOpacityRange,
         allFirms, 
+        woAllFirms,
         maxNfirms, 
-        nFirms,
+        woMaxNfirms,
+        nFirms, 
+        woNFirms,
         Time, 
+        woTime,
         minTime, maxTime, nTimes,
+        woMinTime, woMaxTime, woNTimes,
         data, metaData, arrows, isArrows,
-        transD3};
+        woData, woMetaData, woArrows, woIsArrows,
+        transD3, clearSvgTrigger, highlightCount,
+        woTransD3, woClearSvgTrigger, woHighlightCount};

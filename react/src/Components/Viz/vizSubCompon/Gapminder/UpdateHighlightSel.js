@@ -5,6 +5,7 @@ export default function UpdateHighlightsSel(data, justSelHigh,
                                             sizeSel, allNames, nFirms, nTimes, timeLabs,
                                             x,y,
                                             xYLfunc, yYLfunc, rfunc, 
+                                            setClearSvgTrigger, highlightCount,
                                             trans_d3){
 
 console.log("High Sel Update") 
@@ -71,7 +72,6 @@ if(justSelHigh[0] === 'high'){
 
   d3.selectAll('.firmLabel') //Highlight firm label
     .filter(function(d) {return justSelHigh[1].includes(d.name)})
-    // .attr('fill-opacity', OpacityRange[1])
     .attr('opacity', 1)
     .attr('display', 'inline')
     .attr("data-highlighted", 'true')
@@ -213,6 +213,10 @@ if(justSelHigh[0] === 'dehigh') {
     // .attr('fill-opacity', 0.25)
     .attr('opacity', OpacityRange[0])
   . attr('display', 'none')
+  }
+
+  if(highlightCount === 0){
+    setClearSvgTrigger(d => d + 1)
   }
 
 }

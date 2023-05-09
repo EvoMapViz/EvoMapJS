@@ -17,9 +17,9 @@ import './Navbar.css';
 import {useAtom} from 'jotai';
 import {data, arrows, 
         adaptDisps, allNames, timeLabs, 
-        nFirms, maxNfirms, Time, minTime, maxTime, metaData, sizeSel, colorSel, sizeSelLabel, colorSelLabel, colgroup,
-        colorOptions, colorType, colorDomain, colorRange, colorBins, colorIncreasing, colorExtremes, discColorRange,
-        sizeOptions, sizeIncreasing, sizeExponent, sizeDomain, sizeRange, arrowsSel} 
+        nFirms, maxNfirms, Time, minTime, maxTime, metaData, woSizeSel, woColorSel, woSizeSelLabel, woColorSelLabel, woColgroup,
+        colorOptions, woColorType, woColorDomain, woColorRange, woColorBins, woColorIncreasing, colorExtremes, discColorRange,
+        sizeOptions, woSizeIncreasing, woSizeExponent, woSizeDomain, woSizeRange, woArrowsSel} 
         from 'jotaiStore.js';
 import {interpolatePlasma} from "d3-scale-chromatic";
 
@@ -31,7 +31,7 @@ const NavbarArrow = () => {
     const [locmaxNfirms, ] = useAtom(maxNfirms)
     const [locminTime, ] = useAtom(minTime)
     const [locmaxTime, ] = useAtom(maxTime)
-    const [, locSetColgroup] = useAtom(colgroup)
+    const [, locSetColgroup] = useAtom(woColgroup)
     
     let [locSizeOptions, ] = useAtom(sizeOptions)
     locSizeOptions = locSizeOptions.map(d => ({"value": d.name, "label": d.label}))
@@ -41,28 +41,28 @@ const NavbarArrow = () => {
                             .map(d => ({"value": d.name.toString(), "label": d.name}) )
     const [selected, setSelected] = useState([]); // Select-all "local" state for multi-selection in arrow selector
 
-    const [, locSetArrowSel] = useAtom(arrowsSel)
+    const [, locSetArrowSel] = useAtom(woArrowsSel)
 
-    const [, locSetSizeSel] = useAtom(sizeSel)
-    const [, locSetSizeSelLabel] = useAtom(sizeSelLabel)
+    const [, locSetSizeSel] = useAtom(woSizeSel)
+    const [, locSetSizeSelLabel] = useAtom(woSizeSelLabel)
     
     let [locColorOptions, ] = useAtom(colorOptions)
     locColorOptions = locColorOptions.map(d => ({"value": d.name, "label": d.label}))
     
-    const [ ,locSetColorSel] = useAtom(colorSel)
-    const [ ,locSetColorSelLabel] = useAtom(colorSelLabel)
-    const [ ,locSetColortype] = useAtom(colorType)
-    const [ ,locSetColorrange] = useAtom(colorRange)
-    const [ ,locSetColorbins] = useAtom(colorBins)
-    const [ ,locSetColordomain] = useAtom(colorDomain)
-    const [ ,locSetColorincreasing] = useAtom(colorIncreasing)
+    const [ ,locSetColorSel] = useAtom(woColorSel)
+    const [ ,locSetColorSelLabel] = useAtom(woColorSelLabel)
+    const [ ,locSetColortype] = useAtom(woColorType)
+    const [ ,locSetColorrange] = useAtom(woColorRange)
+    const [ ,locSetColorbins] = useAtom(woColorBins)
+    const [ ,locSetColordomain] = useAtom(woColorDomain)
+    const [ ,locSetColorincreasing] = useAtom(woColorIncreasing)
     const [locDiscColorRange, ] = useAtom(discColorRange)
     const [locColorExtremes, ] = useAtom(colorExtremes)
 
-    const [, locSetSizeincreasing] = useAtom(sizeIncreasing)
-    const [, locSetSizeexponent] = useAtom(sizeExponent)
-    const [, locSetSizedomain] = useAtom(sizeDomain)
-    const [, locSetSizerange] = useAtom(sizeRange)
+    const [, locSetSizeincreasing] = useAtom(woSizeIncreasing)
+    const [, locSetSizeexponent] = useAtom(woSizeExponent)
+    const [, locSetSizedomain] = useAtom(woSizeDomain)
+    const [, locSetSizerange] = useAtom(woSizeRange)
     
 
 
