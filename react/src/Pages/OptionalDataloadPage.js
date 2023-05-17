@@ -18,14 +18,18 @@ import myVideo from './background.mov'
 import { woRawCircleData, rawCircleData, rawMetaData, rawArrowData } from 'jotaiStore.js';
 import {useAtom} from 'jotai'
 
-
-import raw_circle_data from "../data/circles.json"
-import raw_meta_data from "../data/metadata.json"
-import raw_arrow_data from "../data/arrows.json"
-
 const OptionalDataloadPage = ({ onClick }) => {
 
   console.log('Welcome')
+
+  const raw_circle_data =  require("data/circles.json")
+  const raw_meta_data = require("data/metadata.json")
+  let raw_arrow_data = []
+  try{
+    raw_arrow_data = require("data/arrows.json")
+  } catch(e){
+    console.log('No arrows data supplied')
+  }
 
   const [openDialog, setOpenDialog] = useState(false);
   const [openSubmitRejectSnackbar, setOpenSubmitRejectSnackbar] = useState(false);
