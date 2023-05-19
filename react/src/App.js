@@ -14,16 +14,6 @@ import {rawCircleData, rawMetaData, rawArrowData} from 'jotaiStore';
 
 
 function App() {  
-  const raw_circle_data =  require("data/circles.json")
-  const raw_meta_data = require("data/metadata.json")
-  let raw_arrow_data = []
-  try{
-    raw_arrow_data = require("data/arrows.json")
-  } catch(e){
-    console.log('No arrows data supplied')
-  }
-
-  
 
   const [page, setPage] = useState('welcome');
 
@@ -47,6 +37,15 @@ function App() {
   }
 
   if(app_settings[0]['mode'] === 'production'){
+
+    const raw_circle_data =  require("data/circles.json")
+    const raw_meta_data = require("data/metadata.json")
+    let raw_arrow_data = []
+    try{
+      raw_arrow_data = require("data/arrows.json")
+    } catch(e){
+      console.log('No arrows data supplied')
+    }
 
     locSetRawCircleData(raw_circle_data);
     locSetRawMetaData(raw_meta_data);

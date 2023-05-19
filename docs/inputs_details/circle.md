@@ -1,11 +1,11 @@
 ---
 layout: default
-title: circles.json
+title: circles.json (Required)
 nav_order: 1
 parent: Inputs - Details
 ---
 
-# `circles.json`
+# `circles.json` (Required)
 
 ## Key-value pairs (each row)
 
