@@ -20,9 +20,9 @@ If it does not, open a browser and navigate to [http://localhost:3000/](http://l
 
 See the [Deploy online](https://evomapviz.github.io/EvoMapJS/docs/deploy/) section for a guide on how to deploy the app *online*.
 
-# `playground` and `production` modes
+# Playground and production modes
 
-The app can be run in two modes: `playground` and `production`.
+The app can be ran in two modes: `playground` and `production`.
 The mode is set in the `src/app_setting.js` file (see the `mode` variable at the top of the file).
 
 - `production` mode: Directly displays the visualization interface based on data and settings in `src/data/circle.json`, `src/data/metadata.json`, and `src/data/arrows.json`.
