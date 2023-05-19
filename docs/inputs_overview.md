@@ -6,11 +6,12 @@ nav_order: 2
 
 # Inputs: Overview and terminology
 
-The app requires the three `json` input files listed below.
+The app requires two `json` input files and accepts one additional optional `json`, all listed below.
 Each of these three `json` is made of a single array of objects. 
 The objects themselves can only contain key-value pairs. 
 The three `json` files must be located in the `src/data` folder.
-See 
+
+## Required
 
 ### `circles.json` 
 {: .mb-lg-3 }
@@ -33,14 +34,14 @@ An array of objects containing a set of key-value pairs that provides additional
   - How these features should be taken into account in the visualization,
   - How these features should be taken into account in the app's UI.
 
+## Optional
+
 ### `arrows.json`
 {: .mb-lg-3 }
 
 An array of objects containing a set of key-value pairs that represent the relevant data about the arrows that should be displayed in the visualization.
 
 The data is assumed to be in tidy format, i.e., each object in the array must represent a *single* arrow in a *single* time period.
-
-The file is **required** *even if no arrows should be displayed* in the visualization. To display no arrows, simply provide an empty array, i.e., `[]`.
 
 
 

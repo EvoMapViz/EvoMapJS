@@ -8,7 +8,7 @@ console.log('Blank jotaiStore.js')
 
 const rawCircleData = atom('')
 const rawMetaData = atom('')
-const rawArrowData = atom('')
+const rawArrowData = atom([])
 const woRawCircleData = atom(null, (get, set, update) => {set(rawCircleData, update)}) // write-only atom to avoid re-rendering, see https://egghead.io/lessons/react-prevent-rerenders-and-add-functionality-with-jotai-write-only-atoms
 const woRawMetaData = atom(null, (get, set, update) => {set(rawMetaData, update)})
 const woRawArrowData = atom(null, (get, set, update) => {set(rawArrowData, update)})
