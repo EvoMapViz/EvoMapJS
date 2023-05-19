@@ -9,13 +9,14 @@ nav_order: 5
 ## Netlify
 
   {: .warning}
-  To experiment with new data and metadata setting, please use your own branch with prefix `uexp/` (feel free to create one by cloning the `main` branch).
+  To experiment with new data and metadata settings, please use your own branch with prefix `uexp/` (feel free to create one by cloning the `main` branch).
   **!! Do NOT use existing `main` or `dev` branches!!**.
   If you'd like to contribute, please create a new branch with prefix `dev/` and submit a pull request.
 
 #### Existing turnkey deployement synced with Github repository.
 
-  - Clone the `uexp/master` branche from [https://github.com/EvoMapViz/EvoMapJS](https://github.com/EvoMapViz/EvoMapJS).
+  - If you would like to use the latest stable version of the app and the `uexp/master` branch is behind the `main` branch, update the `uexp/master` branch to the latest commit of the `main` branch (e.g., through a pull request).
+  - Clone the `uexp/master` branch from [https://github.com/EvoMapViz/EvoMapJS](https://github.com/EvoMapViz/EvoMapJS).
   - Edit `circle.json`, `metadata.json`, or `arrows.json` locally in the `src/data` folder.
   - Commit your changes using `git` and push them to the Github repository.
   - The deployement at [https://uexp-evomapjs.netlify.app/](https://uexp-evomapjs.netlify.app/)) should automatically update (pending about a minute for the build process to complete).
