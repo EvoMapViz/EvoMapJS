@@ -10,7 +10,6 @@ import NavbarNoArrow from 'Components/Navbar/NavbarNoArrow'
 import { useAtom } from 'jotai'
 
 import {rawCircleData, rawMetaData, rawArrowData,
-        woRawCircleData, woRawMetaData, woRawArrowData,
         woAdaptDisps, woAllNames, woTimeLabs, woDisplay,
         woJustClicked, woJustSelHigh,
         woColgroup,

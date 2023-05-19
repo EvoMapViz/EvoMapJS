@@ -1,11 +1,11 @@
 ---
 layout: default
-title: metadata.json
+title: metadata.json (Required)
 nav_order: 2
 parent: Inputs - Details
 ---
 
-# `metadata.json`
+# `metadata.json` (Required)
 {: .mb-lg-5 } 
 <!-- https://just-the-docs.github.io/just-the-docs/docs/utilities/layout/ -->
 

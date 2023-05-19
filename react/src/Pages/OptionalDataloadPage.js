@@ -5,7 +5,6 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import BubbleChartOutlinedIcon from '@material-ui/icons/BubbleChartOutlined';
 import CloudUploadOutlinedIcon from '@material-ui/icons/CloudUploadOutlined';
-import { CircularProgress } from '@material-ui/core';
 import ClipLoader from "react-spinners/ClipLoader";
 import { DropzoneDialog } from 'material-ui-dropzone';
 import { useState } from 'react';
@@ -15,50 +14,59 @@ import './OptionalDataloadPage.css'
 
 import myVideo from './background.mov'
 
-import { woRawCircleData, rawCircleData, rawMetaData, rawArrowData } from 'jotaiStore.js';
+import {rawCircleData, rawMetaData, rawArrowData } from 'jotaiStore.js';
 import {useAtom} from 'jotai'
-
-
-import raw_circle_data from "../data/circles.json"
-import raw_meta_data from "../data/metadata.json"
-import raw_arrow_data from "../data/arrows.json"
 
 const OptionalDataloadPage = ({ onClick }) => {
 
   console.log('Welcome')
 
   const [openDialog, setOpenDialog] = useState(false);
+
+  const [loadAnim, setLoadingAnim] = useState(false);
+  const [demoLoad, setDemoLoad] = useState(false)
+
+  const [loadedCircles, setLoadedCircles] = useState(false);
+  const [loadedMetadata, setLoadedMetadata] = useState(false);
+  const [loadedArrows, setLoadedArrows] = useState(false);
+
   const [openSubmitRejectSnackbar, setOpenSubmitRejectSnackbar] = useState(false);
   const [submitRejectSnackbarMessage, setSubmitRejectSnackbarMessage] = useState(null);
-  const [jsonContent, setJsonContent] = useState(null);
 
-  const [, locSetRawCircleData] = useAtom(woRawCircleData);
-  const [, locSetRawMetaData] = useAtom(rawMetaData);
+  const [locRawCircleData, locSetRawCircleData] = useAtom(rawCircleData);
+  const [locRawMetaData, locSetRawMetaData] = useAtom(rawMetaData);
   const [locRawArrowData, locSetRawArrowData] = useAtom(rawArrowData);
 
   const didMountRef = useRef(false);
 
+  ////
+  // Effects of data upload
+  ////
+
   const handleSave = (files) => {
 
       let valid_sub = true
+      didMountRef.current = true;
 
       const names = files.map(file => file.name)
+      const poss_names = ["circles.json", "metadata.json", "arrows.json"]
 
-      if(!names.every(d => names.includes(d))){
+      if(
+        (
+        !names.every(d => poss_names.includes(d))
+        ) | 
+        (
+          files.length !== 3 && files.length !== 2
+        ) |
+        (
+          (!names.includes('circles.json')) | (!names.includes('metadata.json'))
+        ) 
+        ){
         setSubmitRejectSnackbarMessage(
         <div>
-        The app requires three .json named "circles.json", "metadata.json", and "arrow.json". 
-        See the <a href="https://evomapviz.github.io/EvoMapJS/docs/inputs_details/inputs_details/">EvoMapJS documentation </a> 
-        for more details.
-        </div>
-        )
-        valid_sub = false
-      }
-      
-      if(files.length !== 3){
-        setSubmitRejectSnackbarMessage(
-        <div>
-        The app requires three .json named "circles.json", "metadata.json", and "arrow.json". 
+        The app requires two .json named "circles.json" and "metadata.json". 
+        You can also add an optional .json called "arrow.json". 
+        No other files can be uploaded.
         See the <a href="https://evomapviz.github.io/EvoMapJS/docs/inputs_details/inputs_details/">EvoMapJS documentation </a> 
         for more details.
         </div>
@@ -68,65 +76,92 @@ const OptionalDataloadPage = ({ onClick }) => {
 
       if(valid_sub){
 
-        let file = files.filter(d => d.name === "circles.json")[0]
-        const circleReader = new FileReader();
-        circleReader.onload = () => {
-          const content = JSON.parse(circleReader.result);
-          locSetRawCircleData(content);
-        };
-        circleReader.readAsText(file);
-
-        file = files.filter(d => d.name === "metadata.json")[0]
-        const metaReader = new FileReader();
-        metaReader.onload = () => {
-          const content = JSON.parse(metaReader.result);
-          locSetRawMetaData(content);
-        };
-        metaReader.readAsText(file);
-
-        file = files.filter(d => d.name === "arrows.json")[0]
-        const arrowReader = new FileReader();
-        arrowReader.onload = () => {
-          const content = JSON.parse(arrowReader.result);
-          locSetRawArrowData(content)
-        };
-        arrowReader.readAsText(file);
+        if(!names.includes("arrows.json")){
+          locSetRawArrowData([])
+        }
 
         setOpenDialog(false);
         document.getElementById('progress_container').style.visibility = 'visible'
-
+        files.map(d => {
+          if(d.name === "circles.json"){
+            console.log('circles.json')
+            d.text().then(function(e){
+              locSetRawCircleData(JSON.parse(e))
+            })
+          }
+          if(d.name === "metadata.json"){
+            console.log('metadata.json')
+            d.text().then(function(e){
+              locSetRawMetaData(JSON.parse(e))
+            })
+          }
+          if(d.name === "arrows.json"){
+            console.log('arrows.json')
+            d.text().then(function(e){
+              locSetRawArrowData(JSON.parse(e))
+            })
+          }
+        })
       } else {
         setOpenSubmitRejectSnackbar(true)
       }
     }
 
+  // Update load indicator states
+
   useEffect(() => {
-    if(didMountRef.current){
+    if(didMountRef.current){ setLoadedCircles(true)}
+  }, [locRawCircleData]); 
+
+  useEffect(() => {
+    if(didMountRef.current){ setLoadedMetadata(true)}
+  }, [locRawMetaData]);
+
+  useEffect(() => {
+    if(didMountRef.current){ setLoadedArrows(true)  }
+  }, [locRawArrowData]);
+
+  // Once all load indicator are true, switch to MainViz page
+
+  useEffect(() => {
+    if(didMountRef.current && loadedCircles && loadedMetadata && loadedArrows){
       onClick();
     }
-    didMountRef.current = true;
-  }, [locRawArrowData]); // last json to be loaded
+  }, [loadedCircles,loadedMetadata,loadedArrows]); // last json to be loaded
 
-  const [loadAnim, setLoadingAnim] = useState(false);
-  const [load, setLoad] = useState(false)
+  ////
+  // Effects of demo data
+  ////
 
   useEffect(() => {
-    if(didMountRef.current && loadAnim){
-      console.log('loadAnim EFFECT')
+    console.log('loadAnim EFFECT')
+    if(loadAnim){
+      console.log('loadAnim EFFECT 2')
       document.getElementById('progress_container').style.visibility = 'visible'
-      setLoad(true)
+      setDemoLoad(true)
     }
-  }, [loadAnim]); // last json to be loaded
+    didMountRef.current = true;
+  }, [loadAnim]);
 
   useEffect(() => {
-    if(didMountRef.current && loadAnim && load){
+    if(didMountRef.current && loadAnim && demoLoad){
       console.log('load EFFECT')
+
+      const raw_circle_data =  require("data/circles.json")
+      const raw_meta_data = require("data/metadata.json")
+      let raw_arrow_data = []
+      try{
+        raw_arrow_data = require("data/arrows.json")
+      } catch(e){
+        console.log('No arrows data supplied')
+      }
+
       locSetRawCircleData(raw_circle_data)
       locSetRawMetaData(raw_meta_data)
       locSetRawArrowData(raw_arrow_data)
       onClick()
-    } 
-  }, [load]);
+    }   
+  }, [demoLoad]);
 
   return (
     <div>
@@ -134,7 +169,6 @@ const OptionalDataloadPage = ({ onClick }) => {
       <div className="background-video-container">  
 
       <video loop autoPlay muted
-        // style = {{transform: 'translateX(-50%) translateY(-50%)'}}
         id="background-video"
         className="background-video"
         >
@@ -142,7 +176,6 @@ const OptionalDataloadPage = ({ onClick }) => {
       </video>
 
       <div id = 'progress_container'>
-         {/* <CircularProgress/> */}
           <ClipLoader color="#3f51b5" />
       </div>
 
@@ -180,7 +213,12 @@ const OptionalDataloadPage = ({ onClick }) => {
           variant='contained'
           style = {{width: '160px',
                     marginTop: '10px',}}
-          onClick = {() => {window.location.href = 'https://github.com/EvoMapViz/EvoMapJS'}}
+          onClick = {() => {
+            window.open(
+              'https://github.com/EvoMapViz/EvoMapJS',
+              '_blank' // <- This is what makes it open in a new tab/window.
+            );
+          }}
           >
             <span style = {{paddingLeft: '5px', paddingRight: '5px'}}> Github </span>
             <GitHubIcon/>
@@ -192,7 +230,12 @@ const OptionalDataloadPage = ({ onClick }) => {
           variant='contained'
           style = {{width: '160px',
                     marginTop: '10px',}}
-          onClick = {() => {window.location.href = 'https://evomapviz.github.io/EvoMapJS/'}}
+          onClick = {() => {
+            window.open(
+              'https://evomapviz.github.io/EvoMapJS/',
+              '_blank' // <- This is what makes it open in a new tab/window.
+            );
+          }}
           >
             <span style = {{paddingLeft: '5px', paddingRight: '5px'}}> Doc </span>
             <InfoOutlined/>
@@ -205,10 +248,7 @@ const OptionalDataloadPage = ({ onClick }) => {
                       width : '160px',  }}
             variant="contained"
             color = "primary"
-            onClick={function(){
-              console.log('CLICKED!')
-              setLoadingAnim(true)
-            }}>
+            onClick={function(){ setLoadingAnim(true) }}>
             <span style = {{paddingLeft: '5px', paddingRight: '5px'}}> Demo Data </span>
             <BubbleChartOutlinedIcon/>
           </Button>
@@ -222,7 +262,6 @@ const OptionalDataloadPage = ({ onClick }) => {
           color="primary" 
           onClick={() => setOpenDialog(true)}>
            <span style = {{paddingLeft: '5px', paddingRight: '5px'}}> Upload Data </span>
-           {/* <span style = {{float: 'right'}}>  </span> */}
            <CloudUploadOutlinedIcon/>
           </Button>
         </div> 
@@ -235,7 +274,9 @@ const OptionalDataloadPage = ({ onClick }) => {
           filesLimit={3}
           dialogTitle= {
             <div>
-              The app requires three .json named "circles.json", "metadata.json", and "arrow.json". 
+              The app requires two .json named "circles.json" and "metadata.json". 
+              You can also add an optional .json called "arrow.json". 
+              No other files can be uploaded.
               See the <a href="https://evomapviz.github.io/EvoMapJS/docs/inputs_details/inputs_details/">EvoMapJS documentation </a> 
               for more details.
             </div>

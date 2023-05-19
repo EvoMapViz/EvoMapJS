@@ -1,10 +1,10 @@
 ---
 layout: default
-title: arrow.json
+title: arrow.json (Optional)
 parent: Inputs - Details
 ---
 
-# `arrows.json`
+# `arrows.json` (Optional)
 
 ## Key-value pairs
 
