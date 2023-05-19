@@ -20,6 +20,14 @@ If it does not, open a browser and navigate to [http://localhost:3000/](http://l
 
 See the [Deploy online](https://evomapviz.github.io/EvoMapJS/docs/deploy/) section for a guide on how to deploy the app *online*.
 
+# `playground` and `production` modes
+
+The app can be run in two modes: `playground` and `production`.
+The mode is set in the `src/app_setting.js` file (see the `mode` variable at the top of the file).
+
+- `production` mode: Directly displays the visualization interface based on data and settings in `src/data/circle.json`, `src/data/metadata.json`, and `src/data/arrows.json`.
+- `playground` mode: Displays a welcome page where the user can find links to Github source code, the Doc, and choose between using "demo data" (in which the visualization interface will display based on `src/data/circle.json`, `src/data/metadata.json`, and `src/data/arrows.json`) or "custom data" (in which case the user can upload their own data and settings).
+
 # Branch management and usage
 
  - The `main` branch contains the latest stable version of the app.
